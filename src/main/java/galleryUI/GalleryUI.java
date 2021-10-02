@@ -83,7 +83,7 @@ public class GalleryUI {
         });
 
         //Todo change this method to accept the input from an opened file
-        this.image.
+        //this.image.
         this.imageView.setImage(this.image);
 
     }
