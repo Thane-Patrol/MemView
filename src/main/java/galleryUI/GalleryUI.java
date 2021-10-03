@@ -88,6 +88,10 @@ public class GalleryUI {
 
     }
 
+    public void getSize() {
+
+    }
+
     public Scene getScene() { return this.scene;}
 
 
