@@ -1,5 +1,6 @@
 package galleryUI;
 
+import directory.handling.DirectoryReader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Priority;
@@ -28,8 +29,6 @@ public class GalleryUI {
     private ImageView imageView;
     private Button backButton;
     private Button nextButton;
-    private int indexOfCurrentPhoto;
-    private Rectangle2D screenBounds;
 
     //Todo add a Path object as a constructor so the image specified is opened on keypress
     //Todo handle exceptions that may be thrown, eg wrong filetype or nonsupported fileType
@@ -41,7 +40,7 @@ public class GalleryUI {
         //Set the filePath as the image
         //todo remove this code
         this.image = new Image(filePath.toURI().toString());
-        System.out.println(filePath.getAbsolutePath());
+        //System.out.println(filePath.getAbsolutePath());
 
         //Create pane and set layout
         StackPane parentPane = new StackPane();
@@ -60,18 +59,13 @@ public class GalleryUI {
         this.backButton = new Button("<");
 
         //Create imageView for main Gallery
-        //ToDo add full screen option
         this.imageView = new ImageView(this.image);
 
         //Add buttons to HBox and imageView to parentPane
         buttonBox.getChildren().addAll(backButton, spacer, nextButton);
-        parentPane.getChildren().addAll(buttonBox, imageView);
+        parentPane.getChildren().addAll(imageView, buttonBox);
         parentPane.setAlignment(buttonBox, Pos.CENTER);
 
-        //Get the current screens size to allow a suitable size window to be shown
-
-        screenBounds = Screen.getPrimary().getVisualBounds();
-        System.out.println("Height:" + screenBounds.getHeight() + "Width: " + screenBounds.getWidth());
 
         //Create scene and add pane
         this.scene = new Scene(parentPane);
@@ -82,18 +76,7 @@ public class GalleryUI {
 
     }
 
-    public void setImageOnButtonPress(List<Path> pathList) {
-
-        //Change photo to previous image on back button Press
-        backButton.setOnMouseClicked(event -> {
-            //Loop through pathList to find current position of photo
-            //ToDo find a more efficient means to implement this
-            for (int i = 0; i < pathList.size(); i++) {
-                if (pathList.get(i).toString().equals(this.imageView.getImage().getUrl())) {
-
-                }
-            }
-        });
+    public void setPreviousImageOnButtonPress(Image image) {
 
         //Todo change this method to accept the input from an opened file
         //this.image.
@@ -101,12 +84,20 @@ public class GalleryUI {
 
     }
 
-    public double getStageHeight() {
-        return screenBounds.getHeight();
+    public void setNextImageOnButtonPress(Image image) {
+
+        //Todo change this method to accept the input from an opened file
+        //this.image.
+        this.imageView.setImage(image);
+
     }
 
-    public double getStageWidth() {
-        return screenBounds.getWidth();
+    public Button getNextButton() {
+        return this.nextButton;
+    }
+
+    public Button getBackButton() {
+        return this.backButton;
     }
 
     public Scene getScene() { return this.scene;}

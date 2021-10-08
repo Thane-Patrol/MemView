@@ -12,6 +12,7 @@ public class DirectoryReader {
     private File originalFilePath;
     private String originalFileName;
     private List<Path> fileNames;
+    private int currentFileIndex;
 
     // Creates the DirectoryReader object to index all the files in the directory of the open file
     // THe originalFile object is the absolute Path of the file opened
@@ -38,19 +39,49 @@ public class DirectoryReader {
             System.out.println(e.getMessage());
         }
         System.out.println(fileNames.toString());
-    }
 
-    public Path getNext() {
-        Path toRtn = null;
-
-        // Go through the fileNames array and find the index of the next image
-        for(int i = 0; i < fileNames.size(); i++) {
-            if (fileNames.get(i).getFileName().equals(originalFileName)) {
-                toRtn = fileNames.get(i + 1).getFileName();
+        // Finding the index of the first photo
+        for (int i = 0; i < fileNames.size(); i++) {
+            if (fileNames.get(i).equals(originalFilePath.toPath())) {
+                currentFileIndex = i;
             }
         }
 
+        System.out.println(currentFileIndex);
+    }
+
+    public Path getPreviousImage() {
+
+        //toDo add the below section of code to return a generic file for the end of directory case
+        /*
+        if(fileNames.size() == 1) {
+            return;
+        } else if (fileNames.size() == currentFileIndex + 1) {
+            return;
+        } else {
+        */
+        Path toRtn = fileNames.get(currentFileIndex - 1);
+        currentFileIndex--;
+
         return toRtn;
+    }
+
+    public Path getNextImage() {
+        //toDo add the below section of code to return a generic file for the end of directory case
+        /*
+        if(fileNames.size() == 1) {
+            return;
+        } else if (fileNames.size() == currentFileIndex + 1) {
+            return;
+        } else {
+        */
+        Path toRtn = fileNames.get(currentFileIndex + 1);
+        currentFileIndex++;
+        return toRtn;
+    }
+
+    public int getCurrentFileIndex() {
+        return currentFileIndex;
     }
 
     public File getPath() {return originalFilePath;}

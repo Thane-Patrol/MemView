@@ -7,6 +7,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -28,28 +30,39 @@ public class HelloApplication extends Application {
 
          */
 
+        //Todo get the filename in a whitespace trimmed format to pass as a constructor to the DirectoryReader class
         //Create DirectoryReader to index files before the GalleryUI is started
         DirectoryReader directoryReader = new DirectoryReader("D:/javaMemView/gtest(1).jpg");
 
         //Create new GalleryUI on application start
         GalleryUI galleryUI = new GalleryUI(directoryReader.getPath());
 
-        /*
+        Button nextButton = galleryUI.getNextButton();
+        Button backButton = galleryUI.getBackButton();
+
         new AnimationTimer() {
 
             @Override
             public void handle(long now) {
-                galleryUI.setImage(input);
+
+                nextButton.setOnMouseClicked(event -> {
+                    Image image = new Image(directoryReader.getNextImage().toUri().toString());
+                    galleryUI.setNextImageOnButtonPress(image);
+                });
+
+                backButton.setOnMouseClicked(event -> {
+                    Image image = new Image(directoryReader.getPreviousImage().toUri().toString());
+                    galleryUI.setPreviousImageOnButtonPress(image);
+                });
             }
         }.start();
-        */
 
-        //Call the method to set screen size
-        stage.setMaxWidth(galleryUI.getStageWidth());
-        stage.setMaxHeight(galleryUI.getStageHeight());
 
         stage.setTitle("Hello!");
         stage.setScene(galleryUI.getScene());
+
+        //Set to start as Maximised Window to prevent weird multiMonitor issues
+        stage.setMaximized(true);
 
         stage.show();
     }
