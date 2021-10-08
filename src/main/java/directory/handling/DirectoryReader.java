@@ -16,6 +16,7 @@ public class DirectoryReader {
     // Creates the DirectoryReader object to index all the files in the directory of the open file
     // THe originalFile object is the absolute Path of the file opened
     //todo change the constructor to a File object or whatever is appropriate for when a file is opened
+    //todo Trim the whitespace out of a file name to prevent errors (needs to be done for File Path reasons)
     public DirectoryReader(String fileName) {
 
         originalFilePath = new File(fileName);
@@ -52,7 +53,7 @@ public class DirectoryReader {
         return toRtn;
     }
 
-    public String getPath() {return originalFileName;}
-    public List<Path> getPathlist() { return fileNames;}
+    public File getPath() {return originalFilePath;}
+    public List<Path> getPathList() { return fileNames;}
 
 }

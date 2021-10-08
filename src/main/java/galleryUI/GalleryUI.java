@@ -1,6 +1,7 @@
 package galleryUI;
 
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
@@ -14,6 +15,8 @@ import java.util.Scanner;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 
 public class GalleryUI {
@@ -26,17 +29,19 @@ public class GalleryUI {
     private Button backButton;
     private Button nextButton;
     private int indexOfCurrentPhoto;
+    private Rectangle2D screenBounds;
 
     //Todo add a Path object as a constructor so the image specified is opened on keypress
     //Todo handle exceptions that may be thrown, eg wrong filetype or nonsupported fileType
-    public GalleryUI(String filePath) {
+    public GalleryUI(File filePath) {
         inset = new Insets(20, 20, 20, 20);
 
         //Create a bufferedReader image to convert to javafx Image
 
         //Set the filePath as the image
         //todo remove this code
-        this.image = new Image("file:" + filePath);
+        this.image = new Image(filePath.toURI().toString());
+        System.out.println(filePath.getAbsolutePath());
 
         //Create pane and set layout
         StackPane parentPane = new StackPane();
@@ -63,13 +68,21 @@ public class GalleryUI {
         parentPane.getChildren().addAll(buttonBox, imageView);
         parentPane.setAlignment(buttonBox, Pos.CENTER);
 
+        //Get the current screens size to allow a suitable size window to be shown
+
+        screenBounds = Screen.getPrimary().getVisualBounds();
+        System.out.println("Height:" + screenBounds.getHeight() + "Width: " + screenBounds.getWidth());
 
         //Create scene and add pane
         this.scene = new Scene(parentPane);
     }
 
 
-    public void setImage(List<Path> pathList) {
+    public void setFirstImage() {
+
+    }
+
+    public void setImageOnButtonPress(List<Path> pathList) {
 
         //Change photo to previous image on back button Press
         backButton.setOnMouseClicked(event -> {
@@ -88,8 +101,12 @@ public class GalleryUI {
 
     }
 
-    public void getSize() {
+    public double getStageHeight() {
+        return screenBounds.getHeight();
+    }
 
+    public double getStageWidth() {
+        return screenBounds.getWidth();
     }
 
     public Scene getScene() { return this.scene;}
