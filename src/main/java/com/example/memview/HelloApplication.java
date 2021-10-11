@@ -32,7 +32,7 @@ public class HelloApplication extends Application {
 
         //Todo get the filename in a whitespace trimmed format to pass as a constructor to the DirectoryReader class
         //Create DirectoryReader to index files before the GalleryUI is started
-        DirectoryReader directoryReader = new DirectoryReader("D:/javaMemView/gtest(1).jpg");
+        DirectoryReader directoryReader = new DirectoryReader("/Users/hugh/Desktop/memView/BackGardenEntire.png");
 
         //Create new GalleryUI on application start
         GalleryUI galleryUI = new GalleryUI(directoryReader.getPath());
