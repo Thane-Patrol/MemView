@@ -9,6 +9,25 @@
     <version>1.0-SNAPSHOT</version>
     <name>MemView</name>
 
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <name>ImageJ</name>
+            <id>scijava.public</id>
+            <url>https://maven.scijava.org/content/repositories/public/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.7.1</junit.version>
@@ -16,11 +35,18 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/net.imagej/imagej -->
+
         <dependency>
             <groupId>net.imagej</groupId>
-            <artifactId>ij-launcher</artifactId>
-            <version>2.0.3</version>
+            <artifactId>imagej-maven-plugin</artifactId>
+            <version>0.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>gov.nih.imagej</groupId>
+            <artifactId>imagej</artifactId>
+            <version>1.47</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -50,25 +76,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </snapshots>
-            <name>ImageJ2</name>
-            <id>imagej</id>
-            <url>https://maven.scijava.org/content/repositories/public/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>
