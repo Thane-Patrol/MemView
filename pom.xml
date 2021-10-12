@@ -35,16 +35,10 @@
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/net.imagej/imagej -->
-
         <dependency>
             <groupId>net.imagej</groupId>
-            <artifactId>imagej-maven-plugin</artifactId>
-            <version>0.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>gov.nih.imagej</groupId>
-            <artifactId>imagej</artifactId>
-            <version>1.47</version>
+            <artifactId>ij</artifactId>
+            <version>1.53d</version>
         </dependency>
 
 
