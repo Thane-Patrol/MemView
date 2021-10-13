@@ -40,6 +40,13 @@
             <artifactId>ij</artifactId>
             <version>1.53d</version>
         </dependency>
+        <!-- https://github.com/palexdev/MaterialFX -->
+        <!-- For cool buttons and nice UI stuff -->
+        <dependency>
+            <groupId>io.github.palexdev</groupId>
+            <artifactId>materialfx</artifactId>
+            <version>11.12.0</version>
+        </dependency>
 
 
         <dependency>
@@ -91,7 +98,61 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.memview/com.example.memview.HelloApplication</mainClass>
+                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>ServiceCreate</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!--packager to create .exe, More info: https://github.com/fvarrui/JavaPackager -->
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.6.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <!-- mandatory -->
+                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                            <!-- optional -->
+                            <generateInstaller>true</generateInstaller>
+                            <administratorRequired>true</administratorRequired>
+                            <platform>windows</platform>
+
+
                         </configuration>
                     </execution>
                 </executions>
