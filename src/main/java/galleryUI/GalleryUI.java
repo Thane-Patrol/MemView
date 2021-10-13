@@ -1,8 +1,7 @@
 package galleryUI;
 
-import directory.handling.DirectoryReader;
+
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Pane;
@@ -10,14 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import javafx.scene.Scene;
 import java.io.File;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Scanner;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 
 public class GalleryUI {
@@ -33,7 +27,7 @@ public class GalleryUI {
     //Todo add a Path object as a constructor so the image specified is opened on keypress
     //Todo handle exceptions that may be thrown, eg wrong filetype or nonsupported fileType
     public GalleryUI(File filePath) {
-        inset = new Insets(20, 20, 20, 20);
+        inset = new Insets(40, 40, 40, 40);
 
         //Create a bufferedReader image to convert to javafx Image
 
@@ -57,39 +51,29 @@ public class GalleryUI {
         //ToDo add graphics to buttons
         this.nextButton = new Button(">");
         this.backButton = new Button("<");
+        //→
+
+        //Change text size via css
+        nextButton.setStyle("-fx-font-size:26px;");
+        backButton.setStyle("-fx-font-size:26px;");
 
         //Create imageView for main Gallery
         this.imageView = new ImageView(this.image);
 
         //Add buttons to HBox and imageView to parentPane
         buttonBox.getChildren().addAll(backButton, spacer, nextButton);
+        buttonBox.setAlignment(Pos.CENTER);
         parentPane.getChildren().addAll(imageView, buttonBox);
         parentPane.setAlignment(buttonBox, Pos.CENTER);
+        parentPane.setPadding(new Insets(100, 20, 100, 20));
 
 
         //Create scene and add pane
         this.scene = new Scene(parentPane);
     }
 
-
-    public void setFirstImage() {
-
-    }
-
-    public void setPreviousImageOnButtonPress(Image image) {
-
-        //Todo change this method to accept the input from an opened file
-        //this.image.
-        this.imageView.setImage(this.image);
-
-    }
-
-    public void setNextImageOnButtonPress(Image image) {
-
-        //Todo change this method to accept the input from an opened file
-        //this.image.
+    public void setImageOnButtonPress(Image image) {
         this.imageView.setImage(image);
-
     }
 
     public Button getNextButton() {
@@ -101,8 +85,6 @@ public class GalleryUI {
     }
 
     public Scene getScene() { return this.scene;}
-
-
 
 
 }

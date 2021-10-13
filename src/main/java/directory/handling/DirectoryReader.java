@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,32 +53,36 @@ public class DirectoryReader {
 
     public Path getPreviousImage() {
 
-        //toDo add the below section of code to return a generic file for the end of directory case
-        /*
-        if(fileNames.size() == 1) {
-            return;
-        } else if (fileNames.size() == currentFileIndex + 1) {
-            return;
-        } else {
-        */
-        Path toRtn = fileNames.get(currentFileIndex - 1);
-        currentFileIndex--;
+        Path path = Paths.get("src/main/resources/image.Resources/testOutOfBoundsImage.png");
 
-        return toRtn;
+        if(fileNames.size() == 1) {
+            return path;
+        } else if (-1 == currentFileIndex - 1) {
+            return path;
+
+        } else {
+            Path toRtn = fileNames.get(currentFileIndex - 1);
+            currentFileIndex--;
+
+            return toRtn;
+        }
+
     }
 
     public Path getNextImage() {
-        //toDo add the below section of code to return a generic file for the end of directory case
-        /*
+        Path path = Paths.get("src/main/resources/image.Resources/testOutOfBoundsImage.png");
+
         if(fileNames.size() == 1) {
-            return;
+            return path;
+
         } else if (fileNames.size() == currentFileIndex + 1) {
-            return;
+            return path;
+
         } else {
-        */
-        Path toRtn = fileNames.get(currentFileIndex + 1);
-        currentFileIndex++;
-        return toRtn;
+            Path toRtn = fileNames.get(currentFileIndex + 1);
+            currentFileIndex++;
+            return toRtn;
+        }
     }
 
     public int getCurrentFileIndex() {
