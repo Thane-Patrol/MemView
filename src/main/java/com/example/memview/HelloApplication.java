@@ -4,19 +4,19 @@ import directory.handling.DirectoryReader;
 import galleryUI.GalleryUI;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class HelloApplication extends Application {
 
-    private static Rectangle2D screenBounds;
+    private static Image outOfBoundsImage;
+    private static Image firstImage;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -32,7 +32,9 @@ public class HelloApplication extends Application {
 
         //Todo get the filename in a whitespace trimmed format to pass as a constructor to the DirectoryReader class
         //Create DirectoryReader to index files before the GalleryUI is started
-        DirectoryReader directoryReader = new DirectoryReader("/Users/hugh/Desktop/memView/BackGardenEntire.png");
+        //OSX path /Users/hugh/Desktop/memView/BackGardenEntire.png
+        //Windows path: D:\\javaMemView\\gtest(1).jpg
+        DirectoryReader directoryReader = new DirectoryReader(firstImage.getUrl().toString());
 
         //Create new GalleryUI on application start
         GalleryUI galleryUI = new GalleryUI(directoryReader.getPath());
@@ -47,12 +49,12 @@ public class HelloApplication extends Application {
 
                 nextButton.setOnMouseClicked(event -> {
                     Image image = new Image(directoryReader.getNextImage().toUri().toString());
-                    galleryUI.setNextImageOnButtonPress(image);
+                    galleryUI.setImageOnButtonPress(image);
                 });
 
                 backButton.setOnMouseClicked(event -> {
                     Image image = new Image(directoryReader.getPreviousImage().toUri().toString());
-                    galleryUI.setPreviousImageOnButtonPress(image);
+                    galleryUI.setImageOnButtonPress(image);
                 });
             }
         }.start();
@@ -67,7 +69,19 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static <WindowsPath> void main(String[] args) {
+        outOfBoundsImage = new Image(Paths.get("image.Resources/testOutOfBoundsImage.png").toUri().toString());
+
+        //ToDo get rid of this debugging
+        //toDo sort out why the filepath that is being passed to the args array is not translating into a readable file Path for the DirectoryReader class
+        for(String toPrint : args) {
+            System.out.println(toPrint);
+        }
+        Path filePath = Paths.get(args[0]);
+
+        System.out.println("File Path given to String[] args: " + filePath.toString());
+
+        firstImage = new Image(filePath.toUri().toString());
 
         launch();
     }
