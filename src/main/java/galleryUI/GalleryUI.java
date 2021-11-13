@@ -2,16 +2,13 @@ package galleryUI;
 
 
 import javafx.geometry.Pos;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import javafx.scene.Scene;
 import java.io.File;
 
 import javafx.geometry.Insets;
-import javafx.scene.layout.HBox;
 
 
 public class GalleryUI {
@@ -56,6 +53,10 @@ public class GalleryUI {
         //Change text size via css
         nextButton.setStyle("-fx-font-size:26px;");
         backButton.setStyle("-fx-font-size:26px;");
+
+        //Change button to transparent
+        nextButton.setBackground(Background.EMPTY);
+        backButton.setBackground(Background.EMPTY);
 
         //Create imageView for main Gallery
         this.imageView = new ImageView(this.image);
