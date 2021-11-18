@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
    <children>
       <ImageView fx:id="mainImageView" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
          <effect>
