@@ -38,6 +38,9 @@ public class HelloController {
     //Tracks the last keypress to ensure keypress isn't registered when key is held
     private KeyCode eventTracker = null;
 
+    //Used to store screenBounds dimensions as a variable to automatically resize imageView components to suit monitor
+    private Rectangle2D screenBounds;
+
     public HelloController() {
 
         root = new StackPane();
@@ -48,6 +51,8 @@ public class HelloController {
         directoryReader = new DirectoryReader(directory);
 
         mainImageView = new ImageView();
+
+        screenBounds = Screen.getPrimary().getVisualBounds();
 
     }
 
@@ -63,6 +68,7 @@ public class HelloController {
     private void initialize() {
 
         mainImageView.setImage(new Image(directoryReader.getCurrentImage().toUri().toString()));
+        resizeImageForScreen(mainImageView);
 
         mainImageView.fitHeightProperty().bind(root.widthProperty());
         mainImageView.fitWidthProperty().bind(root.widthProperty());
@@ -71,21 +77,27 @@ public class HelloController {
     @FXML
     public void nextButtonAction() {
         Path nextImagePath = directoryReader.getNextImage();
-        Image nextImage = new Image(nextImagePath.toUri().toString(), 1080, 720, true, true);
-
+        Image nextImage = new Image(nextImagePath.toUri().toString());
         mainImageView.setImage(nextImage);
     }
 
     @FXML
     public void backButtonAction() {
         Path previousImagePath = directoryReader.getPreviousImage();
-        Image previousImage = new Image(previousImagePath.toUri().toString(), 1080, 720, true, true);
+        Image previousImage = new Image(previousImagePath.toUri().toString());
         mainImageView.setImage(previousImage);
+    }
+
+    public ImageView resizeImageForScreen(ImageView imageView) {
+        imageView.setFitWidth(screenBounds.getWidth() - 100.0);
+        imageView.setFitHeight(screenBounds.getHeight() - 100.0);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        return imageView;
     }
 
     @FXML
     public void keyPressHandler(KeyEvent event) {
-        System.out.println("Keypress: " + event.getCode());
 
         if(event.getCode() == KeyCode.RIGHT && eventTracker == null) {
             nextButtonAction();
