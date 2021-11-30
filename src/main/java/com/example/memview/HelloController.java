@@ -1,28 +1,23 @@
 package com.example.memview;
 
 import directory.handling.DirectoryReader;
-import javafx.beans.property.DoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Scanner;
 
 public class HelloController {
     @FXML
@@ -39,7 +34,7 @@ public class HelloController {
 
     private DirectoryReader directoryReader;
 
-    //Tracks the last keypress to ensure keypress isn't registered when key is held
+    //Tracks the last key press to ensure key press isn't registered when key is held
     private KeyCode eventTracker = null;
 
     //Used to store screenBounds dimensions as a variable to automatically resize imageView components to suit monitor
@@ -56,7 +51,7 @@ public class HelloController {
 
         root = new StackPane();
 
-        String directory = "D:\\javaMemView\\gtest(1).jpg";
+        String directory = "D:\\javaMemView\\1.jpg";
         System.out.println("Directory: " + directory);
 
         directoryReader = new DirectoryReader(directory);
@@ -76,12 +71,13 @@ public class HelloController {
     }
 
     @FXML
-    private void initialize() {
+    private void initialize() throws IOException {
+        //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images
+        BufferedImage imageSwing = ImageIO.read(directoryReader.getCurrentImage().toFile());
+        Image imageFX = SwingFXUtils.toFXImage(imageSwing, null);
+        mainImageView.setImage(imageFX);
 
-        mainImageView.setImage(new Image(directoryReader.getCurrentImage().toUri().toString()));
         resizeImageForScreen(mainImageView);
-
-        //DoubleProperty rootPaneProperty
 
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
@@ -92,15 +88,13 @@ public class HelloController {
     public void nextButtonAction() {
         Path nextImagePath = directoryReader.getNextImage();
         Image nextImage = new Image(nextImagePath.toUri().toString());
-        //resizeImageForScreen(mainImageView);
         mainImageView.setImage(nextImage);
     }
 
     @FXML
-    public void backButtonAction() {
-        Path previousImagePath = directoryReader.getPreviousImage();
-        Image previousImage = new Image(previousImagePath.toUri().toString());
-        //resizeImageForScreen(mainImageView);
+    public void backButtonAction() throws IOException {
+        File previousImageFilePath = directoryReader.getPreviousImage().toFile();
+        Image previousImage = SwingFXUtils.toFXImage(ImageIO.read(previousImageFilePath), null);
         mainImageView.setImage(previousImage);
     }
 
@@ -115,7 +109,7 @@ public class HelloController {
     }
 
     @FXML
-    public void keyPressHandler(KeyEvent event) {
+    public void keyPressHandler(KeyEvent event) throws IOException {
 
         if(event.getCode() == KeyCode.CONTROL) {
             eventTracker = event.getCode();
@@ -136,12 +130,9 @@ public class HelloController {
     }
 
     @FXML
-    private void scrollHandler(ScrollEvent scrollEvent) {
+    private void scrollHandler(ScrollEvent scrollEvent) throws IOException{
         scrollEventTracker = scrollEvent;
         //scrollAmountTracker used to keep track of different stages of zoom.
-
-        System.out.println("Scroll amount tracker: " + scrollAmountTracker);
-        System.out.println(".getDeltaY() result: " + scrollEvent.getDeltaY());
 
         if (eventTracker == KeyCode.CONTROL && scrollEvent.getDeltaY() > 0 && scrollAmountTracker > 39) {
             zoomInActionSecondLevel();

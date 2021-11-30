@@ -1,19 +1,14 @@
 package com.example.memview;
 
-import directory.handling.DirectoryReader;
-import galleryUI.GalleryUI;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class HelloApplication extends Application {
 
@@ -50,7 +45,11 @@ public class HelloApplication extends Application {
 
                  scene.setOnKeyPressed(event -> {
                       if(event.getCode() == KeyCode.LEFT) {
-                          controller.backButtonAction();
+                          try {
+                              controller.backButtonAction();
+                          } catch (IOException e) {
+                              System.out.println("error message: + " + e.getMessage());
+                          }
                           System.out.println("Left Arrow Key Pressesd");
                       }
                   });

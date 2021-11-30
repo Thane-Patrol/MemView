@@ -50,8 +50,6 @@ public class DirectoryReader {
                 currentFileIndex = i;
             }
         }
-
-
     }
 
     public Path getCurrentImage() {
