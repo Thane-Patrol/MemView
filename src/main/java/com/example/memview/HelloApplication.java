@@ -38,7 +38,11 @@ public class HelloApplication extends Application {
             public void handle(long now) {
                   scene.setOnKeyPressed(event -> {
                       if(event.getCode() == KeyCode.RIGHT) {
-                          controller.nextButtonAction();
+                          try {
+                              controller.nextButtonAction();
+                          } catch (IOException e) {
+                              e.printStackTrace();
+                          }
                           System.out.println("Right Arrow key pressed");
                       }
                   });

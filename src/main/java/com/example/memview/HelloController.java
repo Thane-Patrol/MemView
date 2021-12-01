@@ -85,9 +85,9 @@ public class HelloController {
     }
 
     @FXML
-    public void nextButtonAction() {
-        Path nextImagePath = directoryReader.getNextImage();
-        Image nextImage = new Image(nextImagePath.toUri().toString());
+    public void nextButtonAction() throws IOException{
+        File nextImageFilePath = directoryReader.getNextImage().toFile();
+        Image nextImage = SwingFXUtils.toFXImage(ImageIO.read(nextImageFilePath), null);
         mainImageView.setImage(nextImage);
     }
 
