@@ -7,10 +7,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
    <children>
-      <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+      <VBox fx:id="zoomBoxContainer" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </VBox>
+      <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
          <effect>
             <Blend />
          </effect></ImageView>

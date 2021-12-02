@@ -3,17 +3,21 @@ package com.example.memview;
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +32,10 @@ public class HelloController {
 
     @FXML
     private ImageView mainImageView;
+    @FXML
+    private ImageView zoomBoxView;
+    @FXML
+    private VBox zoomBoxContainer;
 
     @FXML
     private StackPane root;
@@ -42,8 +50,9 @@ public class HelloController {
 
     private ScrollEvent scrollEventTracker = null;
 
-    //Used for snapping the zoom back to default when key is released
-    private boolean controlKeypressTracker = false;
+    //Used to allow reading of metadata, read multiple images in the background, independent of user interaction
+    private ImageReader imageReader;
+
     //Used for keeping track of the amount of level of scrolling for zoom calculations
     private double scrollAmountTracker = 0.0;
 
@@ -57,6 +66,8 @@ public class HelloController {
         directoryReader = new DirectoryReader(directory);
 
         mainImageView = new ImageView();
+        zoomBoxView = new ImageView();
+        zoomBoxContainer = new VBox();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -82,6 +93,7 @@ public class HelloController {
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
+        zoomBoxView.setVisible(false);
     }
 
     @FXML
@@ -113,7 +125,6 @@ public class HelloController {
 
         if(event.getCode() == KeyCode.CONTROL) {
             eventTracker = event.getCode();
-            controlKeypressTracker = true;
         }
 
         if(event.getCode() == KeyCode.RIGHT && eventTracker == null) {
@@ -182,10 +193,34 @@ public class HelloController {
         scrollAmountTracker = 40;
     }
 
+    //Trigger should be on mouseclick on the ImageView object itself
+    @FXML
+    private void createZoomBoxOnClick(MouseEvent event) throws IOException{
+        zoomBoxView.setVisible(true);
+        double xCoordinates = event.getSceneX();
+        double yCoordinates = event.getSceneY();
+        //Pos xyCoordinates = new Pos(yCoordinates, xCoordinates);
+
+        //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
+        //todo implement the above functionality
+        zoomBoxContainer.setAlignment(Pos.CENTER);
+        zoomBoxContainer.toFront();
+        zoomBoxContainer.setOpacity(0);
+
+        System.out.println("method createZoomBoxOnClick called");
+        System.out.println("X coordinates: " + xCoordinates);
+        System.out.println("Y coordinates: " + yCoordinates);
+
+        zoomBoxView.setImage(SwingFXUtils.toFXImage(ImageIO.read(directoryReader.getCurrentImage().toFile()), null));
+        zoomBoxView.setScaleX(5);
+        zoomBoxView.setScaleY(5);
+
+
+    }
+
     @FXML
     private void keyReleasedHandler(KeyEvent event) {
         eventTracker = null;
-        controlKeypressTracker = false;
     }
 
     private HelloApplication mainApp;
