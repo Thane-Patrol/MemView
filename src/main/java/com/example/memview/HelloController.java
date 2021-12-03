@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -21,7 +22,9 @@ import javax.imageio.ImageReader;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class HelloController {
     @FXML
@@ -53,6 +56,10 @@ public class HelloController {
     //Used to allow reading of metadata, read multiple images in the background, independent of user interaction
     private ImageReader imageReader;
 
+    //Label to display the metadata
+    @FXML
+    private Label metadataLabel;
+
     //Used for keeping track of the amount of level of scrolling for zoom calculations
     private double scrollAmountTracker = 0.0;
 
@@ -68,17 +75,10 @@ public class HelloController {
         mainImageView = new ImageView();
         zoomBoxView = new ImageView();
         zoomBoxContainer = new VBox();
+        metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
 
-    }
-
-    public Button getNextButton() {
-        return this.nextButton;
-    }
-
-    public Button getBackButton() {
-        return this.backButton;
     }
 
     @FXML
@@ -87,8 +87,10 @@ public class HelloController {
         BufferedImage imageSwing = ImageIO.read(directoryReader.getCurrentImage().toFile());
         Image imageFX = SwingFXUtils.toFXImage(imageSwing, null);
         mainImageView.setImage(imageFX);
+        metadataLabel.setAlignment(Pos.TOP_LEFT);
 
         resizeImageForScreen(mainImageView);
+
 
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
@@ -98,14 +100,18 @@ public class HelloController {
 
     @FXML
     public void nextButtonAction() throws IOException{
-        File nextImageFilePath = directoryReader.getNextImage().toFile();
-        Image nextImage = SwingFXUtils.toFXImage(ImageIO.read(nextImageFilePath), null);
+        Path nextImageFilePath = directoryReader.getNextImage();
+        getImageMetadata(nextImageFilePath);
+        File nextImageFile = nextImageFilePath.toFile();
+        Image nextImage = SwingFXUtils.toFXImage(ImageIO.read(nextImageFile), null);
         mainImageView.setImage(nextImage);
     }
 
     @FXML
     public void backButtonAction() throws IOException {
-        File previousImageFilePath = directoryReader.getPreviousImage().toFile();
+        Path previousImagePath = directoryReader.getPreviousImage();
+        getImageMetadata(previousImagePath);
+        File previousImageFilePath = previousImagePath.toFile();
         Image previousImage = SwingFXUtils.toFXImage(ImageIO.read(previousImageFilePath), null);
         mainImageView.setImage(previousImage);
     }
@@ -138,6 +144,11 @@ public class HelloController {
         } else {
             event.consume();
         }
+    }
+
+    public void getImageMetadata(Path imageFile) throws IOException{
+        BasicFileAttributes fileAttributes = Files.readAttributes(imageFile, BasicFileAttributes.class);
+        metadataLabel.setText("Creation: " + fileAttributes.creationTime() + "/n" + "Size: " + fileAttributes.size());
     }
 
     @FXML
