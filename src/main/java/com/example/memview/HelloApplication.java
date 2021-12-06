@@ -31,37 +31,6 @@ public class HelloApplication extends Application {
 
         //Set to start as Maximised Window to prevent weird multiMonitor issues
         mainStage.setMaximized(true);
-
-        //Animation timer for detecting inputs such as next image keyboard and then changing picture
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                  scene.setOnKeyPressed(event -> {
-                      if(event.getCode() == KeyCode.RIGHT) {
-                          try {
-                              controller.nextButtonAction();
-                          } catch (IOException e) {
-                              e.printStackTrace();
-                          }
-                          System.out.println("Right Arrow key pressed");
-                      }
-                  });
-
-                 scene.setOnKeyPressed(event -> {
-                      if(event.getCode() == KeyCode.LEFT) {
-                          try {
-                              controller.backButtonAction();
-                          } catch (IOException e) {
-                              System.out.println("error message: + " + e.getMessage());
-                          }
-                          System.out.println("Left Arrow Key Pressesd");
-                      }
-                  });
-            }
-        };
-
-
-
         mainStage.show();
         scene.getRoot().requestFocus();
     }

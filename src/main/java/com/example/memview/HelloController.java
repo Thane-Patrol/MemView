@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.ZoneId;
 
 public class HelloController {
     @FXML
@@ -56,6 +57,9 @@ public class HelloController {
     //Used to allow reading of metadata, read multiple images in the background, independent of user interaction
     private ImageReader imageReader;
 
+    //Used for application logic and data handling to make this method a bit cleaner
+    private ApplicationLogic applicationLogic;
+
     //Label to display the metadata
     @FXML
     private Label metadataLabel;
@@ -78,6 +82,7 @@ public class HelloController {
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
+        applicationLogic = new ApplicationLogic();
 
     }
 
@@ -148,7 +153,7 @@ public class HelloController {
 
     public void getImageMetadata(Path imageFile) throws IOException{
         BasicFileAttributes fileAttributes = Files.readAttributes(imageFile, BasicFileAttributes.class);
-        metadataLabel.setText("Creation: " + fileAttributes.creationTime() + "/n" + "Size: " + fileAttributes.size());
+        metadataLabel.setText("Creation: " + fileAttributes.creationTime().toInstant().atZone(ZoneId.systemDefault()) + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile));
     }
 
     @FXML
@@ -156,27 +161,29 @@ public class HelloController {
         scrollEventTracker = scrollEvent;
         //scrollAmountTracker used to keep track of different stages of zoom.
 
-        if (eventTracker == KeyCode.CONTROL && scrollEvent.getDeltaY() > 0 && scrollAmountTracker > 39) {
-            zoomInActionSecondLevel();
-            scrollAmountTracker += scrollEvent.getDeltaY();
+        boolean controlKeyPressed = eventTracker == KeyCode.CONTROL;
+        double scrollEventAmount = scrollEvent.getDeltaY();
 
-        } else if (eventTracker == KeyCode.CONTROL && scrollEvent.getDeltaY() < 0 && scrollAmountTracker < -41) {
+        if (controlKeyPressed && scrollEventAmount > 0 && scrollAmountTracker > 39) {
+            zoomInActionSecondLevel();
+            scrollAmountTracker += scrollEventAmount;
+
+        } else if (controlKeyPressed && scrollEventAmount < 0 && scrollAmountTracker < -41) {
             zoomOutActionSecondLevel();
             scrollAmountTracker += scrollEventTracker.getDeltaY();
 
-        } else if (eventTracker == KeyCode.CONTROL && scrollEvent.getDeltaY() < 0 && scrollAmountTracker > -40) {
-
+        } else if (controlKeyPressed && scrollEventAmount < 0 && scrollAmountTracker > -40) {
             scrollAmountTracker += scrollEventTracker.getDeltaY();
             zoomOutActionFirstLevel();
 
-        } else if (eventTracker == KeyCode.CONTROL && scrollEvent.getDeltaY() > 0 && scrollAmountTracker < 40) {
-
-            scrollAmountTracker += scrollEvent.getDeltaY();
+        } else if (controlKeyPressed && scrollEventAmount > 0 && scrollAmountTracker < 40) {
+            scrollAmountTracker += scrollEventAmount;
             zoomInActionFirstLevel();
 
-        } else if (scrollEvent.getDeltaY() < 0) {
+        } else if (scrollEventAmount < 0) {
             backButtonAction();
-        } else if (scrollEvent.getDeltaY() > 0) {
+
+        } else if (scrollEventAmount > 0) {
             nextButtonAction();
         }
         scrollEvent.consume();
@@ -206,7 +213,7 @@ public class HelloController {
 
     //Trigger should be on mouseclick on the ImageView object itself
     @FXML
-    private void createZoomBoxOnClick(MouseEvent event) throws IOException{
+    private void createZoomBoxOnClick(MouseEvent event){
         zoomBoxView.setVisible(true);
         double xCoordinates = event.getSceneX();
         double yCoordinates = event.getSceneY();
@@ -216,15 +223,15 @@ public class HelloController {
         //todo implement the above functionality
         zoomBoxContainer.setAlignment(Pos.CENTER);
         zoomBoxContainer.toFront();
-        zoomBoxContainer.setOpacity(0);
+        //zoomBoxContainer.setOpacity(0);
 
         System.out.println("method createZoomBoxOnClick called");
         System.out.println("X coordinates: " + xCoordinates);
         System.out.println("Y coordinates: " + yCoordinates);
 
-        zoomBoxView.setImage(SwingFXUtils.toFXImage(ImageIO.read(directoryReader.getCurrentImage().toFile()), null));
-        zoomBoxView.setScaleX(5);
-        zoomBoxView.setScaleY(5);
+        zoomBoxView.setImage(mainImageView.getImage());
+        zoomBoxView.setScaleX(20);
+        zoomBoxView.setScaleY(20);
 
 
     }
