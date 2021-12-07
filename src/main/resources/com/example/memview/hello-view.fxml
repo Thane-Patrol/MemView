@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
    <Label fx:id="metadataLabel" alignment="TOP_LEFT" StackPane.alignment="TOP_LEFT">
@@ -16,11 +15,6 @@
          <Insets left="15.0" />
       </padding>
    </Label>
-   <VBox fx:id="zoomBoxContainer" prefHeight="200.0" prefWidth="100.0">
-      
-         <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-
-   </VBox>
    <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
       <effect>
          <Blend />
@@ -39,4 +33,7 @@
          </HBox.margin>
       </Button>
    </HBox>
+   <Pane fx:id="zoomBoxContainer" prefHeight="200.0" prefWidth="200.0">
+            <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+   </Pane>
 </StackPane>

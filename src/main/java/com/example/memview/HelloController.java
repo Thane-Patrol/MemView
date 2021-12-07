@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -39,7 +40,7 @@ public class HelloController {
     @FXML
     private ImageView zoomBoxView;
     @FXML
-    private VBox zoomBoxContainer;
+    private Pane zoomBoxContainer;
 
     @FXML
     private StackPane root;
@@ -78,7 +79,7 @@ public class HelloController {
 
         mainImageView = new ImageView();
         zoomBoxView = new ImageView();
-        zoomBoxContainer = new VBox();
+        zoomBoxContainer = new Pane();
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
@@ -133,7 +134,6 @@ public class HelloController {
 
     @FXML
     public void keyPressHandler(KeyEvent event) throws IOException {
-
         if(event.getCode() == KeyCode.CONTROL) {
             eventTracker = event.getCode();
         }
@@ -221,19 +221,18 @@ public class HelloController {
 
         //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
         //todo implement the above functionality
-        zoomBoxContainer.setAlignment(Pos.CENTER);
+        zoomBoxContainer.setTranslateX(xCoordinates);
+        zoomBoxContainer.setTranslateY(yCoordinates);
         zoomBoxContainer.toFront();
-        //zoomBoxContainer.setOpacity(0);
+        zoomBoxContainer.setOpacity(100);
 
         System.out.println("method createZoomBoxOnClick called");
         System.out.println("X coordinates: " + xCoordinates);
         System.out.println("Y coordinates: " + yCoordinates);
 
         zoomBoxView.setImage(mainImageView.getImage());
-        zoomBoxView.setScaleX(20);
-        zoomBoxView.setScaleY(20);
-
-
+        zoomBoxView.setScaleX(10);
+        zoomBoxView.setScaleY(10);
     }
 
     @FXML
