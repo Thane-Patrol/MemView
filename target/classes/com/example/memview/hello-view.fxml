@@ -2,40 +2,41 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
-   <children>
-      <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-         <effect>
-            <Blend />
-         </effect></ImageView>
-      <HBox alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
-         <children>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" opacity="0.5" text="&lt;">
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </Button>
-            <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <ButtonBar layoutX="-34.0" layoutY="30.0" prefHeight="40.0" prefWidth="200.0">
-                    <buttons>
-                      <Button mnemonicParsing="false" text="Button" />
-                    </buttons>
-                  </ButtonBar>
-               </children></Pane>
-            <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onScroll="#nextButtonAction" opacity="0.5" text="&gt;">
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
-   </children>
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+   <Label fx:id="metadataLabel" alignment="TOP_LEFT" StackPane.alignment="TOP_LEFT">
+      <padding>
+         <Insets left="15.0" />
+      </padding>
+   </Label>
+   <VBox fx:id="zoomBoxContainer" prefHeight="200.0" prefWidth="100.0">
+      <children>
+         <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+      </children>
+   </VBox>
+   <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+      <effect>
+         <Blend />
+      </effect>
+   </ImageView>
+   <HBox alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
+      <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" opacity="0.5" text="&lt;">
+         <HBox.margin>
+            <Insets left="10.0" />
+         </HBox.margin>
+      </Button>
+      <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+      <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onScroll="#nextButtonAction" opacity="0.5" text="&gt;">
+         <HBox.margin>
+            <Insets right="10.0" />
+         </HBox.margin>
+      </Button>
+   </HBox>
 </StackPane>
