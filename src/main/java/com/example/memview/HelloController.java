@@ -2,11 +2,13 @@ package com.example.memview;
 
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -41,6 +43,8 @@ public class HelloController {
     private ImageView zoomBoxView;
     @FXML
     private Pane zoomBoxContainer;
+    @FXML
+    private ToolBar galleryThumbnailParentToolbar;
 
     @FXML
     private StackPane root;
@@ -83,7 +87,8 @@ public class HelloController {
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
-        applicationLogic = new ApplicationLogic();
+        applicationLogic = new ApplicationLogic(directoryReader);
+        galleryThumbnailParentToolbar = new ToolBar();
 
     }
 
@@ -96,8 +101,10 @@ public class HelloController {
         metadataLabel.setAlignment(Pos.TOP_LEFT);
 
         resizeImageForScreen(mainImageView);
-
-
+        
+        galleryThumbnailParentToolbar.setOpacity(0.0);
+        galleryThumbnailParentToolbar.toFront();
+        
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
@@ -130,6 +137,18 @@ public class HelloController {
         //imageView.setFitWidth(screenBounds.getWidth());
         imageView.setFitHeight(screenBounds.getHeight() - 100);
         return imageView;
+    }
+
+    public void setTransparentToolbar() {
+        galleryThumbnailParentToolbar.setOpacity(0.0);
+    }
+
+    public void setVisibleToolbar() {
+        galleryThumbnailParentToolbar.setOpacity(100);
+    }
+
+    public void addThumbnailsToToolbar() {
+        applicationLogic.addPhotoThumbnailsToToolbar(galleryThumbnailParentToolbar);
     }
 
     @FXML
@@ -243,4 +262,8 @@ public class HelloController {
     private HelloApplication mainApp;
 
     public void setMainApp(HelloApplication mainApp) {this.mainApp = mainApp;}
+
+    public DirectoryReader getDirectoryReader() {
+        return directoryReader;
+    }
 }

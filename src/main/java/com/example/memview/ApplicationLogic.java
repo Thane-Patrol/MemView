@@ -1,6 +1,8 @@
 package com.example.memview;
 
+import directory.handling.DirectoryReader;
 import javafx.application.Application;
+import javafx.scene.control.ToolBar;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +10,12 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class ApplicationLogic {
+
+    private DirectoryReader directoryReader;
+
+    public ApplicationLogic(DirectoryReader directoryReader) {
+        this.directoryReader = directoryReader;
+    }
 
     public String getPhotoSizeInUnits(Path imagePath) throws IOException {
         BasicFileAttributes fileAttributes = Files.readAttributes(imagePath, BasicFileAttributes.class);
@@ -35,5 +43,12 @@ public class ApplicationLogic {
         }
 
         return fileSizeWithBytes;
+    }
+
+    public ToolBar addPhotoThumbnailsToToolbar(ToolBar toolBar) {
+
+        directoryReader.printAllFilesAsString();
+
+        return toolBar;
     }
 }

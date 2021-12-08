@@ -92,4 +92,9 @@ public class DirectoryReader {
         }
     }
 
+    //For debugging purposes
+    public void printAllFilesAsString() {
+        fileNames.stream().forEach(s -> System.out.println("File: " + s));
+    }
+
 }
