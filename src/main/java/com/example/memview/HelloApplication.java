@@ -12,7 +12,6 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
-    private static Image firstImage;
     private Stage mainStage;
 
     @Override

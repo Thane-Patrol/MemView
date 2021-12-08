@@ -1,12 +1,12 @@
 package com.example.memview;
 
 import directory.handling.DirectoryReader;
-import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import javax.imageio.ImageIO;
@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ApplicationLogic {
 
@@ -53,11 +54,14 @@ public class ApplicationLogic {
         return fileSizeWithBytes;
     }
 
-    public ToolBar addPhotoThumbnailsToToolbar(ToolBar toolBar) {
+    public HBox addPhotoThumbnailsToHBox(HBox hBox) {
 
         List<Path> filePaths = directoryReader.getListOfFilePaths();
 
-        //Stream through this path, Create the labels, thumbnails and Vboxs to contain them and add all of them to the toolbar then return it
+        //Use an integer counter to create unique names for the vboxes, also helpful for potentially keeping track of which thumbnail is which
+        AtomicInteger i = new AtomicInteger();
+
+        //Stream through this path, Create the labels, thumbnails and Vboxs to contain them and add all of them to the hbox then return it
         filePaths.stream().forEach(s -> {
 
             Label fileName = new Label();
@@ -79,9 +83,10 @@ public class ApplicationLogic {
 
             VBox vBox = new VBox();
             vBox.getChildren().addAll(imageView, fileName);
-            toolBar.getItems().add(vBox);
+            //vBox.setId(String.valueOf(i.incrementAndGet()));
+            hBox.getChildren().add(vBox);
         });
 
-        return toolBar;
+        return hBox;
     }
 }

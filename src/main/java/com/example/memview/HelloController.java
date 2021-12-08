@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
@@ -37,6 +39,10 @@ public class HelloController {
     private Pane zoomBoxContainer;
     @FXML
     private ToolBar galleryThumbnailParentToolbar;
+    @FXML
+    private ScrollPane scrollPaneRootFileRibbon;
+    @FXML
+    private HBox thumbnailContainerRibbon;
 
     @FXML
     private StackPane root;
@@ -81,6 +87,8 @@ public class HelloController {
         screenBounds = Screen.getPrimary().getVisualBounds();
         applicationLogic = new ApplicationLogic(directoryReader);
         galleryThumbnailParentToolbar = new ToolBar();
+        scrollPaneRootFileRibbon = new ScrollPane();
+        thumbnailContainerRibbon = new HBox();
 
     }
 
@@ -93,15 +101,17 @@ public class HelloController {
         metadataLabel.setAlignment(Pos.TOP_LEFT);
 
         resizeImageForScreen(mainImageView);
-        
+
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
-        applicationLogic.addPhotoThumbnailsToToolbar(galleryThumbnailParentToolbar);
+        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
+
+        scrollPaneRootFileRibbon.setFitToHeight(true);
         
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
-        zoomBoxView.setVisible(false);
+        zoomBoxView.setOpacity(0.0);
     }
 
     @FXML
@@ -138,10 +148,6 @@ public class HelloController {
 
     public void setVisibleToolbar() {
         galleryThumbnailParentToolbar.setOpacity(100);
-    }
-
-    public void addThumbnailsToToolbar() {
-        applicationLogic.addPhotoThumbnailsToToolbar(galleryThumbnailParentToolbar);
     }
 
     @FXML
@@ -226,7 +232,7 @@ public class HelloController {
     //Trigger should be on mouseclick on the ImageView object itself
     @FXML
     private void createZoomBoxOnClick(MouseEvent event){
-        zoomBoxView.setVisible(true);
+        zoomBoxView.setOpacity(100);
         double xCoordinates = event.getSceneX();
         double yCoordinates = event.getSceneY();
         //Pos xyCoordinates = new Pos(yCoordinates, xCoordinates);
@@ -235,8 +241,6 @@ public class HelloController {
         //todo implement the above functionality
         zoomBoxContainer.setTranslateX(xCoordinates);
         zoomBoxContainer.setTranslateY(yCoordinates);
-        zoomBoxContainer.toFront();
-        zoomBoxContainer.setOpacity(100);
 
         System.out.println("method createZoomBoxOnClick called");
         System.out.println("X coordinates: " + xCoordinates);
@@ -245,6 +249,11 @@ public class HelloController {
         zoomBoxView.setImage(mainImageView.getImage());
         zoomBoxView.setScaleX(10);
         zoomBoxView.setScaleY(10);
+    }
+
+    @FXML
+    private void hideZoomBoxOnRelease(MouseEvent event) {
+        zoomBoxView.setOpacity(0.0);
     }
 
     @FXML
