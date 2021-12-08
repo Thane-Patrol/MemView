@@ -2,11 +2,9 @@ package com.example.memview;
 
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
@@ -17,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 
 import javax.imageio.ImageIO;
@@ -31,11 +28,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.ZoneId;
 
 public class HelloController {
-    @FXML
-    private Button nextButton;
-
-    @FXML
-    private Button backButton;
 
     @FXML
     private ImageView mainImageView;
@@ -49,13 +41,13 @@ public class HelloController {
     @FXML
     private StackPane root;
 
-    private DirectoryReader directoryReader;
+    private final DirectoryReader directoryReader;
 
     //Tracks the last key press to ensure key press isn't registered when key is held
     private KeyCode eventTracker = null;
 
     //Used to store screenBounds dimensions as a variable to automatically resize imageView components to suit monitor
-    private Rectangle2D screenBounds;
+    private final Rectangle2D screenBounds;
 
     private ScrollEvent scrollEventTracker = null;
 
@@ -104,6 +96,7 @@ public class HelloController {
         
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
+        applicationLogic.addPhotoThumbnailsToToolbar(galleryThumbnailParentToolbar);
         
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
