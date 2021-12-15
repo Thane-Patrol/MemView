@@ -21,9 +21,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ApplicationLogic {
 
     private DirectoryReader directoryReader;
+    private double vboxHeight;
 
     public ApplicationLogic(DirectoryReader directoryReader) {
         this.directoryReader = directoryReader;
+        this.vboxHeight = 250;
     }
 
     public String getPhotoSizeInUnits(Path imagePath) throws IOException {
@@ -83,10 +85,17 @@ public class ApplicationLogic {
 
             VBox vBox = new VBox();
             vBox.getChildren().addAll(imageView, fileName);
+
             //vBox.setId(String.valueOf(i.incrementAndGet()));
             hBox.getChildren().add(vBox);
+
+            //To keep track of the height of a single vbox
         });
 
         return hBox;
+    }
+
+    public double getVboxHeight() {
+        return vboxHeight;
     }
 }

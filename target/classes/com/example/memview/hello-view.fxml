@@ -11,15 +11,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
    <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="40.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
-     <items>
          <ScrollPane fx:id="scrollPaneRootFileRibbon" fitToHeight="true" fitToWidth="true">
             <content>
                <HBox fx:id="thumbnailContainerRibbon" prefHeight="100.0" prefWidth="200.0" />
             </content>
          </ScrollPane>
-     </items>
    </ToolBar>
    <Label fx:id="metadataLabel" alignment="TOP_LEFT" StackPane.alignment="TOP_LEFT">
       <padding>
@@ -31,7 +29,7 @@
          <Blend />
       </effect>
    </ImageView>
-   <HBox alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
+   <HBox fx:id="buttonHolder" alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
       <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" opacity="0.5" text="&lt;">
          <HBox.margin>
             <Insets left="10.0" />
