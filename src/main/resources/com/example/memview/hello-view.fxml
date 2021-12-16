@@ -3,24 +3,33 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+   <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="40.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
+         <ScrollPane fx:id="scrollPaneRootFileRibbon" fitToHeight="true" fitToWidth="true">
+            <content>
+               <HBox fx:id="thumbnailContainerRibbon" prefHeight="100.0" prefWidth="200.0" />
+            </content>
+         </ScrollPane>
+   </ToolBar>
    <Label fx:id="metadataLabel" alignment="TOP_LEFT" StackPane.alignment="TOP_LEFT">
       <padding>
          <Insets left="15.0" />
       </padding>
    </Label>
-   <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseClicked="#createZoomBoxOnClick" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+   <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
       <effect>
          <Blend />
       </effect>
    </ImageView>
-   <HBox alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
+   <HBox fx:id="buttonHolder" alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
       <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" opacity="0.5" text="&lt;">
          <HBox.margin>
             <Insets left="10.0" />

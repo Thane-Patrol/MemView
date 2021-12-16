@@ -3,23 +3,25 @@ package com.example.memview;
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Screen;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,11 +31,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.ZoneId;
 
 public class HelloController {
-    @FXML
-    private Button nextButton;
-
-    @FXML
-    private Button backButton;
 
     @FXML
     private ImageView mainImageView;
@@ -41,17 +38,29 @@ public class HelloController {
     private ImageView zoomBoxView;
     @FXML
     private Pane zoomBoxContainer;
+    @FXML
+    private ToolBar galleryThumbnailParentToolbar;
+    @FXML
+    private ScrollPane scrollPaneRootFileRibbon;
+    @FXML
+    private HBox thumbnailContainerRibbon;
+    @FXML
+    private Button backButton;
+    @FXML
+    private Button nextButton;
+    @FXML
+    private HBox buttonHolder;
 
     @FXML
     private StackPane root;
 
-    private DirectoryReader directoryReader;
+    private final DirectoryReader directoryReader;
 
     //Tracks the last key press to ensure key press isn't registered when key is held
     private KeyCode eventTracker = null;
 
     //Used to store screenBounds dimensions as a variable to automatically resize imageView components to suit monitor
-    private Rectangle2D screenBounds;
+    private final Rectangle2D screenBounds;
 
     private ScrollEvent scrollEventTracker = null;
 
@@ -83,7 +92,11 @@ public class HelloController {
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
-        applicationLogic = new ApplicationLogic();
+        applicationLogic = new ApplicationLogic(directoryReader);
+        galleryThumbnailParentToolbar = new ToolBar();
+        scrollPaneRootFileRibbon = new ScrollPane();
+        thumbnailContainerRibbon = new HBox();
+        //buttonHolder = new HBox();
 
     }
 
@@ -97,11 +110,25 @@ public class HelloController {
 
         resizeImageForScreen(mainImageView);
 
+        buttonHolder.toFront();
 
+
+        galleryThumbnailParentToolbar.setOpacity(0.0);
+        galleryThumbnailParentToolbar.toFront();
+        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
+
+        thumbnailContainerRibbon.setSpacing(200);
+
+        scrollPaneRootFileRibbon.setFitToWidth(true);
+        //scrollPaneRootFileRibbon.setPadding(new Insets(10, 20, 10, 20));
+        scrollPaneRootFileRibbon.setPrefHeight(applicationLogic.getVboxHeight());
+        scrollPaneRootFileRibbon.setPrefWidth(screenBounds.getWidth() - 100);
+        
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
-        zoomBoxView.setVisible(false);
+        zoomBoxContainer.setOpacity(0.0);
+
     }
 
     @FXML
@@ -130,6 +157,15 @@ public class HelloController {
         //imageView.setFitWidth(screenBounds.getWidth());
         imageView.setFitHeight(screenBounds.getHeight() - 100);
         return imageView;
+    }
+
+    public void setTransparentToolbar() {
+        galleryThumbnailParentToolbar.setOpacity(0.0);
+    }
+
+    public void setVisibleToolbar() {
+        galleryThumbnailParentToolbar.setOpacity(100);
+        galleryThumbnailParentToolbar.toFront();
     }
 
     @FXML
@@ -214,7 +250,7 @@ public class HelloController {
     //Trigger should be on mouseclick on the ImageView object itself
     @FXML
     private void createZoomBoxOnClick(MouseEvent event){
-        zoomBoxView.setVisible(true);
+        zoomBoxContainer.setOpacity(100);
         double xCoordinates = event.getSceneX();
         double yCoordinates = event.getSceneY();
         //Pos xyCoordinates = new Pos(yCoordinates, xCoordinates);
@@ -223,16 +259,23 @@ public class HelloController {
         //todo implement the above functionality
         zoomBoxContainer.setTranslateX(xCoordinates);
         zoomBoxContainer.setTranslateY(yCoordinates);
-        zoomBoxContainer.toFront();
-        zoomBoxContainer.setOpacity(100);
-
-        System.out.println("method createZoomBoxOnClick called");
-        System.out.println("X coordinates: " + xCoordinates);
-        System.out.println("Y coordinates: " + yCoordinates);
 
         zoomBoxView.setImage(mainImageView.getImage());
         zoomBoxView.setScaleX(10);
         zoomBoxView.setScaleY(10);
+    }
+
+    @FXML
+    private void moveZoomBoxWithMouse(MouseEvent event) {
+        if(zoomBoxContainer.getOpacity() == 100) {
+            zoomBoxContainer.setTranslateX(event.getSceneX());
+            zoomBoxContainer.setTranslateY(event.getSceneY());
+        }
+    }
+
+    @FXML
+    private void hideZoomBoxOnRelease(MouseEvent event) {
+        zoomBoxContainer.setOpacity(0.0);
     }
 
     @FXML
@@ -243,4 +286,8 @@ public class HelloController {
     private HelloApplication mainApp;
 
     public void setMainApp(HelloApplication mainApp) {this.mainApp = mainApp;}
+
+    public DirectoryReader getDirectoryReader() {
+        return directoryReader;
+    }
 }

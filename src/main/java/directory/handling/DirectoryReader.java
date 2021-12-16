@@ -1,7 +1,5 @@
 package directory.handling;
 
-import javafx.scene.image.Image;
-
 import java.io.File;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -12,18 +10,18 @@ import java.util.List;
 
 public class DirectoryReader {
 
-    private File originalFilePath;
-    private List<Path> fileNames;
+    private final List<Path> fileNames;
     private int currentFileIndex;
-    private Path outOfBoundsImagePath;
+    private final Path outOfBoundsImagePath;
 
     // Creates the DirectoryReader object to index all the files in the directory of the open file
     // THe originalFile object is the absolute Path of the file opened
     //todo change the constructor to a File object or whatever is appropriate for when a file is opened
-    //todo Trim the whitespace out of a file name to prevent errors (needs to be done for File Path reasons)
-    public DirectoryReader(String fileName) {
+    public DirectoryReader(String unsanitizedFileName) {
 
-        originalFilePath = new File(fileName);
+        String sanitisedFileName = unsanitizedFileName.replaceAll("//s","");
+
+        File originalFilePath = new File(sanitisedFileName);
         fileNames = new ArrayList<>();
         outOfBoundsImagePath = Paths.get("src/main/resources/testOutOfBoundsImage.png");
 
@@ -42,7 +40,7 @@ public class DirectoryReader {
             System.out.println("Error Message:");
             System.out.println(e.getMessage());
         }
-        System.out.println(fileNames.toString());
+        System.out.println(fileNames);
 
         // Finding the index of the first photo
         for (int i = 0; i < fileNames.size(); i++) {
@@ -90,6 +88,15 @@ public class DirectoryReader {
             currentFileIndex++;
             return toRtn;
         }
+    }
+
+    //For debugging purposes
+    public void printAllFilesAsString() {
+        fileNames.stream().forEach(s -> System.out.println("File: " + s));
+    }
+
+    public List<Path> getListOfFilePaths() {
+        return fileNames;
     }
 
 }
