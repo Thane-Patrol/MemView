@@ -50,6 +50,8 @@ public class HelloController {
     private Button nextButton;
     @FXML
     private HBox buttonHolder;
+    @FXML
+    private Image zoomedImage;
 
     @FXML
     private StackPane root;
@@ -128,6 +130,9 @@ public class HelloController {
         //mainImageView.fitHeightProperty().bind(root.widthProperty());
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
         zoomBoxContainer.setOpacity(0.0);
+        zoomBoxContainer.setScaleX(mainImageView.getScaleX() / 4);
+        zoomBoxContainer.setScaleY(mainImageView.getScaleY() / 4);
+
 
     }
 
@@ -257,8 +262,7 @@ public class HelloController {
 
         //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
         //todo implement the above functionality
-        zoomBoxContainer.setTranslateX(xCoordinates);
-        zoomBoxContainer.setTranslateY(yCoordinates);
+        zoomedImage = mainImageView.getImage();
 
         zoomBoxView.setImage(mainImageView.getImage());
         zoomBoxView.setScaleX(10);
@@ -268,8 +272,15 @@ public class HelloController {
     @FXML
     private void moveZoomBoxWithMouse(MouseEvent event) {
         if(zoomBoxContainer.getOpacity() == 100) {
-            zoomBoxContainer.setTranslateX(event.getSceneX());
-            zoomBoxContainer.setTranslateY(event.getSceneY());
+
+            double mouseXCoordinates = event.getSceneX();
+            double mouseYCoordinates = event.getSceneY();
+
+            zoomBoxContainer.setTranslateX(mouseXCoordinates);
+            zoomBoxContainer.setTranslateY(mouseYCoordinates);
+
+            //todo Got to resize the zoombox to something smaller but it no longer follows the mouse exactly, it is offset by a bit
+            //todo fix this
         }
     }
 
