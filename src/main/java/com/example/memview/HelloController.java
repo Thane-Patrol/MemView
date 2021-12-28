@@ -18,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
+import photo.conversion.ConversionLogic;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -70,7 +71,10 @@ public class HelloController {
     private ImageReader imageReader;
 
     //Used for application logic and data handling to make this method a bit cleaner
-    private ApplicationLogic applicationLogic;
+    private PhotoViewerApplicationLogic applicationLogic;
+
+    //Class used to handle the logic of photo resizing, cropping, etc
+    private ConversionLogic conversionLogicClass;
 
     //Label to display the metadata
     @FXML
@@ -88,17 +92,19 @@ public class HelloController {
 
         directoryReader = new DirectoryReader(directory);
 
+        conversionLogicClass = new ConversionLogic(directoryReader);
+
+
         mainImageView = new ImageView();
         zoomBoxView = new ImageView();
         zoomBoxContainer = new Pane();
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
-        applicationLogic = new ApplicationLogic(directoryReader);
+        applicationLogic = new PhotoViewerApplicationLogic(directoryReader);
         galleryThumbnailParentToolbar = new ToolBar();
         scrollPaneRootFileRibbon = new ScrollPane();
         thumbnailContainerRibbon = new HBox();
-        //buttonHolder = new HBox();
 
     }
 
@@ -113,13 +119,11 @@ public class HelloController {
         resizeImageForScreen(mainImageView);
 
         buttonHolder.toFront();
-
-
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
         applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
 
-        thumbnailContainerRibbon.setSpacing(200);
+        thumbnailContainerRibbon.setSpacing(75);
 
         scrollPaneRootFileRibbon.setFitToWidth(true);
         //scrollPaneRootFileRibbon.setPadding(new Insets(10, 20, 10, 20));
@@ -132,8 +136,6 @@ public class HelloController {
         zoomBoxContainer.setOpacity(0.0);
         zoomBoxContainer.setScaleX(mainImageView.getScaleX() / 4);
         zoomBoxContainer.setScaleY(mainImageView.getScaleY() / 4);
-
-
     }
 
     @FXML

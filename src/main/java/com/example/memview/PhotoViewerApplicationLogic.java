@@ -18,12 +18,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ApplicationLogic {
+public class PhotoViewerApplicationLogic {
 
     private DirectoryReader directoryReader;
     private double vboxHeight;
 
-    public ApplicationLogic(DirectoryReader directoryReader) {
+    public PhotoViewerApplicationLogic(DirectoryReader directoryReader) {
         this.directoryReader = directoryReader;
         this.vboxHeight = 250;
     }
