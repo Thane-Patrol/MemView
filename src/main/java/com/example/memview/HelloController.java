@@ -194,7 +194,7 @@ public class HelloController {
 
     public void getImageMetadata(Path imageFile) throws IOException{
         BasicFileAttributes fileAttributes = Files.readAttributes(imageFile, BasicFileAttributes.class);
-        metadataLabel.setText("Creation: " + fileAttributes.creationTime().toInstant().atZone(ZoneId.systemDefault()) + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile));
+        metadataLabel.setText("Creation: " + fileAttributes.creationTime().toInstant() + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile));
     }
 
     @FXML
@@ -276,11 +276,10 @@ public class HelloController {
             double mouseXCoordinates = event.getSceneX();
             double mouseYCoordinates = event.getSceneY();
 
-            zoomBoxContainer.setTranslateX(mouseXCoordinates);
-            zoomBoxContainer.setTranslateY(mouseYCoordinates);
+            zoomBoxContainer.setTranslateX(mouseXCoordinates - 2.5 * zoomBoxView.getFitWidth());
+            zoomBoxContainer.setTranslateY(mouseYCoordinates - 2.5 * zoomBoxView.getFitHeight());
 
-            //todo Got to resize the zoombox to something smaller but it no longer follows the mouse exactly, it is offset by a bit
-            //todo fix this
+            //todo Make the zoombox actually zooms in, not just providing a smaller version of the main image
         }
     }
 
