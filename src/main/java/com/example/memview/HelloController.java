@@ -87,7 +87,7 @@ public class HelloController {
 
         root = new StackPane();
 
-        String directory =  "/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"D:\\javaMemView\\1.jpg";
+        String directory =  "D:\\javaMemView\\1.jpg"; //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         directoryReader = new DirectoryReader(directory);
@@ -232,6 +232,7 @@ public class HelloController {
         scrollEvent.consume();
     }
 
+    //todo scroll in on the section the cursor is over, not the center
     private void zoomInActionFirstLevel() {
         mainImageView.setScaleY(2);
         mainImageView.setScaleX(2);
@@ -278,8 +279,10 @@ public class HelloController {
             double mouseXCoordinates = event.getSceneX();
             double mouseYCoordinates = event.getSceneY();
 
-            zoomBoxContainer.setTranslateX(mouseXCoordinates - 2.5 * zoomBoxView.getFitWidth());
-            zoomBoxContainer.setTranslateY(mouseYCoordinates - 2.5 * zoomBoxView.getFitHeight());
+            zoomBoxContainer.setTranslateX(mouseXCoordinates - zoomBoxContainer.getWidth()/3);
+            zoomBoxContainer.setTranslateY(mouseYCoordinates - zoomBoxContainer.getHeight()/3);
+
+
 
             //todo Make the zoombox actually zooms in, not just providing a smaller version of the main image
         }
