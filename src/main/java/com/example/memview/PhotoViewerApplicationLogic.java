@@ -2,11 +2,15 @@ package com.example.memview;
 
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import javax.imageio.ImageIO;
@@ -16,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PhotoViewerApplicationLogic {
 
@@ -60,9 +63,6 @@ public class PhotoViewerApplicationLogic {
 
         List<Path> filePaths = directoryReader.getListOfFilePaths();
 
-        //Use an integer counter to create unique names for the vboxes, also helpful for potentially keeping track of which thumbnail is which
-        AtomicInteger i = new AtomicInteger();
-
         //Stream through this path, Create the labels, thumbnails and Vboxs to contain them and add all of them to the hbox then return it
         filePaths.stream().forEach(s -> {
 
@@ -93,6 +93,30 @@ public class PhotoViewerApplicationLogic {
         });
 
         return hBox;
+    }
+
+    //Used to get the region of the image underneath the main image
+    public Image getImageUnderneathZoomBoxContainer(Pane zoomBox, ImageView mainImageView) {
+
+        System.out.println("width: " + zoomBox.getTranslateX());
+        System.out.println("Height: " + zoomBox.getTranslateY());
+
+        System.out.println(zoomBox.getBoundsInParent().getCenterX());
+
+        System.out.println("Size of bounding box: " + "Height: " + zoomBox.getBoundsInParent().getHeight() + "width: " + zoomBox.getBoundsInParent().getWidth());
+
+        //Integers used for specifying the region that is underneath the zoombox
+        int topLeftPixel_X = Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxX()));
+        int topLeftPixel_Y = Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxY()));
+        int bottomRightPixel_X = Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMinX()));
+        int bottomRightPixel_Y = Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxY()));
+
+        //mainImageView.getImage().getPixelReader().getPixels(topLeftPixel_X, topLeftPixel_Y, bottomRightPixel_X - topLeftPixel_X, bottomRightPixel_Y - topLeftPixel_Y, WritablePixelFormat<java.nio.IntBuffer>, int[] buffer, int offset, int scanlineStride);
+        Image zoomedImageSection = new WritableImage(mainImageView.getImage().getPixelReader(), topLeftPixel_X, topLeftPixel_Y, 50, 50);
+        //todo Got up to here, Writeable image fails with IOOBException
+        //todo The topLeftPixel_X should map to the top pixel that the zoombox is over, this coordinate is then used to created a section of the main imageView with a WritableImage
+
+        return zoomedImageSection;
     }
 
     public double getVboxHeight() {

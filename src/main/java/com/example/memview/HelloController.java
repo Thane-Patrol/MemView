@@ -282,7 +282,7 @@ public class HelloController {
             zoomBoxContainer.setTranslateX(mouseXCoordinates - zoomBoxContainer.getWidth()/3);
             zoomBoxContainer.setTranslateY(mouseYCoordinates - zoomBoxContainer.getHeight()/3);
 
-
+            zoomBoxView.setImage(applicationLogic.getImageUnderneathZoomBoxContainer(zoomBoxContainer, mainImageView));
 
             //todo Make the zoombox actually zooms in, not just providing a smaller version of the main image
         }
