@@ -126,7 +126,6 @@ public class HelloController {
         thumbnailContainerRibbon.setSpacing(75);
 
         scrollPaneRootFileRibbon.setFitToWidth(true);
-        //scrollPaneRootFileRibbon.setPadding(new Insets(10, 20, 10, 20));
         scrollPaneRootFileRibbon.setPrefHeight(applicationLogic.getVboxHeight());
         scrollPaneRootFileRibbon.setPrefWidth(screenBounds.getWidth() - 100);
         
@@ -282,7 +281,7 @@ public class HelloController {
             zoomBoxContainer.setTranslateX(mouseXCoordinates - zoomBoxContainer.getWidth()/3);
             zoomBoxContainer.setTranslateY(mouseYCoordinates - zoomBoxContainer.getHeight()/3);
 
-            zoomBoxView.setImage(applicationLogic.getImageUnderneathZoomBoxContainer(zoomBoxContainer, mainImageView));
+            zoomBoxView.setImage(applicationLogic.getImageUnderneathZoomBoxContainer(zoomBoxContainer, mainImageView, event));
 
             //todo Make the zoombox actually zooms in, not just providing a smaller version of the main image
         }
