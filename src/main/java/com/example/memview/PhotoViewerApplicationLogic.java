@@ -2,11 +2,16 @@ package com.example.memview;
 
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import javax.imageio.ImageIO;
@@ -16,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PhotoViewerApplicationLogic {
 
@@ -60,9 +64,6 @@ public class PhotoViewerApplicationLogic {
 
         List<Path> filePaths = directoryReader.getListOfFilePaths();
 
-        //Use an integer counter to create unique names for the vboxes, also helpful for potentially keeping track of which thumbnail is which
-        AtomicInteger i = new AtomicInteger();
-
         //Stream through this path, Create the labels, thumbnails and Vboxs to contain them and add all of them to the hbox then return it
         filePaths.stream().forEach(s -> {
 
@@ -93,6 +94,39 @@ public class PhotoViewerApplicationLogic {
         });
 
         return hBox;
+    }
+
+    //Used to get the region of the image underneath the main image
+    public Image getImageUnderneathZoomBoxContainer(Pane zoomBox, ImageView mainImageView, MouseEvent mouseEvent) {
+
+        //System.out.println("width: " + zoomBox.getTranslateX());
+        //System.out.println("Height: " + zoomBox.getTranslateY());
+//
+        //System.out.println(zoomBox.getBoundsInParent().getCenterX());
+//
+        //System.out.println("Size of bounding box: " + "Height: " + zoomBox.getBoundsInParent().getHeight() + "width: " + zoomBox.getBoundsInParent().getWidth());
+
+        //Integers used for specifying the region that is underneath the zoombox
+        int topLeftPixel_X = (int) mouseEvent.getSceneX(); //Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxX()));
+        int topLeftPixel_Y = (int) mouseEvent.getSceneY(); //Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxY()));
+
+        Image zoomedImageSection;
+
+        if(isZoomBoxOverTheMainImage(zoomBox, mainImageView)) {
+            zoomedImageSection = new WritableImage(mainImageView.getImage().getPixelReader(), topLeftPixel_X, topLeftPixel_Y, 50, 50);
+        } else {
+            zoomedImageSection = mainImageView.getImage();
+        }
+
+        //todo better tracking of the mouse to create zoombox on section of image underneath
+        //todo A robust check of whether the zoomBox is creating a box over the imageView, this is to prevent IOOBExceptions
+
+
+        return zoomedImageSection;
+    }
+
+    public boolean isZoomBoxOverTheMainImage(Pane zoomBox, ImageView mainImageView) {
+        return zoomBox.intersects(mainImageView.getBoundsInLocal());
     }
 
     public double getVboxHeight() {
