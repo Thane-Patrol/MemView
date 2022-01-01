@@ -310,5 +310,4 @@ public class HelloController {
         return directoryReader;
     }
 
-    public HelloController getImageController() {return this;}
 }
