@@ -108,6 +108,15 @@ public class DirectoryReader {
         }
     }
 
+    public void setCurrentImageIndex(Path imagePath) {
+        for(int i = 0; i < fileNames.size(); i++) {
+
+            if (imagePath.equals(fileNames.get(i))) {
+                currentFileIndex = i;
+            }
+        }
+    }
+
     private boolean fileIsAPhoto(Path photoPath) {
         for(String fileExtensionName : fileExtensionList) {
             if (photoPath.getFileName().toString().contains(fileExtensionName)) {
