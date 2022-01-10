@@ -2,6 +2,7 @@ package com.example.memview;
 
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -26,10 +27,13 @@ public class PhotoViewerApplicationLogic {
 
     private DirectoryReader directoryReader;
     private double vboxHeight;
+    private HelloController helloController;
 
-    public PhotoViewerApplicationLogic(DirectoryReader directoryReader) {
+    public PhotoViewerApplicationLogic(DirectoryReader directoryReader, HelloController helloController) {
         this.directoryReader = directoryReader;
         this.vboxHeight = 250;
+        this.helloController = helloController;
+
     }
 
     public String getPhotoSizeInUnits(Path imagePath) throws IOException {
@@ -87,6 +91,12 @@ public class PhotoViewerApplicationLogic {
             VBox vBox = new VBox();
             vBox.getChildren().addAll(imageView, fileName);
 
+            //Set the mainImage view to the thumbnail when clicked on
+            vBox.setOnMouseClicked(event -> {
+                directoryReader.setCurrentImageIndex(s);
+                helloController.gotoImageOnClick(image);
+                    });
+
             //vBox.setId(String.valueOf(i.incrementAndGet()));
             hBox.getChildren().add(vBox);
 
@@ -120,7 +130,6 @@ public class PhotoViewerApplicationLogic {
 
         //todo better tracking of the mouse to create zoombox on section of image underneath
         //todo A robust check of whether the zoomBox is creating a box over the imageView, this is to prevent IOOBExceptions
-
 
         return zoomedImageSection;
     }

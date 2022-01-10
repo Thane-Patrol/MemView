@@ -101,7 +101,7 @@ public class HelloController {
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
-        applicationLogic = new PhotoViewerApplicationLogic(directoryReader);
+        applicationLogic = new PhotoViewerApplicationLogic(directoryReader, this);
         galleryThumbnailParentToolbar = new ToolBar();
         scrollPaneRootFileRibbon = new ScrollPane();
         thumbnailContainerRibbon = new HBox();
@@ -287,6 +287,11 @@ public class HelloController {
         }
     }
 
+
+    public void gotoImageOnClick(Image imageToGoTo) {
+        mainImageView.setImage(imageToGoTo);
+    }
+
     @FXML
     private void hideZoomBoxOnRelease(MouseEvent event) {
         zoomBoxContainer.setOpacity(0.0);
@@ -304,4 +309,5 @@ public class HelloController {
     public DirectoryReader getDirectoryReader() {
         return directoryReader;
     }
+
 }
