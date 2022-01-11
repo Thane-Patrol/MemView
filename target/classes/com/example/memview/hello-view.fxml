@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" stylesheets="@../../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
    <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="40.0" prefWidth="200.0" StackPane.alignment="TOP_CENTER">
          <ScrollPane fx:id="scrollPaneRootFileRibbon" fitToHeight="true" fitToWidth="true">
             <content>
