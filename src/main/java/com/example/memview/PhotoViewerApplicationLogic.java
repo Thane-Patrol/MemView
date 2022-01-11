@@ -5,10 +5,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
+import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -18,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -117,16 +115,24 @@ public class PhotoViewerApplicationLogic {
         //System.out.println("Size of bounding box: " + "Height: " + zoomBox.getBoundsInParent().getHeight() + "width: " + zoomBox.getBoundsInParent().getWidth());
 
         //Integers used for specifying the region that is underneath the zoombox
-        int topLeftPixel_X = (int) mouseEvent.getSceneX(); //Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxX()));
-        int topLeftPixel_Y = (int) mouseEvent.getSceneY(); //Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxY()));
+        int topLeftPixel_X = (int) mouseEvent.getSceneX();
+        int topLeftPixel_Y = (int) mouseEvent.getSceneY();
 
         Image zoomedImageSection;
+        WritableImage intermediateZoomedImage = new WritableImage(50, 50);
 
-        if(isZoomBoxOverTheMainImage(zoomBox, mainImageView)) {
-            zoomedImageSection = new WritableImage(mainImageView.getImage().getPixelReader(), topLeftPixel_X, topLeftPixel_Y, 50, 50);
-        } else {
-            zoomedImageSection = mainImageView.getImage();
-        }
+        PixelReader pixelReader = mainImageView.getImage().getPixelReader();
+        PixelFormat<IntBuffer> intBufferPixelFormat = PixelFormat.getIntArgbInstance();
+
+        int[] pixelArray = new int[10000];
+        pixelReader.getPixels(topLeftPixel_X, topLeftPixel_Y, 50, 50, (WritablePixelFormat<IntBuffer>) intBufferPixelFormat, pixelArray, 0, 50);
+
+        PixelWriter pixelWriter = intermediateZoomedImage.getPixelWriter();
+        pixelWriter.setPixels(0, 0, 50, 50, intBufferPixelFormat, pixelArray, 0, 50);
+
+        zoomedImageSection = intermediateZoomedImage;
+
+
 
         //todo better tracking of the mouse to create zoombox on section of image underneath
         //todo A robust check of whether the zoomBox is creating a box over the imageView, this is to prevent IOOBExceptions

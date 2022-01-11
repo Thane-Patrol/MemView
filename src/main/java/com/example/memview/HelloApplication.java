@@ -21,6 +21,7 @@ public class HelloApplication extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+        scene.getStylesheets().add("src/main/resources/image.Resources/styles.css");
 
         HelloController controller = fxmlLoader.getController();
         controller.setMainApp(this);

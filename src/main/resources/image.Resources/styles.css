@@ -1,0 +1,11 @@
+.root {
+    -fx-font: 16px "Serif";
+    -fx-padding: 10px;
+    -fx-background-color: #474747; 
+    -fx-text-fill: #f0f0f0;
+}
+
+.button {
+    -fx-background-color: #474747
+
+}
