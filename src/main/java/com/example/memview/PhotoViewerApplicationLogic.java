@@ -118,20 +118,16 @@ public class PhotoViewerApplicationLogic {
         int topLeftPixel_X = (int) mouseEvent.getSceneX();
         int topLeftPixel_Y = (int) mouseEvent.getSceneY();
 
-        Image zoomedImageSection;
-        WritableImage intermediateZoomedImage = new WritableImage(50, 50);
+        WritableImage zoomedImageSection = new WritableImage(50, 50);
 
         PixelReader pixelReader = mainImageView.getImage().getPixelReader();
-        PixelFormat<IntBuffer> intBufferPixelFormat = PixelFormat.getIntArgbInstance();
+        WritablePixelFormat<IntBuffer> intBufferPixelFormat = PixelFormat.getIntArgbInstance();
 
-        int[] pixelArray = new int[10000];
-        pixelReader.getPixels(topLeftPixel_X, topLeftPixel_Y, 50, 50, (WritablePixelFormat<IntBuffer>) intBufferPixelFormat, pixelArray, 0, 50);
+        int[] pixelArray = new int[2500];
+        pixelReader.getPixels(topLeftPixel_X, topLeftPixel_Y, 50, 50, intBufferPixelFormat, pixelArray, 0, 50);
 
-        PixelWriter pixelWriter = intermediateZoomedImage.getPixelWriter();
+        PixelWriter pixelWriter = zoomedImageSection.getPixelWriter();
         pixelWriter.setPixels(0, 0, 50, 50, intBufferPixelFormat, pixelArray, 0, 50);
-
-        zoomedImageSection = intermediateZoomedImage;
-
 
 
         //todo better tracking of the mouse to create zoombox on section of image underneath
