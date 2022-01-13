@@ -87,7 +87,7 @@ public class HelloController {
 
         root = new StackPane();
 
-        String directory =  "D:\\javaMemView\\1.jpg"; //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
+        String directory =  "/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         directoryReader = new DirectoryReader(directory);
