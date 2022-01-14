@@ -115,6 +115,7 @@ public class HelloController {
         Image imageFX = SwingFXUtils.toFXImage(imageSwing, null);
         mainImageView.setImage(imageFX);
         metadataLabel.setAlignment(Pos.TOP_LEFT);
+        metadataLabel.toFront();
 
         resizeImageForScreen(mainImageView);
 
@@ -128,6 +129,7 @@ public class HelloController {
         scrollPaneRootFileRibbon.setFitToWidth(true);
         scrollPaneRootFileRibbon.setPrefHeight(applicationLogic.getVboxHeight());
         scrollPaneRootFileRibbon.setPrefWidth(screenBounds.getWidth() - 100);
+
         
         //todo make the binding property work with any size/ resolution photo
         //mainImageView.fitHeightProperty().bind(root.widthProperty());

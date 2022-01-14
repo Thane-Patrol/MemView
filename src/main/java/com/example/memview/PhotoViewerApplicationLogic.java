@@ -82,12 +82,16 @@ public class PhotoViewerApplicationLogic {
 
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
+            //imageView.setStyle("-fx-background-color:#47474700;");
 
             //todo set height based upon reasonable screenbounds and/or current window size
             imageView.setFitHeight(200);
+            //fileName.setStyle("-fx-text-fill: #f0f0f0; -fx-font-size: 24px; -fx-font-family: sans-serif; -fx-font-weight: 300;");
 
             VBox vBox = new VBox();
             vBox.getChildren().addAll(imageView, fileName);
+            //vBox.setStyle("-fx-background-color:#47474700; -fx-font-size: 24px; -fx-font-family: sans-serif; -fx-padding: 10px; -fx-font-weight: 300;");
+
 
             //Set the mainImage view to the thumbnail when clicked on
             vBox.setOnMouseClicked(event -> {

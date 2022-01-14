@@ -1,8 +1,10 @@
 .root {
-    -fx-font: 16px "Verdana" "Serif" sans-serif;
+    -fx-font-size: 24px;
+    -fx-font-family: "Verdana" "Serif" sans-serif;
     -fx-padding: 10px;
     -fx-background-color: #474747; 
     -fx-text-fill: #f0f0f0;
+    -fx-font-weight: 300;
 }
 
 .button {
@@ -10,6 +12,11 @@
     -fx-text-fill: #f0f0f0;
 }
 
-.scroll-ribbon {
+.scroll {
     -fx-background-color:#47474700;
+    -fx-text-fill: #f0f0f0;
+    -fx-font-size: 24px;
+    -fx-font-family: "Verdana" "Serif" sans-serif;
+    -fx-padding: 10px;
+    -fx-font-weight: 300;
 }
