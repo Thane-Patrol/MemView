@@ -80,13 +80,13 @@ public class PhotoViewerApplicationLogic {
             Label fileName = new Label();
             fileName.setText(s.getFileName().toString());
 
-            BufferedImage imageSwing = null;
+            Image image = null;
             try {
-                imageSwing = ImageIO.read(s.toFile());
+                image = directoryReader.loadImageFromPath(s);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Image image = SwingFXUtils.toFXImage(imageSwing, null);
+
 
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
@@ -104,7 +104,11 @@ public class PhotoViewerApplicationLogic {
             //Set the mainImage view to the thumbnail when clicked on
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
-                helloController.gotoImageOnClick(image);
+                try {
+                    helloController.gotoImageOnClick(directoryReader.loadImage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 try {
                     helloController.updateMetadataLabel(directoryReader.getCurrentImage());
                 } catch (IOException e) {

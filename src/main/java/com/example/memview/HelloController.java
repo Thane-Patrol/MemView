@@ -124,12 +124,15 @@ public class HelloController {
     private void initialize() throws IOException {
         //Getting host services for access to browser
 
-        //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images
-        BufferedImage imageSwing = ImageIO.read(directoryReader.getCurrentImage().toFile());
-        Image imageFX = SwingFXUtils.toFXImage(imageSwing, null);
-        mainImageView.setImage(imageFX);
+        //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images unless a GIF then use native Image object
+        File firstImagePath = directoryReader.getCurrentImage().toFile();
+        Image firstImage = directoryReader.loadImage();
+
+
+        mainImageView.setImage(firstImage);
         metadataLabel.setAlignment(Pos.TOP_LEFT);
         metadataLabel.toFront();
+        getImageMetadata(firstImagePath.toPath());
 
         resizeImageForScreen(mainImageView);
 
@@ -158,7 +161,8 @@ public class HelloController {
         Path nextImageFilePath = directoryReader.getNextImage();
         getImageMetadata(nextImageFilePath);
         File nextImageFile = nextImageFilePath.toFile();
-        Image nextImage = SwingFXUtils.toFXImage(ImageIO.read(nextImageFile), null);
+
+        Image nextImage = directoryReader.loadImage();
         mainImageView.setImage(nextImage);
     }
 
@@ -167,7 +171,9 @@ public class HelloController {
         Path previousImagePath = directoryReader.getPreviousImage();
         getImageMetadata(previousImagePath);
         File previousImageFilePath = previousImagePath.toFile();
-        Image previousImage = SwingFXUtils.toFXImage(ImageIO.read(previousImageFilePath), null);
+
+        Image previousImage = directoryReader.loadImage();
+
         mainImageView.setImage(previousImage);
     }
 

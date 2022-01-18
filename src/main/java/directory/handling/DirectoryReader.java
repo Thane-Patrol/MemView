@@ -1,12 +1,19 @@
 package directory.handling;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import org.apache.commons.io.FilenameUtils;
+
+import javax.imageio.ImageIO;
 
 public class DirectoryReader {
 
@@ -124,6 +131,37 @@ public class DirectoryReader {
             }
         }
         return false;
+    }
+
+    public String getPhotoExtension() {
+        String extension = FilenameUtils.getExtension(getCurrentImage().toString());
+        return extension;
+    }
+
+    public Image loadImage() throws IOException {
+        File firstImagePath = this.getCurrentImage().toFile();
+        Image image;
+
+        if(this.getPhotoExtension().equals("gif")) {
+            image = new Image(firstImagePath.toURI().toString());
+        } else {
+            image = SwingFXUtils.toFXImage(ImageIO.read(firstImagePath), null);
+        }
+
+        return image;
+    }
+
+    public Image loadImageFromPath(Path imagePath) throws IOException {
+        File imageFile = imagePath.toFile();
+        Image image;
+
+        if(this.getPhotoExtension().equals("gif")) {
+            image = new Image(imageFile.toURI().toString());
+        } else {
+            image = SwingFXUtils.toFXImage(ImageIO.read(imageFile), null);
+        }
+
+        return image;
     }
 
     //For debugging purposes

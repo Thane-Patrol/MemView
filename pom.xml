@@ -48,6 +48,13 @@
             <version>11.12.0</version>
         </dependency>
 
+        <!-- Used mainly for reading File Extensions -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <!--metadata reading from: https://github.com/drewnoakes/metadata-extractor -->
         <dependency>
             <groupId>com.drewnoakes</groupId>
