@@ -5,6 +5,7 @@ module com.example.memview {
 
     requires org.controlsfx.controls;
     requires java.desktop;
+    requires metadata.extractor;
 
     opens com.example.memview to javafx.fxml;
     exports com.example.memview;

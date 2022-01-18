@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 
 public class HelloController {
@@ -197,7 +199,10 @@ public class HelloController {
 
     public void getImageMetadata(Path imageFile) throws IOException{
         BasicFileAttributes fileAttributes = Files.readAttributes(imageFile, BasicFileAttributes.class);
-        metadataLabel.setText("Creation: " + fileAttributes.creationTime().toInstant() + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile));
+        FileTime date = fileAttributes.creationTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String dateCreated = dateFormat.format(date.toMillis());
+        metadataLabel.setText("Creation: " + dateCreated + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile) + " GPS: " + applicationLogic.getGPSCoordinates(imageFile));
     }
 
     @FXML

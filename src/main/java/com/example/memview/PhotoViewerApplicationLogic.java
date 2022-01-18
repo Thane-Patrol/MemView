@@ -1,5 +1,10 @@
 package com.example.memview;
 
+import com.drew.imaging.ImageProcessingException;
+import com.drew.lang.GeoLocation;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
@@ -14,18 +19,21 @@ import javafx.scene.layout.VBox;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collection;
 import java.util.List;
+import com.drew.imaging.ImageMetadataReader;
 
 public class PhotoViewerApplicationLogic {
 
-    private DirectoryReader directoryReader;
+    private final DirectoryReader directoryReader;
     private double vboxHeight;
-    private HelloController helloController;
+    private final HelloController helloController;
 
     public PhotoViewerApplicationLogic(DirectoryReader directoryReader, HelloController helloController) {
         this.directoryReader = directoryReader;
@@ -62,7 +70,7 @@ public class PhotoViewerApplicationLogic {
         return fileSizeWithBytes;
     }
 
-    public HBox addPhotoThumbnailsToHBox(HBox hBox) {
+    public void addPhotoThumbnailsToHBox(HBox hBox) {
 
         List<Path> filePaths = directoryReader.getListOfFilePaths();
 
@@ -105,7 +113,7 @@ public class PhotoViewerApplicationLogic {
             //To keep track of the height of a single vbox
         });
 
-        return hBox;
+        
     }
 
     //Used to get the region of the image underneath the main image
@@ -142,6 +150,35 @@ public class PhotoViewerApplicationLogic {
 
     public boolean isZoomBoxOverTheMainImage(Pane zoomBox, ImageView mainImageView) {
         return zoomBox.intersects(mainImageView.getBoundsInLocal());
+    }
+
+    public String getGPSCoordinates(Path imagePath) {
+        File imageFile = imagePath.toFile();
+        Metadata metadata = null;
+        try {
+            metadata = ImageMetadataReader.readMetadata(imageFile);
+        } catch (ImageProcessingException imageProcessingException) {
+            imageProcessingException.fillInStackTrace();
+
+        } catch (IOException ioException) {
+            ioException.fillInStackTrace();
+        }
+
+        Collection<GpsDirectory> gpsDirectories = metadata.getDirectoriesOfType(GpsDirectory.class);
+
+        GeoLocation geoLocation = null;
+        for(GpsDirectory gpsDirectory : gpsDirectories) {
+            geoLocation = gpsDirectory.getGeoLocation();
+
+
+        }
+
+        if (geoLocation == null || geoLocation.isZero()) {
+            return "No GPS data found";
+        }
+
+
+        return geoLocation.toDMSString();
     }
 
     public double getVboxHeight() {
