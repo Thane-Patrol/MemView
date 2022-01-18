@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" styleClass="root" stylesheets="@../../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" styleClass="root" stylesheets="@../../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.HelloController">
    <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="40.0" prefWidth="200.0" styleClass="scroll-ribbon" StackPane.alignment="TOP_CENTER">
          <ScrollPane fx:id="scrollPaneRootFileRibbon" fitToHeight="true" fitToWidth="true" styleClass="scroll">
-               <HBox fx:id="thumbnailContainerRibbon" prefHeight="100.0" prefWidth="200.0" styleClass="scroll"/>
+               <HBox fx:id="thumbnailContainerRibbon" prefHeight="100.0" prefWidth="200.0" styleClass="scroll" />
          </ScrollPane>
    </ToolBar>
-   <Label fx:id="metadataLabel" alignment="TOP_LEFT" styleClass="root" StackPane.alignment="TOP_LEFT">
+   <Label fx:id="metadataLabel" alignment="TOP_LEFT" onMouseClicked="#openGoogleMapsGPS" styleClass="root" StackPane.alignment="BOTTOM_LEFT">
       <padding>
          <Insets left="15.0" />
       </padding>
@@ -41,6 +41,6 @@
       </Button>
    </HBox>
    <Pane fx:id="zoomBoxContainer" prefHeight="200.0" prefWidth="200.0">
-            <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#createZoomBoxOnClick" onMouseDragged="#moveZoomBoxWithMouse" onMouseReleased="#hideZoomBoxOnRelease" pickOnBounds="true" preserveRatio="true" />
    </Pane>
 </StackPane>
