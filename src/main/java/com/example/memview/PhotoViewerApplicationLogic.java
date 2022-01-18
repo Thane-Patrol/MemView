@@ -105,7 +105,12 @@ public class PhotoViewerApplicationLogic {
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
                 helloController.gotoImageOnClick(image);
-                    });
+                try {
+                    helloController.updateMetadataLabel(directoryReader.getCurrentImage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
             //vBox.setId(String.valueOf(i.incrementAndGet()));
             hBox.getChildren().add(vBox);
@@ -113,7 +118,7 @@ public class PhotoViewerApplicationLogic {
             //To keep track of the height of a single vbox
         });
 
-        
+
     }
 
     //Used to get the region of the image underneath the main image
@@ -152,7 +157,7 @@ public class PhotoViewerApplicationLogic {
         return zoomBox.intersects(mainImageView.getBoundsInLocal());
     }
 
-    public String getGPSCoordinates(Path imagePath) {
+    public GeoLocation getGPSCoordinates(Path imagePath) {
         File imageFile = imagePath.toFile();
         Metadata metadata = null;
         try {
@@ -170,15 +175,16 @@ public class PhotoViewerApplicationLogic {
         for(GpsDirectory gpsDirectory : gpsDirectories) {
             geoLocation = gpsDirectory.getGeoLocation();
 
-
         }
 
+        return geoLocation;
+    }
+
+    public boolean checkGeolocationForNull(GeoLocation geoLocation) {
         if (geoLocation == null || geoLocation.isZero()) {
-            return "No GPS data found";
+            return true;
         }
-
-
-        return geoLocation.toDMSString();
+        return false;
     }
 
     public double getVboxHeight() {

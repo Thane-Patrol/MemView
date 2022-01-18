@@ -1,6 +1,9 @@
 package com.example.memview;
 
+import com.drew.lang.GeoLocation;
 import directory.handling.DirectoryReader;
+import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -82,6 +85,9 @@ public class HelloController {
     @FXML
     private Label metadataLabel;
 
+    private GeoLocation geoLocation;
+    private HostServices hostServices;
+
     //Used for keeping track of the amount of level of scrolling for zoom calculations
     private double scrollAmountTracker = 0.0;
 
@@ -110,8 +116,14 @@ public class HelloController {
 
     }
 
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
+
     @FXML
     private void initialize() throws IOException {
+        //Getting host services for access to browser
+
         //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images
         BufferedImage imageSwing = ImageIO.read(directoryReader.getCurrentImage().toFile());
         Image imageFX = SwingFXUtils.toFXImage(imageSwing, null);
@@ -202,7 +214,32 @@ public class HelloController {
         FileTime date = fileAttributes.creationTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String dateCreated = dateFormat.format(date.toMillis());
-        metadataLabel.setText("Creation: " + dateCreated + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile) + " GPS: " + applicationLogic.getGPSCoordinates(imageFile));
+
+        //GPS data in Degrees Minutes Seconds format
+        geoLocation = applicationLogic.getGPSCoordinates(imageFile);
+        String gpsCoordinates;
+        if(applicationLogic.checkGeolocationForNull(geoLocation)) {
+            gpsCoordinates = "No GPS information found";
+        } else {
+            gpsCoordinates = geoLocation.toDMSString();
+            metadataLabel.toFront();
+        }
+
+
+        metadataLabel.setText("Creation: " + dateCreated + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile) + " GPS: " + gpsCoordinates);
+    }
+
+    //This method must always be called after the getImageMetadata method
+    @FXML
+    private void openGoogleMapsGPS() {
+        if(applicationLogic.checkGeolocationForNull(geoLocation)) {
+            return;
+        } else {
+            String url = "https://maps.google.com/?q=" + geoLocation.getLatitude() + "," + geoLocation.getLongitude();
+            hostServices.showDocument(url);
+        }
+
+
     }
 
     @FXML
@@ -297,6 +334,10 @@ public class HelloController {
 
     public void gotoImageOnClick(Image imageToGoTo) {
         mainImageView.setImage(imageToGoTo);
+    }
+
+    public void updateMetadataLabel(Path imagePath) throws IOException {
+        getImageMetadata(imagePath);
     }
 
     @FXML

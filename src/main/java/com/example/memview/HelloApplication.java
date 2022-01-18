@@ -2,6 +2,7 @@ package com.example.memview;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -13,6 +14,7 @@ import java.io.IOException;
 public class HelloApplication extends Application {
 
     private Stage mainStage;
+    private static HostServices hostServices;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -25,6 +27,7 @@ public class HelloApplication extends Application {
 
         HelloController controller = fxmlLoader.getController();
         controller.setMainApp(this);
+        controller.setHostServices(this.getHostServices());
 
         mainStage.setTitle("MemView");
         mainStage.setScene(scene);
@@ -52,6 +55,8 @@ public class HelloApplication extends Application {
         firstImage = new Image(filePath.toUri().toString());
 
          */
+
+
 
         launch();
     }
