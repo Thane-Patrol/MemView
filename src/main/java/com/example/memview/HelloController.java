@@ -22,6 +22,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import photo.conversion.ConversionLogic;
+import preferences.UserPreferences;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -81,6 +82,12 @@ public class HelloController {
     //Class used to handle the logic of photo resizing, cropping, etc
     private ConversionLogic conversionLogicClass;
 
+    //Class used for handling metadata
+    private MetadataWrangler metadataWrangler;
+
+    //Class used for user preferences
+    private UserPreferences userPreferences;
+
     //Label to display the metadata
     @FXML
     private Label metadataLabel;
@@ -98,9 +105,12 @@ public class HelloController {
         String directory =  "/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
+        //Instantiation of all the helper classes needed, Order is important
         directoryReader = new DirectoryReader(directory);
-
         conversionLogicClass = new ConversionLogic(directoryReader);
+        userPreferences = new UserPreferences();
+        applicationLogic = new PhotoViewerApplicationLogic(directoryReader, this);
+        metadataWrangler = new MetadataWrangler(userPreferences, applicationLogic);
 
 
         mainImageView = new ImageView();
@@ -109,7 +119,6 @@ public class HelloController {
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
-        applicationLogic = new PhotoViewerApplicationLogic(directoryReader, this);
         galleryThumbnailParentToolbar = new ToolBar();
         scrollPaneRootFileRibbon = new ScrollPane();
         thumbnailContainerRibbon = new HBox();
@@ -215,9 +224,11 @@ public class HelloController {
         }
     }
 
+    //todo clear up this method and integrate it with the UserPreferences and metadata wrangler class
     public void getImageMetadata(Path imageFile) throws IOException{
-        BasicFileAttributes fileAttributes = Files.readAttributes(imageFile, BasicFileAttributes.class);
-        FileTime date = fileAttributes.creationTime();
+        metadataLabel.toFront();
+        //BasicFileAttributes fileAttributes = Files.readAttributes(imageFile, BasicFileAttributes.class);
+        /*FileTime date = fileAttributes.creationTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String dateCreated = dateFormat.format(date.toMillis());
 
@@ -228,22 +239,19 @@ public class HelloController {
             gpsCoordinates = "No GPS information found";
         } else {
             gpsCoordinates = geoLocation.toDMSString();
-            metadataLabel.toFront();
         }
-
-
-        metadataLabel.setText("Creation: " + dateCreated + " Size: " + applicationLogic.getPhotoSizeInUnits(imageFile) + " GPS: " + gpsCoordinates);
+        */
+        metadataLabel.setText(metadataWrangler.setMetadataLabel(imageFile));
     }
 
     //This method must always be called after the getImageMetadata method
     @FXML
     private void openGoogleMapsGPS() {
-        if(applicationLogic.checkGeolocationForNull(geoLocation)) {
-            return;
-        } else {
-            String url = "https://maps.google.com/?q=" + geoLocation.getLatitude() + "," + geoLocation.getLongitude();
+        if(metadataWrangler.getGPSMetadataForNullBoolean()) {
+            String url = metadataWrangler.getGoogleMapsURL();
             hostServices.showDocument(url);
         }
+        return;
 
 
     }
