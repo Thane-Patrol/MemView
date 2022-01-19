@@ -11,6 +11,7 @@
 .button {
     -fx-background-color: #696969;
     -fx-text-fill: #f0f0f0;
+    -fx-opacity: 0.6;
 }
 
 .scroll {
@@ -24,4 +25,6 @@
 
 .menu {
     -fx-font-size: 16px;
+    -fx-opacity: 0.6;
+
 }
