@@ -20,6 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Popup;
 import javafx.stage.Screen;
 import photo.conversion.ConversionLogic;
 import preferences.UserPreferences;
@@ -95,7 +96,7 @@ public class HelloController {
     @FXML
     private MenuBar menuBar;
 
-
+    private PhotoConversionPopupController photoConversionPopupController;
 
     private GeoLocation geoLocation;
     private HostServices hostServices;
@@ -118,6 +119,7 @@ public class HelloController {
         metadataWrangler = new MetadataWrangler(userPreferences, applicationLogic);
 
 
+
         mainImageView = new ImageView();
         zoomBoxView = new ImageView();
         zoomBoxContainer = new Pane();
@@ -135,8 +137,16 @@ public class HelloController {
     }
 
     @FXML
+    public void showConversionPopup() {
+        photoConversionPopupController.showPopup();
+    }
+
+    public void setPhotoConversionPopupController(PhotoConversionPopupController photoConversionPopupController) {
+        this.photoConversionPopupController = photoConversionPopupController;
+    }
+
+    @FXML
     private void initialize() throws IOException {
-        //Getting host services for access to browser
 
         //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images unless a GIF then use native Image object
         File firstImagePath = directoryReader.getCurrentImage().toFile();
