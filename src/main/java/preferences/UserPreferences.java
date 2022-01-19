@@ -16,7 +16,7 @@ public class UserPreferences {
     }
     //todo change all defaults to false when proper menu functionality is implemented
     public boolean getMetadataGPSLabel() {
-        return userPreferences.getBoolean("SHOW_GPS_METADATA", true);
+        return userPreferences.getBoolean("SHOW_GPS_METADATA", false);
     }
 
     //True for show Creation date
@@ -25,7 +25,7 @@ public class UserPreferences {
     }
 
     public boolean getMetadataCreationLabel() {
-        return userPreferences.getBoolean("SHOW_CREATION_METADATA", true);
+        return userPreferences.getBoolean("SHOW_CREATION_METADATA", false);
     }
 
     public void setMetadataFileSizeLabel(boolean state) {
@@ -33,6 +33,6 @@ public class UserPreferences {
     }
 
     public boolean getMetadataFileSizeLabel() {
-        return userPreferences.getBoolean("SHOW_FILE_SIZE_METADATA", true);
+        return userPreferences.getBoolean("SHOW_FILE_SIZE_METADATA", false);
     }
 }

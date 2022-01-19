@@ -92,6 +92,11 @@ public class HelloController {
     @FXML
     private Label metadataLabel;
 
+    @FXML
+    private MenuBar menuBar;
+
+
+
     private GeoLocation geoLocation;
     private HostServices hostServices;
 
@@ -145,7 +150,7 @@ public class HelloController {
 
         resizeImageForScreen(mainImageView);
 
-        buttonHolder.toFront();
+        //buttonHolder.toFront();
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
         applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
@@ -224,23 +229,8 @@ public class HelloController {
         }
     }
 
-    //todo clear up this method and integrate it with the UserPreferences and metadata wrangler class
     public void getImageMetadata(Path imageFile) throws IOException{
         metadataLabel.toFront();
-        //BasicFileAttributes fileAttributes = Files.readAttributes(imageFile, BasicFileAttributes.class);
-        /*FileTime date = fileAttributes.creationTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        String dateCreated = dateFormat.format(date.toMillis());
-
-        //GPS data in Degrees Minutes Seconds format
-        geoLocation = applicationLogic.getGPSCoordinates(imageFile);
-        String gpsCoordinates;
-        if(applicationLogic.checkGeolocationForNull(geoLocation)) {
-            gpsCoordinates = "No GPS information found";
-        } else {
-            gpsCoordinates = geoLocation.toDMSString();
-        }
-        */
         metadataLabel.setText(metadataWrangler.setMetadataLabel(imageFile));
     }
 
@@ -252,8 +242,6 @@ public class HelloController {
             hostServices.showDocument(url);
         }
         return;
-
-
     }
 
     @FXML
@@ -371,5 +359,41 @@ public class HelloController {
     public DirectoryReader getDirectoryReader() {
         return directoryReader;
     }
+
+    //todo Make sure radio buttons reflect the preferences file
+    @FXML
+    private void toggleGPSExifPreferences() throws IOException {
+        //If currently set to true, set to false - default is false
+        if(userPreferences.getMetadataGPSLabel()) {
+            userPreferences.setMetadataGPSLabel(false);
+            getImageMetadata(directoryReader.getCurrentImage());
+        } else {
+            userPreferences.setMetadataGPSLabel(true);
+            getImageMetadata(directoryReader.getCurrentImage());
+        }
+    }
+
+    @FXML
+    private void toggleFileSizePreferences() throws IOException {
+        if(userPreferences.getMetadataFileSizeLabel()) {
+            userPreferences.setMetadataFileSizeLabel(false);
+            getImageMetadata(directoryReader.getCurrentImage());
+        } else {
+            userPreferences.setMetadataFileSizeLabel(true);
+            getImageMetadata(directoryReader.getCurrentImage());
+        }
+    }
+
+    @FXML
+    private void toggleCreationDatePreferences() throws IOException {
+        if(userPreferences.getMetadataCreationLabel()) {
+            userPreferences.setMetadataCreationLabel(false);
+            getImageMetadata(directoryReader.getCurrentImage());
+        } else {
+            userPreferences.setMetadataCreationLabel(true);
+            getImageMetadata(directoryReader.getCurrentImage());
+        }
+    }
+
 
 }
