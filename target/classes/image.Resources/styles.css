@@ -5,6 +5,7 @@
     -fx-background-color: #474747; 
     -fx-text-fill: #f0f0f0;
     -fx-font-weight: 300;
+    -fx-base: #474747;
 }
 
 .button {
@@ -19,4 +20,8 @@
     -fx-font-family: "Verdana" "Serif" sans-serif;
     -fx-padding: 10px;
     -fx-font-weight: 300;
+}
+
+.menu {
+    -fx-font-size: 16px;
 }
