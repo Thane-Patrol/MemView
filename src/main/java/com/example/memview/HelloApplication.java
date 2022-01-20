@@ -46,7 +46,8 @@ public class HelloApplication extends Application {
         scene.getRoot().requestFocus();
 
         //popup FXML file for conversion of photos
-        Popup popup = new Popup();
+        //This needs to be called before the main controller
+        Stage popupStage = new Stage();
         FXMLLoader fxmlLoaderPopupConversion = new FXMLLoader(HelloApplication.class.getResource("photo-conversion.fxml"));
         Scene popupScene = new Scene(fxmlLoaderPopupConversion.load(), 640, 480);
         PhotoConversionPopupController photoConversionPopupController = fxmlLoaderPopupConversion.getController();
@@ -55,8 +56,13 @@ public class HelloApplication extends Application {
         photoConversionPopupController.setMainStage(mainStage);
         controller.setPhotoConversionPopupController(photoConversionPopupController);
 
-        popup.getContent().add(popupScene.getRoot());
-        photoConversionPopupController.setPopup(popup);
+        //popup.getContent().add(popupScene.getRoot());
+        //photoConversionPopupController.setPopup(popup);
+        popupStage.setScene(popupScene);
+        photoConversionPopupController.setPopupStage(popupStage);
+        popupStage.setTitle("Photo Resizing");
+
+
     }
 
     public Stage getMainStage() {return this.mainStage;}

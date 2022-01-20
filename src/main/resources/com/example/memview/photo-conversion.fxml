@@ -4,65 +4,63 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionPopupController">
-   <children>
+<AnchorPane prefHeight="400.0" prefWidth="640.0" styleClass="root" stylesheets="@../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionPopupController">
+
       <VBox layoutX="14.0" layoutY="14.0" prefHeight="443.0" prefWidth="241.0">
-         <children>
+
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="241.0" text="List of files">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <SplitPane dividerPositions="0.805439330543933" prefHeight="160.0" prefWidth="200.0">
-              <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-              </items>
-            </SplitPane>
-         </children>
+            <ScrollPane prefHeight="417.0" prefWidth="241.0">
+
+                  <VBox fx:id="radioButtonFileSelectVBox" prefHeight="395.0" prefWidth="225.0" />
+
+            </ScrollPane>
+
       </VBox>
       <VBox layoutX="320.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0">
-         <children>
+
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="100.0" text="Resize" />
             <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
+
                   <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
+
                         <Label alignment="CENTER" prefHeight="16.0" prefWidth="102.0" text="Ratio slider" />
                         <Slider />
                         <HBox prefHeight="100.0" prefWidth="200.0">
-                           <children>
+
                               <TextField prefHeight="25.0" prefWidth="44.0" />
                               <Label text="x" />
                               <TextField prefHeight="25.0" prefWidth="44.0" />
-                           </children>
+
                         </HBox>
-                     </children>
+
                   </VBox>
-               </children>
+
             </HBox>
             <HBox prefHeight="60.0" prefWidth="100.0">
-               <children>
                   <CheckBox mnemonicParsing="false" prefHeight="34.0" prefWidth="100.0" text="Keep Aspect Ratio" />
-               </children>
+
             </HBox>
-         </children>
+
       </VBox>
       <VBox layoutX="468.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0">
-         <children>
+
             <Label text="Format" />
             <ListView prefHeight="200.0" prefWidth="200.0" />
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="108.0" text="Convert" />
-         </children>
+            <Button mnemonicParsing="false" onAction="#storeListOfImagesToConvert" prefHeight="25.0" prefWidth="108.0" text="Convert" />
+
       </VBox>
       <Button layoutX="332.0" layoutY="415.0" mnemonicParsing="false" onAction="#hidePopup" text="Cancel" />
-   </children>
+
 </AnchorPane>

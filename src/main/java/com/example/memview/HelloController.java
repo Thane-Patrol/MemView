@@ -118,8 +118,6 @@ public class HelloController {
         applicationLogic = new PhotoViewerApplicationLogic(directoryReader, this);
         metadataWrangler = new MetadataWrangler(userPreferences, applicationLogic);
 
-
-
         mainImageView = new ImageView();
         zoomBoxView = new ImageView();
         zoomBoxContainer = new Pane();
@@ -143,6 +141,9 @@ public class HelloController {
 
     public void setPhotoConversionPopupController(PhotoConversionPopupController photoConversionPopupController) {
         this.photoConversionPopupController = photoConversionPopupController;
+
+        //This needs to be called here to prevent NPE
+        photoConversionPopupController.setConversionLogic(conversionLogicClass);
     }
 
     @FXML
