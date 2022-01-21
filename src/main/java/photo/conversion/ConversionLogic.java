@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -24,58 +25,34 @@ public class ConversionLogic {
         this.directoryReader = directoryReader;
     }
 
-    //Class used to determine
-    public List<File> convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extension, String pathToSaveOutput,
-                                                  boolean toResize, boolean keepAspectRatio, int finalHeight, int finalWidth) {
+    //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
+    //
+    public List<File> convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
+                                                  boolean toResize, int finalHeight, int finalWidth) {
 
         List<File> listOfConvertedFiles = new ArrayList<>();
 
-        if (toResize) {
-            resizePhotosToSize(listOfFilesToConvert, keepAspectRatio, finalHeight, finalWidth);
-        } else {
-            for (Path path : listOfFilesToConvert) {
-                try {
-                    BufferedImage bufferedImage = ImageIO.read(path.toFile());
-                    ImageIO.write(bufferedImage, extension, new File(pathToSaveOutput + path.getFileName() + "." + extension));
-
-
-
-                    //Directory File
-                    File dir = new File(pathToSaveOutput);
-                    //Output file to write to
-                    File outputFile = new File(dir, path.getFileName() + "." + extension);
-                    ImageIO.write(bufferedImage, extension, outputFile);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-
-
-        return listOfConvertedFiles;
-    }
-
-    private void saveFilesToDisk(List<Path> listOfFilesToSave, String directory) {
-
-    }
-
-    public List<File> resizePhotosToSize(List<Path> listOfFilesToResize,
-                                         boolean keepAspectRatio, int finalPixelHeight, int finalPixelWidth) {
-        List<File> listOfResizedFiles = new ArrayList<>();
-        BufferedImage finalImage;
-
-        for (Path path : listOfFilesToResize) {
+        for (Path path : listOfFilesToConvert) {
             try {
+                //Read Image into bufferedImage object, this makes the image file agnostic due to TwelveMonkeys
                 BufferedImage originalImage = ImageIO.read(path.toFile());
-                finalImage = Thumbnails.of(originalImage).size(finalPixelWidth, finalPixelHeight).asBufferedImage();
+                BufferedImage finalImage = originalImage;
+
+                //Make the decision on further file manipulation with if statements
+                if(toResize) {
+                    finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
+                }
+                //Get filename without the extension included
+                String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
+
+                //Save the image to File as the extension requested, to the directory requested by user
+                ImageIO.write(finalImage, extensionToSaveAs, new File(pathToSaveOutput +  fileNameSanitized + "." + extensionToSaveAs));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        return listOfResizedFiles;
+        return listOfConvertedFiles;
     }
 
     public List<List> getListOfRawFilesInDirectory() {

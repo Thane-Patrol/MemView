@@ -89,11 +89,11 @@ public class PhotoConversionPopupController {
         int finalPixelWidth = Integer.valueOf(widthTextField.getText());
 
         boolean toResize = true;
-        boolean keepAspectRatio = keepAspectRatioCheckBox.isSelected();
+        boolean toConvertFileType = true;
 
-        //todo change the logic so the extension is recorded from user and used as method parameter below as well as a path of output dir
+        //todo Record target filetype, destination path and final size
         conversionLogic.convertListOfFilesToConvert(listOfSelectedFilePaths, "jpg", path,
-                toResize, keepAspectRatio, finalPixelHeight, finalPixelWidth);
+                toResize, finalPixelHeight, finalPixelWidth);
     }
 
     private void initializePopup() {

@@ -55,11 +55,11 @@
             <version>1.4.1</version>
         </dependency>
         -->
-        <!-- Used mainly for reading File Extensions -->
+        <!-- Used mainly for reading File Extensions  https://commons.apache.org/proper/commons-io/ -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.11.0</version>
         </dependency>
 
         <!--metadata reading from: https://github.com/drewnoakes/metadata-extractor -->
