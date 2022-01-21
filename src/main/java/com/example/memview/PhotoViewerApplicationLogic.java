@@ -1,38 +1,37 @@
 package com.example.memview;
 
+import com.drew.imaging.ImageProcessingException;
+import com.drew.lang.GeoLocation;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
+import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collection;
 import java.util.List;
+import com.drew.imaging.ImageMetadataReader;
 
 public class PhotoViewerApplicationLogic {
 
-    private DirectoryReader directoryReader;
+    private final DirectoryReader directoryReader;
     private double vboxHeight;
-    private HelloController helloController;
+    private final MainController mainController;
 
-    public PhotoViewerApplicationLogic(DirectoryReader directoryReader, HelloController helloController) {
+    public PhotoViewerApplicationLogic(DirectoryReader directoryReader, MainController mainController) {
         this.directoryReader = directoryReader;
         this.vboxHeight = 250;
-        this.helloController = helloController;
+        this.mainController = mainController;
 
     }
 
@@ -64,7 +63,7 @@ public class PhotoViewerApplicationLogic {
         return fileSizeWithBytes;
     }
 
-    public HBox addPhotoThumbnailsToHBox(HBox hBox) {
+    public void addPhotoThumbnailsToHBox(HBox hBox) {
 
         List<Path> filePaths = directoryReader.getListOfFilePaths();
 
@@ -74,28 +73,41 @@ public class PhotoViewerApplicationLogic {
             Label fileName = new Label();
             fileName.setText(s.getFileName().toString());
 
-            BufferedImage imageSwing = null;
+            Image image = null;
             try {
-                imageSwing = ImageIO.read(s.toFile());
+                image = directoryReader.loadImageFromPath(s);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Image image = SwingFXUtils.toFXImage(imageSwing, null);
+
 
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
+            //imageView.setStyle("-fx-background-color:#47474700;");
 
             //todo set height based upon reasonable screenbounds and/or current window size
             imageView.setFitHeight(200);
+            //fileName.setStyle("-fx-text-fill: #f0f0f0; -fx-font-size: 24px; -fx-font-family: sans-serif; -fx-font-weight: 300;");
 
             VBox vBox = new VBox();
             vBox.getChildren().addAll(imageView, fileName);
+            //vBox.setStyle("-fx-background-color:#47474700; -fx-font-size: 24px; -fx-font-family: sans-serif; -fx-padding: 10px; -fx-font-weight: 300;");
+
 
             //Set the mainImage view to the thumbnail when clicked on
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
-                helloController.gotoImageOnClick(image);
-                    });
+                try {
+                    mainController.gotoImageOnClick(directoryReader.loadImage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    mainController.updateMetadataLabel(directoryReader.getCurrentImage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
             //vBox.setId(String.valueOf(i.incrementAndGet()));
             hBox.getChildren().add(vBox);
@@ -103,7 +115,7 @@ public class PhotoViewerApplicationLogic {
             //To keep track of the height of a single vbox
         });
 
-        return hBox;
+
     }
 
     //Used to get the region of the image underneath the main image
@@ -117,16 +129,20 @@ public class PhotoViewerApplicationLogic {
         //System.out.println("Size of bounding box: " + "Height: " + zoomBox.getBoundsInParent().getHeight() + "width: " + zoomBox.getBoundsInParent().getWidth());
 
         //Integers used for specifying the region that is underneath the zoombox
-        int topLeftPixel_X = (int) mouseEvent.getSceneX(); //Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxX()));
-        int topLeftPixel_Y = (int) mouseEvent.getSceneY(); //Math.toIntExact(Math.round(zoomBox.getBoundsInParent().getMaxY()));
+        int topLeftPixel_X = (int) mouseEvent.getSceneX();
+        int topLeftPixel_Y = (int) mouseEvent.getSceneY();
 
-        Image zoomedImageSection;
+        WritableImage zoomedImageSection = new WritableImage(50, 50);
 
-        if(isZoomBoxOverTheMainImage(zoomBox, mainImageView)) {
-            zoomedImageSection = new WritableImage(mainImageView.getImage().getPixelReader(), topLeftPixel_X, topLeftPixel_Y, 50, 50);
-        } else {
-            zoomedImageSection = mainImageView.getImage();
-        }
+        PixelReader pixelReader = mainImageView.getImage().getPixelReader();
+        WritablePixelFormat<IntBuffer> intBufferPixelFormat = PixelFormat.getIntArgbInstance();
+
+        int[] pixelArray = new int[2500];
+        pixelReader.getPixels(topLeftPixel_X, topLeftPixel_Y, 50, 50, intBufferPixelFormat, pixelArray, 0, 50);
+
+        PixelWriter pixelWriter = zoomedImageSection.getPixelWriter();
+        pixelWriter.setPixels(0, 0, 50, 50, intBufferPixelFormat, pixelArray, 0, 50);
+
 
         //todo better tracking of the mouse to create zoombox on section of image underneath
         //todo A robust check of whether the zoomBox is creating a box over the imageView, this is to prevent IOOBExceptions
@@ -136,6 +152,36 @@ public class PhotoViewerApplicationLogic {
 
     public boolean isZoomBoxOverTheMainImage(Pane zoomBox, ImageView mainImageView) {
         return zoomBox.intersects(mainImageView.getBoundsInLocal());
+    }
+
+    public GeoLocation getGPSCoordinates(Path imagePath) {
+        File imageFile = imagePath.toFile();
+        Metadata metadata = null;
+        try {
+            metadata = ImageMetadataReader.readMetadata(imageFile);
+        } catch (ImageProcessingException imageProcessingException) {
+            imageProcessingException.fillInStackTrace();
+
+        } catch (IOException ioException) {
+            ioException.fillInStackTrace();
+        }
+
+        Collection<GpsDirectory> gpsDirectories = metadata.getDirectoriesOfType(GpsDirectory.class);
+
+        GeoLocation geoLocation = null;
+        for(GpsDirectory gpsDirectory : gpsDirectories) {
+            geoLocation = gpsDirectory.getGeoLocation();
+
+        }
+
+        return geoLocation;
+    }
+
+    public boolean checkGeolocationForNull(GeoLocation geoLocation) {
+        if (geoLocation == null || geoLocation.isZero()) {
+            return true;
+        }
+        return false;
     }
 
     public double getVboxHeight() {

@@ -40,30 +40,61 @@
             <artifactId>ij</artifactId>
             <version>1.53d</version>
         </dependency>
-        <!-- https://github.com/palexdev/MaterialFX -->
-        <!-- For cool buttons and nice UI stuff -->
+        <!--
+         https://github.com/palexdev/MaterialFX
+         For cool buttons and nice UI stuff
         <dependency>
             <groupId>io.github.palexdev</groupId>
             <artifactId>materialfx</artifactId>
             <version>11.12.0</version>
         </dependency>
+        Required by materialFX  https://github.com/TomasMikula/ReactFX
+        <dependency>
+            <groupId>org.reactfx</groupId>
+            <artifactId>reactfx</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        -->
+        <!-- Used mainly for reading File Extensions  https://commons.apache.org/proper/commons-io/ -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
 
+        <!--metadata reading from: https://github.com/drewnoakes/metadata-extractor -->
+        <dependency>
+            <groupId>com.drewnoakes</groupId>
+            <artifactId>metadata-extractor</artifactId>
+            <version>2.16.0</version>
+        </dependency>
+
+        <!-- Creating thumbnails directly from bufferedImage - also to add watermarks -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.15</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>17-ea+11</version>
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>17-ea+11</version>
         </dependency>
+
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
             <version>11.1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -194,9 +225,11 @@
                             <!-- mandatory -->
                             <mainClass>com.example.memview.HelloApplication</mainClass>
                             <!-- optional -->
+                            <!-- bundling JRE causes failures, needs investigation -->
+                            <bundleJre>false</bundleJre>
                             <generateInstaller>true</generateInstaller>
-                            <administratorRequired>true</administratorRequired>
-                            <platform>windows</platform>
+                            <administratorRequired>false</administratorRequired>
+                            <platform>linux</platform>
 
 
                         </configuration>
