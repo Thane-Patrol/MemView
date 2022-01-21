@@ -1,27 +1,20 @@
 package photo.conversion;
 
-import com.example.memview.HelloController;
 import directory.handling.DirectoryReader;
-import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import net.coobird.thumbnailator.Thumbnails;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ConversionLogic {
 
@@ -31,37 +24,56 @@ public class ConversionLogic {
         this.directoryReader = directoryReader;
     }
 
-    public List<File> convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extension, String pathToSaveOutput) {
+    //Class used to determine
+    public List<File> convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extension, String pathToSaveOutput,
+                                                  boolean toResize, boolean keepAspectRatio, int finalHeight, int finalWidth) {
+
         List<File> listOfConvertedFiles = new ArrayList<>();
 
+        if (toResize) {
+            resizePhotosToSize(listOfFilesToConvert, keepAspectRatio, finalHeight, finalWidth);
+        } else {
+            for (Path path : listOfFilesToConvert) {
+                try {
+                    BufferedImage bufferedImage = ImageIO.read(path.toFile());
+                    ImageIO.write(bufferedImage, extension, new File(pathToSaveOutput + path.getFileName() + "." + extension));
 
 
-        for (Path path : listOfFilesToConvert) {
-            System.out.println("Files to convert: " + path.toString());
-            try {
-                BufferedImage bufferedImage = ImageIO.read(path.toFile());
 
+                    //Directory File
+                    File dir = new File(pathToSaveOutput);
+                    //Output file to write to
+                    File outputFile = new File(dir, path.getFileName() + "." + extension);
+                    ImageIO.write(bufferedImage, extension, outputFile);
 
-                ImageIO.write(bufferedImage, extension, new File(pathToSaveOutput + path.getFileName() + "." + extension));
-
-                //Directory File
-                File dir = new File(pathToSaveOutput);
-                //Output file to write to
-                File outputFile = new File(dir, path.getFileName() + "." + extension);
-                ImageIO.write(bufferedImage, extension, outputFile);
-
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
 
 
         return listOfConvertedFiles;
     }
 
-    public List<File> resizePhotosToSize(List<File> listOfFilesToResize,
+    private void saveFilesToDisk(List<Path> listOfFilesToSave, String directory) {
+
+    }
+
+    public List<File> resizePhotosToSize(List<Path> listOfFilesToResize,
                                          boolean keepAspectRatio, int finalPixelHeight, int finalPixelWidth) {
         List<File> listOfResizedFiles = new ArrayList<>();
+        BufferedImage finalImage;
+
+        for (Path path : listOfFilesToResize) {
+            try {
+                BufferedImage originalImage = ImageIO.read(path.toFile());
+                finalImage = Thumbnails.of(originalImage).size(finalPixelWidth, finalPixelHeight).asBufferedImage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         return listOfResizedFiles;
     }

@@ -1,20 +1,11 @@
 package com.example.memview;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -31,7 +22,7 @@ public class HelloApplication extends Application {
         //main FXML file
         FXMLLoader fxmlLoaderMain = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoaderMain.load(), 640, 480);
-        HelloController controller = fxmlLoaderMain.getController();
+        MainController controller = fxmlLoaderMain.getController();
         controller.setMainApp(this);
         controller.setHostServices(this.getHostServices());
 

@@ -1,8 +1,9 @@
 package com.example.memview;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -14,20 +15,26 @@ import java.util.List;
 
 public class PhotoConversionPopupController {
     private Stage stage;
-    private HelloController mainController;
+    private MainController mainController;
     private Stage mainStage;
     private ConversionLogic conversionLogic;
     private List<RadioButton> radioButtonList;
     private List<Path> pathList;
     @FXML
     private VBox radioButtonFileSelectVBox;
+    @FXML
+    private CheckBox keepAspectRatioCheckBox;
+    @FXML
+    private TextField heightTextField;
+    @FXML
+    private TextField widthTextField;
 
 
     public PhotoConversionPopupController() {
 
     }
 
-    public void setMainController(HelloController mainController) {
+    public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
@@ -62,6 +69,10 @@ public class PhotoConversionPopupController {
     private void storeListOfImagesToConvert() {
         List<Path> listOfSelectedFilePaths = new ArrayList<>();
 
+        //todo check if image selected is already of the file type being converted if so do not add it
+        //todo create prompt to tell user that particular image/s are already of the selected file type
+        //todo then have option to uncheck the images manually or automatically deselect all
+        //todo have a method for checking file renaming
         for(RadioButton radioButton : radioButtonList) {
             if(radioButton.isSelected()) {
                 for(Path path : pathList) {
@@ -73,8 +84,16 @@ public class PhotoConversionPopupController {
         }
         String path = "/home/hugh/Documents/Development/javaMemView/output_dir/";
 
+        //todo Sanitize input to prevent numbers
+        int finalPixelHeight = Integer.valueOf(heightTextField.getText());
+        int finalPixelWidth = Integer.valueOf(widthTextField.getText());
+
+        boolean toResize = true;
+        boolean keepAspectRatio = keepAspectRatioCheckBox.isSelected();
+
         //todo change the logic so the extension is recorded from user and used as method parameter below as well as a path of output dir
-        conversionLogic.convertListOfFilesToConvert(listOfSelectedFilePaths, "jpg", path);
+        conversionLogic.convertListOfFilesToConvert(listOfSelectedFilePaths, "jpg", path,
+                toResize, keepAspectRatio, finalPixelHeight, finalPixelWidth);
     }
 
     private void initializePopup() {

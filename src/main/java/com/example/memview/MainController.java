@@ -2,11 +2,8 @@ package com.example.memview;
 
 import com.drew.lang.GeoLocation;
 import directory.handling.DirectoryReader;
-import javafx.application.Application;
 import javafx.application.HostServices;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
@@ -20,25 +17,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
-import javafx.stage.Popup;
 import javafx.stage.Screen;
 import photo.conversion.ConversionLogic;
 import preferences.UserPreferences;
 
-import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 
-public class HelloController {
+public class MainController {
 
     @FXML
     private ImageView mainImageView;
@@ -104,7 +93,7 @@ public class HelloController {
     //Used for keeping track of the amount of level of scrolling for zoom calculations
     private double scrollAmountTracker = 0.0;
 
-    public HelloController() {
+    public MainController() {
 
         root = new StackPane();
 

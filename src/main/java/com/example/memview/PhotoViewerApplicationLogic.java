@@ -3,22 +3,15 @@ package com.example.memview;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
@@ -33,12 +26,12 @@ public class PhotoViewerApplicationLogic {
 
     private final DirectoryReader directoryReader;
     private double vboxHeight;
-    private final HelloController helloController;
+    private final MainController mainController;
 
-    public PhotoViewerApplicationLogic(DirectoryReader directoryReader, HelloController helloController) {
+    public PhotoViewerApplicationLogic(DirectoryReader directoryReader, MainController mainController) {
         this.directoryReader = directoryReader;
         this.vboxHeight = 250;
-        this.helloController = helloController;
+        this.mainController = mainController;
 
     }
 
@@ -105,12 +98,12 @@ public class PhotoViewerApplicationLogic {
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
                 try {
-                    helloController.gotoImageOnClick(directoryReader.loadImage());
+                    mainController.gotoImageOnClick(directoryReader.loadImage());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    helloController.updateMetadataLabel(directoryReader.getCurrentImage());
+                    mainController.updateMetadataLabel(directoryReader.getCurrentImage());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
