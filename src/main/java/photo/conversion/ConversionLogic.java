@@ -38,6 +38,7 @@ public class ConversionLogic {
                 BufferedImage originalImage = ImageIO.read(path.toFile());
                 BufferedImage finalImage = originalImage;
 
+                //todo use the .outputFormat method to do the file conversion as well, considering Thumbnails uses the ImageIO api
                 //Make the decision on further file manipulation with if statements
                 if(toResize) {
                     finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
