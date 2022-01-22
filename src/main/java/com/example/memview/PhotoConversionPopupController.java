@@ -84,7 +84,11 @@ public class PhotoConversionPopupController {
         }
         String path = "/home/hugh/Documents/Development/javaMemView/output_dir/";
 
-        //todo Sanitize input to prevent numbers
+        if(!conversionLogic.checkForCorrectInputInImageSize(heightTextField, widthTextField)) {
+            //todo create popup here to inform user of incorrect input then break
+            return;
+        }
+
         int finalPixelHeight = Integer.valueOf(heightTextField.getText());
         int finalPixelWidth = Integer.valueOf(widthTextField.getText());
 

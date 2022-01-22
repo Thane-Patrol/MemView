@@ -2,6 +2,7 @@ package photo.conversion;
 
 import directory.handling.DirectoryReader;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -26,7 +27,6 @@ public class ConversionLogic {
     }
 
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
-    //
     public List<File> convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
                                                   boolean toResize, int finalHeight, int finalWidth) {
 
@@ -38,7 +38,6 @@ public class ConversionLogic {
                 BufferedImage originalImage = ImageIO.read(path.toFile());
                 BufferedImage finalImage = originalImage;
 
-                //todo use the .outputFormat method to do the file conversion as well, considering Thumbnails uses the ImageIO api
                 //Make the decision on further file manipulation with if statements
                 if(toResize) {
                     finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
@@ -81,6 +80,21 @@ public class ConversionLogic {
 
 
         return arrayOfLists;
+    }
+
+    //return true if valid input is found
+    public boolean checkForCorrectInputInImageSize(TextField leftTextbox, TextField rightTextbox) {
+
+        if(leftTextbox.getText().isBlank() || rightTextbox.getText().isBlank()) {
+            return false;
+        }
+
+        //This regex checks for all input that contains anything except numbers, including characters or periods "."
+        String regexForChecking = "[^0-9]+";
+        if(leftTextbox.getText().contains(regexForChecking) || rightTextbox.getText().contains(regexForChecking)) {
+            return false;
+        }
+        return true;
     }
 
 }
