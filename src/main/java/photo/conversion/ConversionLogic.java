@@ -1,6 +1,8 @@
 package photo.conversion;
 
 import directory.handling.DirectoryReader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -27,7 +29,7 @@ public class ConversionLogic {
     }
 
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
-    public List<File> convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
+    public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
                                                   boolean toResize, int finalHeight, int finalWidth) {
 
         List<File> listOfConvertedFiles = new ArrayList<>();
@@ -52,7 +54,6 @@ public class ConversionLogic {
                 e.printStackTrace();
             }
         }
-        return listOfConvertedFiles;
     }
 
     public List<List> getListOfRawFilesInDirectory() {
@@ -91,10 +92,33 @@ public class ConversionLogic {
 
         //This regex checks for all input that contains anything except numbers, including characters or periods "."
         String regexForChecking = "[^0-9]+";
-        if(leftTextbox.getText().contains(regexForChecking) || rightTextbox.getText().contains(regexForChecking)) {
-            return false;
+        return !leftTextbox.getText().contains(regexForChecking) && !rightTextbox.getText().contains(regexForChecking);
+    }
+
+    //return true if no images are selected
+    public boolean checkForOneImageSelected(List<RadioButton> radioButtonList) {
+        int j = 0;
+        for (RadioButton radioButton : radioButtonList) {
+            if(!radioButton.isSelected()) {
+                j++;
+            }
         }
-        return true;
+        return j != radioButtonList.size();
+    }
+
+    public List<Path> addImagesToConvertToList(List<RadioButton> radioButtonList, List<Path> pathList) {
+        List<Path> listOfSelectedFilePaths = new ArrayList<>();
+
+        for(RadioButton radioButton : radioButtonList) {
+            if(radioButton.isSelected()) {
+                for(Path path : pathList) {
+                    if(path.getFileName().toString().equals(radioButton.getText())) {
+                        listOfSelectedFilePaths.add(path);
+                    }
+                }
+            }
+        }
+        return listOfSelectedFilePaths;
     }
 
 }

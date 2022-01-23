@@ -1,9 +1,7 @@
 package com.example.memview;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -73,19 +71,21 @@ public class PhotoConversionPopupController {
         //todo create prompt to tell user that particular image/s are already of the selected file type
         //todo then have option to uncheck the images manually or automatically deselect all
         //todo have a method for checking file renaming
-        for(RadioButton radioButton : radioButtonList) {
-            if(radioButton.isSelected()) {
-                for(Path path : pathList) {
-                    if(path.getFileName().toString().equals(radioButton.getText())) {
-                        listOfSelectedFilePaths.add(path);
-                    }
-                }
-            }
+
+        if(conversionLogic.checkForOneImageSelected(radioButtonList)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please select photos to convert");
+            alert.showAndWait().filter(response -> response == ButtonType.OK);
+            return;
         }
+
+        conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
+
+        //todo get input from user to replace this generic string once debugging is done
         String path = "/home/hugh/Documents/Development/javaMemView/output_dir/";
 
         if(!conversionLogic.checkForCorrectInputInImageSize(heightTextField, widthTextField)) {
-            //todo create popup here to inform user of incorrect input then break
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers are allowed for resolution");
+            alert.showAndWait().filter(response -> response == ButtonType.OK);
             return;
         }
 
@@ -98,6 +98,8 @@ public class PhotoConversionPopupController {
         //todo Record target filetype, destination path and final size
         conversionLogic.convertListOfFilesToConvert(listOfSelectedFilePaths, "jpg", path,
                 toResize, finalPixelHeight, finalPixelWidth);
+        //todo add a popup to tell user that conversion is successful or not
+
     }
 
     private void initializePopup() {
