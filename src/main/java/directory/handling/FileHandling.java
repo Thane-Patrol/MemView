@@ -72,4 +72,14 @@ public class FileHandling {
         this.directoryReader = directoryReader;
     }
 
+    public String getPathInCorrectFormat(String path) {
+        String toRtn;
+        if(OPERATING_SYSTEM.contains("win")) {
+            toRtn = path + "\\";
+        } else {
+            toRtn = path + "/";
+        }
+        return toRtn;
+    }
+
 }

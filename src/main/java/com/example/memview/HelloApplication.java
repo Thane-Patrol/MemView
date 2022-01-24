@@ -60,22 +60,6 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
 
-        //ToDo get rid of this debugging
-        //toDo sort out why the filepath that is being passed to the args array is not translating into a readable file Path for the DirectoryReader class
-        /*
-        for(String toPrint : args) {
-            System.out.println("Test filePath in Loop" + toPrint);
-        }
-        Path filePath = Paths.get(args[0]).toAbsolutePath();
-
-        System.out.println("File Path given to String[] args: " + filePath.toString());
-
-        firstImage = new Image(filePath.toUri().toString());
-
-         */
-
-
-
         launch();
     }
 }

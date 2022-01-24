@@ -22,11 +22,8 @@ public class DirectoryReader {
     private final Path outOfBoundsImagePath;
     private final List<String> fileExtensionList;
 
-    //todo add a method to read movie files and be able to play back
-
     // Creates the DirectoryReader object to index all the files in the directory of the open file
     // THe originalFile object is the absolute Path of the file opened
-    //todo change the constructor to a File object or whatever is appropriate for when a file is opened
     public DirectoryReader(String unsanitizedFileName) {
 
         String sanitisedFileName = unsanitizedFileName.replaceAll("//s","");

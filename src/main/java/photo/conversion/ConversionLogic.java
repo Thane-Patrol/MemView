@@ -1,10 +1,7 @@
 package photo.conversion;
 
 import directory.handling.DirectoryReader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -31,9 +28,8 @@ public class ConversionLogic {
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
     public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
                                                   boolean toResize, int finalHeight, int finalWidth) {
-
-        List<File> listOfConvertedFiles = new ArrayList<>();
-
+        System.out.println("can this method do something already");
+        listOfFilesToConvert.stream().forEach(s -> System.out.println(s));
         for (Path path : listOfFilesToConvert) {
             try {
                 //Read Image into bufferedImage object, this makes the image file agnostic due to TwelveMonkeys
@@ -102,12 +98,11 @@ public class ConversionLogic {
                 j++;
             }
         }
-        return j != radioButtonList.size();
+        return j == 0;
     }
 
     public List<Path> addImagesToConvertToList(List<RadioButton> radioButtonList, List<Path> pathList) {
         List<Path> listOfSelectedFilePaths = new ArrayList<>();
-
         for(RadioButton radioButton : radioButtonList) {
             if(radioButton.isSelected()) {
                 for(Path path : pathList) {
@@ -117,7 +112,14 @@ public class ConversionLogic {
                 }
             }
         }
+        listOfSelectedFilePaths.stream().forEach(s -> System.out.println(s));
         return listOfSelectedFilePaths;
+    }
+
+    //return true if valid directory specified by user
+    public boolean checkForValidDirectoryChosen(RadioButton radioButton, Label directoryLabel) {
+        return radioButton.isSelected() || !directoryLabel.getText().isEmpty() || !directoryLabel.getText().equals("Chosen Directory");
+
     }
 
     public DirectoryReader getDirectoryReader() {

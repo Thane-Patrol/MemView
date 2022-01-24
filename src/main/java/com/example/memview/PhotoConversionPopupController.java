@@ -34,6 +34,10 @@ public class PhotoConversionPopupController {
     private TextField widthTextField;
     @FXML
     private Label chosenDirectoryLabel;
+    @FXML
+    private CheckBox toResizeCheckBox;
+    @FXML
+    private RadioButton saveToCurrentDirectoryRadioButton;
 
 
     public PhotoConversionPopupController() {
@@ -73,8 +77,6 @@ public class PhotoConversionPopupController {
 
     @FXML
     private void storeListOfImagesToConvert() {
-        List<Path> listOfSelectedFilePaths = new ArrayList<>();
-
         //todo check if image selected is already of the file type being converted if so do not add it
         //todo create prompt to tell user that particular image/s are already of the selected file type
         //todo then have option to uncheck the images manually or automatically deselect all
@@ -88,26 +90,44 @@ public class PhotoConversionPopupController {
 
         conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
 
-        //todo get input from user to replace this generic string once debugging is done
-        String path = "/home/hugh/Documents/Development/javaMemView/output_dir/";
-
         if(!conversionLogic.checkForCorrectInputInImageSize(heightTextField, widthTextField)) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers are allowed for resolution");
             alert.showAndWait().filter(response -> response == ButtonType.OK);
             return;
         }
 
-        int finalPixelHeight = Integer.valueOf(heightTextField.getText());
-        int finalPixelWidth = Integer.valueOf(widthTextField.getText());
+        if(!conversionLogic.checkForValidDirectoryChosen(saveToCurrentDirectoryRadioButton, chosenDirectoryLabel)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please specify a valid directory");
+            alert.showAndWait().filter(response -> response == ButtonType.OK);
+        }
+        if(saveToCurrentDirectoryRadioButton.isSelected()) {
+            chosenDirectoryLabel.setText(conversionLogic.getDirectoryReader().getCurrentImage().getParent().toAbsolutePath().toString());
+        }
+        boolean toResize = toResizeCheckBox.isSelected();
+        int finalPixelHeight = 0;
+        int finalPixelWidth = 0;
+        if (toResize) {
+            finalPixelHeight = Integer.valueOf(heightTextField.getText());
+            finalPixelWidth = Integer.valueOf(widthTextField.getText());
+        }
 
-        boolean toResize = true;
-        boolean toConvertFileType = true;
+        //todo grey out all the resizing options if toResize is not selected
+
+        String amendedFilePath = fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText());
+
+        //If the user wants to save to the current directory the chosen directory button should be updated
 
         //todo Record target filetype, destination path and final size
-        conversionLogic.convertListOfFilesToConvert(listOfSelectedFilePaths, "jpg", path,
+        conversionLogic.convertListOfFilesToConvert(pathList, "jpg", amendedFilePath,
                 toResize, finalPixelHeight, finalPixelWidth);
-        //todo add a popup to tell user that conversion is successful or not
 
+        /*
+        if(succesesfulConversion) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Conversion successful!");
+            alert.showAndWait().filter(response -> response == ButtonType.FINISH);
+        }
+        //todo add a popup to tell user that conversion is successful or not
+        */
     }
 
     private void initializePopup() {
@@ -124,7 +144,6 @@ public class PhotoConversionPopupController {
     }
 
     public void openFileDirectoryToSpecifyOutputPath() {
-        String directory = conversionLogic.getDirectoryReader().getDirectoryAsString();
         fileHandling = mainController.getFileHandling();
 
         //This needs to be called before calling DirectoryChooser
