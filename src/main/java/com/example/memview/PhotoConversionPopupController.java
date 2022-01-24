@@ -3,6 +3,7 @@ package com.example.memview;
 import directory.handling.FileHandling;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -31,6 +32,8 @@ public class PhotoConversionPopupController {
     private TextField heightTextField;
     @FXML
     private TextField widthTextField;
+    @FXML
+    private Label chosenDirectoryLabel;
 
 
     public PhotoConversionPopupController() {
@@ -120,25 +123,15 @@ public class PhotoConversionPopupController {
         this.stage = popup;
     }
 
-    public Stage getStage() {
-        return this.stage;
-    }
-
     public void openFileDirectoryToSpecifyOutputPath() {
         String directory = conversionLogic.getDirectoryReader().getDirectoryAsString();
         fileHandling = mainController.getFileHandling();
 
-        //This needs to be called before calling FileChooser
+        //This needs to be called before calling DirectoryChooser
         fileHandling.getPhotoConversionStage(this.stage);
-        fileHandling.createDirectoryChoosingWindow();
-
-        //pop up for creating a explorer window
-        /*
-        try {
-            fileHandling.openSystemSpecific(directory);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
+        //The below needs to be called before calling the DirectoryChooser
+        fileHandling.setDirectoryReader(conversionLogic.getDirectoryReader());
+        String toSetLabel = fileHandling.createDirectoryChoosingWindow();
+        chosenDirectoryLabel.setText(toSetLabel);
     }
 }

@@ -3,12 +3,15 @@ package directory.handling;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 import java.io.IOException;
 
 public class FileHandling {
     private static String OPERATING_SYSTEM;
     private static Stage photoConversionStage;
     private static DirectoryChooser directoryChooser;
+    private static DirectoryReader directoryReader;
 
     public FileHandling() {
         String s = System.getProperty("os.name").toLowerCase();
@@ -25,9 +28,19 @@ public class FileHandling {
         this.directoryChooser = new DirectoryChooser();
     }
 
-    public void createDirectoryChoosingWindow() {
+    public String createDirectoryChoosingWindow() {
         directoryChooser.setTitle("Select a directory");
-        directoryChooser.showDialog(photoConversionStage);
+        directoryChooser.setInitialDirectory(directoryReader.getCurrentImage().getParent().toFile().getAbsoluteFile());
+        final File selectedDirectory = directoryChooser.showDialog(photoConversionStage);
+
+        if(selectedDirectory != null) {
+            selectedDirectory.getAbsolutePath();
+        } else {
+            return "No Directory Chosen";
+        }
+
+        return selectedDirectory.getAbsolutePath();
+
     }
 
     //todo mention in the README that linux OS need to have xdg-utils installed
@@ -37,7 +50,7 @@ public class FileHandling {
             processBuilder.command("explorer", filePath);
         } else if (OPERATING_SYSTEM.contains("mac")){
             processBuilder.command("open", filePath);
-            //linux is the catch all OS, this should be changed to support more OS's
+            //linux is the catch-all OS, this should be changed to support more OS's
         } else if (OPERATING_SYSTEM.contains("linux")) {
             //processBuilder.command("sh", "-c", "xdg-open", filePath);
             processBuilder.command("xdg-open", filePath);
@@ -53,6 +66,10 @@ public class FileHandling {
 
     public void getPhotoConversionStage(Stage stage) {
         photoConversionStage = stage;
+    }
+
+    public void setDirectoryReader(DirectoryReader directoryReader) {
+        this.directoryReader = directoryReader;
     }
 
 }
