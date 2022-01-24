@@ -64,7 +64,6 @@ public class ConversionLogic {
 
         for(Path path : directoryReader.getListOfFilePaths()) {
             Image image = new Image(path.toUri().toString(), 50, 0, true, false);
-            System.out.println(path.getFileName());
             ImageView thumbnail = new ImageView(image);
 
             RadioButton radioButton = new RadioButton();
@@ -121,4 +120,7 @@ public class ConversionLogic {
         return listOfSelectedFilePaths;
     }
 
+    public DirectoryReader getDirectoryReader() {
+        return directoryReader;
+    }
 }

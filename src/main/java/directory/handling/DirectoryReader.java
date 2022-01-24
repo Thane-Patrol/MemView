@@ -173,4 +173,8 @@ public class DirectoryReader {
         return fileNames;
     }
 
+    public String getDirectoryAsString() {
+        return getCurrentImage().getParent().toString();
+    }
+
 }

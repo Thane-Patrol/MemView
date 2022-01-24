@@ -1,12 +1,16 @@
 package com.example.memview;
 
+import directory.handling.FileHandling;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import photo.conversion.ConversionLogic;
 
+import java.awt.*;
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +20,7 @@ public class PhotoConversionPopupController {
     private MainController mainController;
     private Stage mainStage;
     private ConversionLogic conversionLogic;
+    private FileHandling fileHandling;
     private List<RadioButton> radioButtonList;
     private List<Path> pathList;
     @FXML
@@ -113,5 +118,27 @@ public class PhotoConversionPopupController {
 
     public void setPopupStage(Stage popup) {
         this.stage = popup;
+    }
+
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    public void openFileDirectoryToSpecifyOutputPath() {
+        String directory = conversionLogic.getDirectoryReader().getDirectoryAsString();
+        fileHandling = mainController.getFileHandling();
+
+        //This needs to be called before calling FileChooser
+        fileHandling.getPhotoConversionStage(this.stage);
+        fileHandling.createDirectoryChoosingWindow();
+
+        //pop up for creating a explorer window
+        /*
+        try {
+            fileHandling.openSystemSpecific(directory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
     }
 }

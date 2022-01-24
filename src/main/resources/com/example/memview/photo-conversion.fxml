@@ -4,6 +4,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
@@ -23,7 +24,7 @@
                   <VBox fx:id="radioButtonFileSelectVBox" prefHeight="395.0" prefWidth="225.0" />
             </ScrollPane>
       </VBox>
-      <VBox layoutX="320.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0">
+      <VBox layoutX="320.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="243.0" AnchorPane.topAnchor="14.0">
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="100.0" text="Resize" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                   <VBox prefHeight="200.0" prefWidth="100.0">
@@ -39,6 +40,13 @@
             <HBox prefHeight="60.0" prefWidth="100.0">
                   <CheckBox fx:id="keepAspectRatioCheckBox" mnemonicParsing="false" prefHeight="34.0" prefWidth="100.0" text="Keep Aspect Ratio" />
             </HBox>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="TOP" prefHeight="16.0" prefWidth="102.0" text="Save to:" />
+            <RadioButton mnemonicParsing="false" text="Current directory" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#openFileDirectoryToSpecifyOutputPath" text="Somewhere else" />
+         </children>
+      </VBox>
       </VBox>
       <VBox layoutX="468.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0">
             <Label text="Format" />
