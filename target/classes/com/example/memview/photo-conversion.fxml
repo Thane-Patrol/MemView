@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="640.0" styleClass="root" stylesheets="src/main/resources/image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionPopupController">
-      <VBox layoutX="14.0" layoutY="14.0" prefHeight="443.0" prefWidth="241.0">
+      <VBox layoutX="14.0" layoutY="23.0" prefHeight="434.0" prefWidth="241.0">
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="241.0" text="List of files">
                <font>
                   <Font size="20.0" />
@@ -46,6 +47,7 @@
             <RadioButton fx:id="saveToCurrentDirectoryRadioButton" mnemonicParsing="false" text="Current directory" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#openFileDirectoryToSpecifyOutputPath" prefHeight="25.0" prefWidth="165.0" text="Somewhere else" />
             <Label fx:id="chosenDirectoryLabel" alignment="CENTER" prefHeight="49.0" prefWidth="314.0" text="Chosen Directory" />
+            <ChoiceBox fx:id="outputFileFormatChoiceBox" prefWidth="150.0" />
          </children>
       </VBox>
       </VBox>

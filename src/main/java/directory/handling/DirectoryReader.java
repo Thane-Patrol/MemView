@@ -24,6 +24,7 @@ public class DirectoryReader {
     private int currentFileIndex;
     private final Path outOfBoundsImagePath;
     private final List<String> fileExtensionList;
+    private final List<String> writableFileExtensionList;
 
     // Creates the DirectoryReader object to index all the files in the directory of the open file
     // THe originalFile object is the absolute Path of the file opened
@@ -34,9 +35,13 @@ public class DirectoryReader {
         File originalFilePath = new File(sanitisedFileName);
         fileNames = new ArrayList<>();
         outOfBoundsImagePath = Paths.get("src/main/resources/testOutOfBoundsImage.png");
-
+        //Readable File Extensions
         fileExtensionList = FXCollections.observableArrayList();
         addFileExtensionsToList();
+        //Writable File Extensions
+        writableFileExtensionList = FXCollections.observableArrayList();
+        addWriteableFileExtensionsToList();
+
 
         //String representation of potential end of file paths, used for checking if the filetype is a photo or not
 
@@ -69,10 +74,38 @@ public class DirectoryReader {
         fileExtensionList.add(0, ".png");
         fileExtensionList.add(1, ".jpg");
         fileExtensionList.add(2, ".bmp");
-        fileExtensionList.add(3, ".webp");
-        fileExtensionList.add(4, ".hdr");
-        fileExtensionList.add(5, ".gif");
-        fileExtensionList.add(6, ".tiff");
+        fileExtensionList.add(3, ".cur");
+        fileExtensionList.add(4, ".ico");
+        fileExtensionList.add(5, ".pict");
+        fileExtensionList.add(6, ".pntg");
+        fileExtensionList.add(7, ".pam");
+        fileExtensionList.add(8, ".pbm");
+        fileExtensionList.add(9, ".pgm");
+        fileExtensionList.add(10, ".ppm");
+        fileExtensionList.add(11, ".pfm");
+        fileExtensionList.add(12, ".psd");
+        fileExtensionList.add(12, ".psb");
+        fileExtensionList.add(13, ".tga");
+        fileExtensionList.add(15, ".webp");
+        fileExtensionList.add(16, ".hdr");
+        fileExtensionList.add(17, ".gif");
+        fileExtensionList.add(18, ".tiff");
+        fileExtensionList.add(19, ".pcx");
+        fileExtensionList.add(20, ".dcx");
+        fileExtensionList.add(21, ".sgi");
+    }
+
+    private void addWriteableFileExtensionsToList() {
+        writableFileExtensionList.add(0, ".bmp");
+        writableFileExtensionList.add(1, ".ico");
+        writableFileExtensionList.add(2, ".icns");
+        writableFileExtensionList.add(3, ".jpg");
+        writableFileExtensionList.add(4, ".pict");
+        writableFileExtensionList.add(5, ".pnm");
+        writableFileExtensionList.add(6, ".psd");
+        writableFileExtensionList.add(7, ".tga");
+        writableFileExtensionList.add(8, ".tiff");
+
     }
 
     public Path getCurrentImage() {
