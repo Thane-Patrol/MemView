@@ -28,8 +28,9 @@ public class ConversionLogic {
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
     public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
                                                   boolean toResize, int finalHeight, int finalWidth) {
-        System.out.println("can this method do something already");
         listOfFilesToConvert.stream().forEach(s -> System.out.println(s));
+        //this strips the . off the file format as ImageIO.write needs the extension without the dot
+        String extensionCleaned = stripPeriodOffFileExtension(extensionToSaveAs);
         for (Path path : listOfFilesToConvert) {
             try {
                 //Read Image into bufferedImage object, this makes the image file agnostic due to TwelveMonkeys
@@ -39,12 +40,17 @@ public class ConversionLogic {
                 //Make the decision on further file manipulation with if statements
                 if(toResize) {
                     finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
+
                 }
                 //Get filename without the extension included
                 String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
+                System.out.println("FileName Sanitized: " + fileNameSanitized);
+
+                File toSave = new File(pathToSaveOutput +  fileNameSanitized  + extensionToSaveAs);
+                System.out.println("Final output for something not resized: " + toSave.toString());
 
                 //Save the image to File as the extension requested, to the directory requested by user
-                ImageIO.write(finalImage, extensionToSaveAs, new File(pathToSaveOutput +  fileNameSanitized + "." + extensionToSaveAs));
+                ImageIO.write(finalImage, extensionCleaned, toSave);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -112,7 +118,6 @@ public class ConversionLogic {
                 }
             }
         }
-        listOfSelectedFilePaths.stream().forEach(s -> System.out.println(s));
         return listOfSelectedFilePaths;
     }
 
@@ -124,5 +129,9 @@ public class ConversionLogic {
 
     public DirectoryReader getDirectoryReader() {
         return directoryReader;
+    }
+
+    private String stripPeriodOffFileExtension(String foo) {
+        return foo.replace(".", "");
     }
 }

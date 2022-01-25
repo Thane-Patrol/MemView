@@ -9,6 +9,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import org.apache.commons.io.FilenameUtils;
@@ -32,7 +35,7 @@ public class DirectoryReader {
         fileNames = new ArrayList<>();
         outOfBoundsImagePath = Paths.get("src/main/resources/testOutOfBoundsImage.png");
 
-        fileExtensionList = new ArrayList<>(7);
+        fileExtensionList = FXCollections.observableArrayList();
         addFileExtensionsToList();
 
         //String representation of potential end of file paths, used for checking if the filetype is a photo or not
@@ -174,4 +177,7 @@ public class DirectoryReader {
         return getCurrentImage().getParent().toString();
     }
 
+    public List<String> getFileExtensionList() {
+        return fileExtensionList;
+    }
 }

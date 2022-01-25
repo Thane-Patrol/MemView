@@ -1,6 +1,8 @@
 package com.example.memview;
 
+import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -18,12 +20,13 @@ import java.util.List;
 
 public class PhotoConversionPopupController {
     private Stage stage;
-    private MainController mainController;
     private Stage mainStage;
+    private MainController mainController;
     private ConversionLogic conversionLogic;
     private FileHandling fileHandling;
     private List<RadioButton> radioButtonList;
     private List<Path> pathList;
+    private DirectoryReader directoryReader;
     @FXML
     private VBox radioButtonFileSelectVBox;
     @FXML
@@ -38,10 +41,19 @@ public class PhotoConversionPopupController {
     private CheckBox toResizeCheckBox;
     @FXML
     private RadioButton saveToCurrentDirectoryRadioButton;
+    @FXML
+    private ChoiceBox outputFileFormatChoiceBox;
 
+    //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, MainController
 
     public PhotoConversionPopupController() {
+    }
 
+    public void setHelperObjectClasses(DirectoryReader directoryReader, ConversionLogic conversionLogic, FileHandling fileHandling, MainController mainController) {
+        this.directoryReader = directoryReader;
+        this.conversionLogic = conversionLogic;
+        this.fileHandling = fileHandling;
+        this.mainController = mainController;
     }
 
     public void setMainController(MainController mainController) {
@@ -54,11 +66,6 @@ public class PhotoConversionPopupController {
 
     @FXML
     private void initialize() {
-
-    }
-    //This must be called before the addListOfFilesToUserList method
-    public void setConversionLogic(ConversionLogic conversionLogic) {
-        this.conversionLogic = conversionLogic;
     }
 
     private void addListOfFilesToUserList() {
@@ -77,48 +84,62 @@ public class PhotoConversionPopupController {
 
     @FXML
     private void storeListOfImagesToConvert() {
+        List<Path> pathListToConvert = new ArrayList<>();
         //todo check if image selected is already of the file type being converted if so do not add it
         //todo create prompt to tell user that particular image/s are already of the selected file type
         //todo then have option to uncheck the images manually or automatically deselect all
         //todo have a method for checking file renaming
 
-        if(conversionLogic.checkForOneImageSelected(radioButtonList)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Please select photos to convert");
-            alert.showAndWait().filter(response -> response == ButtonType.OK);
+        //Checks for no photos selected otherwise they are added to the converted list
+        if(showNoPhotosSelectedAlert()) {
             return;
+        } else {
+            pathListToConvert = conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
         }
 
-        conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
+        //Checks for the resizing option being selected then checks for invalid characters in resolution TextFields
+        //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
+        boolean toResize = toResizeCheckBox.isSelected();
+        int finalPixelHeight = 0;
+        int finalPixelWidth = 0;
+        if (toResize) {
+            if(showIncorrectResolutionSpecifiedAlert()) {
+                return;
+            } else {
+                finalPixelHeight = Integer.valueOf(heightTextField.getText());
+                finalPixelWidth = Integer.valueOf(widthTextField.getText());
+            }
+        }
 
-        if(!conversionLogic.checkForCorrectInputInImageSize(heightTextField, widthTextField)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers are allowed for resolution");
-            alert.showAndWait().filter(response -> response == ButtonType.OK);
+        //Checks for valid output file type selected
+        String fileFormat;
+        if(showInvalidFileExtensionSpecifiedAlert()) {
             return;
+        } else {
+            fileFormat = outputFileFormatChoiceBox.getSelectionModel().getSelectedItem().toString();
+            System.out.println("File format:" + fileFormat);
         }
 
         if(!conversionLogic.checkForValidDirectoryChosen(saveToCurrentDirectoryRadioButton, chosenDirectoryLabel)) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Please specify a valid directory");
             alert.showAndWait().filter(response -> response == ButtonType.OK);
+            return;
         }
+        String amendedFilePath;
         if(saveToCurrentDirectoryRadioButton.isSelected()) {
-            chosenDirectoryLabel.setText(conversionLogic.getDirectoryReader().getCurrentImage().getParent().toAbsolutePath().toString());
+            amendedFilePath = fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString());
+            chosenDirectoryLabel.setText(amendedFilePath);
+        } else {
+             amendedFilePath = fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText());
         }
-        boolean toResize = toResizeCheckBox.isSelected();
-        int finalPixelHeight = 0;
-        int finalPixelWidth = 0;
-        if (toResize) {
-            finalPixelHeight = Integer.valueOf(heightTextField.getText());
-            finalPixelWidth = Integer.valueOf(widthTextField.getText());
-        }
+        System.out.println("File path to save as: " + amendedFilePath);
 
-        //todo grey out all the resizing options if toResize is not selected
 
-        String amendedFilePath = fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText());
 
         //If the user wants to save to the current directory the chosen directory button should be updated
 
         //todo Record target filetype, destination path and final size
-        conversionLogic.convertListOfFilesToConvert(pathList, "jpg", amendedFilePath,
+        conversionLogic.convertListOfFilesToConvert(pathListToConvert, fileFormat, amendedFilePath,
                 toResize, finalPixelHeight, finalPixelWidth);
 
         /*
@@ -131,6 +152,8 @@ public class PhotoConversionPopupController {
     }
 
     private void initializePopup() {
+        outputFileFormatChoiceBox.getItems().addAll(directoryReader.getFileExtensionList());
+        outputFileFormatChoiceBox.setValue(".jpg");
         addListOfFilesToUserList();
     }
 
@@ -144,8 +167,6 @@ public class PhotoConversionPopupController {
     }
 
     public void openFileDirectoryToSpecifyOutputPath() {
-        fileHandling = mainController.getFileHandling();
-
         //This needs to be called before calling DirectoryChooser
         fileHandling.getPhotoConversionStage(this.stage);
         //The below needs to be called before calling the DirectoryChooser
@@ -153,4 +174,33 @@ public class PhotoConversionPopupController {
         String toSetLabel = fileHandling.createDirectoryChoosingWindow();
         chosenDirectoryLabel.setText(toSetLabel);
     }
+
+    //Will return true if Alert is shown
+    private boolean showNoPhotosSelectedAlert() {
+        if(conversionLogic.checkForOneImageSelected(radioButtonList)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please select photos to convert");
+            alert.showAndWait().filter(response -> response == ButtonType.OK);
+            return true;
+        }
+        return false;
+    }
+
+    //Will return true if Alert is shown
+    private boolean showIncorrectResolutionSpecifiedAlert() {
+        if(!conversionLogic.checkForCorrectInputInImageSize(heightTextField, widthTextField)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers are allowed for resolution");
+            alert.showAndWait().filter(response -> response == ButtonType.OK);
+            return true;
+        }
+        return false;
+    }
+    //Will return true if Alert is shown
+     private boolean showInvalidFileExtensionSpecifiedAlert() {
+        if(outputFileFormatChoiceBox.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "No output file format selected. Please select a output format");
+            alert.showAndWait().filter(response -> response == ButtonType.OK);
+            return true;
+        }
+        return false;
+     }
 }

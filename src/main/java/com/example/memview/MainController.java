@@ -128,6 +128,10 @@ public class MainController {
         this.hostServices = hostServices;
     }
 
+    public void setServicesForPhotoController() {
+        photoConversionPopupController.setHelperObjectClasses(directoryReader, conversionLogicClass, fileHandling, this);
+    }
+
     @FXML
     public void showConversionPopup() {
         photoConversionPopupController.showPopup();
@@ -137,7 +141,7 @@ public class MainController {
         this.photoConversionPopupController = photoConversionPopupController;
 
         //This needs to be called here to prevent NPE
-        photoConversionPopupController.setConversionLogic(conversionLogicClass);
+        //photoConversionPopupController.setConversionLogic(conversionLogicClass);
     }
 
     @FXML
