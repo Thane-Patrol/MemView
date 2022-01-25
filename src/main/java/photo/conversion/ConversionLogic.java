@@ -28,7 +28,6 @@ public class ConversionLogic {
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
     public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
                                                   boolean toResize, int finalHeight, int finalWidth) {
-        listOfFilesToConvert.stream().forEach(s -> System.out.println(s));
         //this strips the . off the file format as ImageIO.write needs the extension without the dot
         String extensionCleaned = stripPeriodOffFileExtension(extensionToSaveAs);
         for (Path path : listOfFilesToConvert) {

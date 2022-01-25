@@ -213,4 +213,8 @@ public class DirectoryReader {
     public List<String> getFileExtensionList() {
         return fileExtensionList;
     }
+
+    public List<String> getWritableFileExtensionList() {
+        return writableFileExtensionList;
+    }
 }

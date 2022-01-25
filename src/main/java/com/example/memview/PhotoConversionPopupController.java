@@ -89,6 +89,7 @@ public class PhotoConversionPopupController {
         //todo create prompt to tell user that particular image/s are already of the selected file type
         //todo then have option to uncheck the images manually or automatically deselect all
         //todo have a method for checking file renaming
+        //todo implement checks to ensure files will not be converted into file types that will fail
 
         //Checks for no photos selected otherwise they are added to the converted list
         if(showNoPhotosSelectedAlert()) {
@@ -152,7 +153,7 @@ public class PhotoConversionPopupController {
     }
 
     private void initializePopup() {
-        outputFileFormatChoiceBox.getItems().addAll(directoryReader.getFileExtensionList());
+        outputFileFormatChoiceBox.getItems().addAll(directoryReader.getWritableFileExtensionList());
         outputFileFormatChoiceBox.setValue(".jpg");
         addListOfFilesToUserList();
     }
