@@ -26,16 +26,6 @@ public class HelloApplication extends Application {
         controller.setMainApp(this);
         controller.setHostServices(this.getHostServices());
 
-
-
-        mainStage.setTitle("MemView");
-        mainStage.setScene(scene);
-
-        //Set to start as Maximised Window to prevent weird multiMonitor issues
-        mainStage.setMaximized(true);
-        mainStage.show();
-        scene.getRoot().requestFocus();
-
         //popup FXML file for conversion of photos
         //This needs to be called before the main controller
         Stage popupStage = new Stage();
@@ -45,7 +35,9 @@ public class HelloApplication extends Application {
 
         photoConversionPopupController.setMainController(controller);
         photoConversionPopupController.setMainStage(mainStage);
+        //These two methods need to be called in this order
         controller.setPhotoConversionPopupController(photoConversionPopupController);
+        controller.setServicesForPhotoController();
 
         //popup.getContent().add(popupScene.getRoot());
         //photoConversionPopupController.setPopup(popup);
@@ -53,28 +45,19 @@ public class HelloApplication extends Application {
         photoConversionPopupController.setPopupStage(popupStage);
         popupStage.setTitle("Photo Resizing");
 
+        mainStage.setTitle("MemView");
+        mainStage.setScene(scene);
+
+        //Set to start as Maximised Window to prevent weird multiMonitor issues
+        mainStage.setMaximized(false);
+        mainStage.show();
+        scene.getRoot().requestFocus();
 
     }
 
     public Stage getMainStage() {return this.mainStage;}
 
     public static void main(String[] args) {
-
-        //ToDo get rid of this debugging
-        //toDo sort out why the filepath that is being passed to the args array is not translating into a readable file Path for the DirectoryReader class
-        /*
-        for(String toPrint : args) {
-            System.out.println("Test filePath in Loop" + toPrint);
-        }
-        Path filePath = Paths.get(args[0]).toAbsolutePath();
-
-        System.out.println("File Path given to String[] args: " + filePath.toString());
-
-        firstImage = new Image(filePath.toUri().toString());
-
-         */
-
-
 
         launch();
     }

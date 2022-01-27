@@ -2,6 +2,7 @@ package com.example.memview;
 
 import com.drew.lang.GeoLocation;
 import directory.handling.DirectoryReader;
+import directory.handling.FileHandling;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -77,6 +78,8 @@ public class MainController {
 
     //Class used for user preferences
     private UserPreferences userPreferences;
+    //Class used for opening directory
+    private FileHandling fileHandling;
 
     //Label to display the metadata
     @FXML
@@ -106,6 +109,7 @@ public class MainController {
         userPreferences = new UserPreferences();
         applicationLogic = new PhotoViewerApplicationLogic(directoryReader, this);
         metadataWrangler = new MetadataWrangler(userPreferences, applicationLogic);
+        fileHandling = new FileHandling();
 
         mainImageView = new ImageView();
         zoomBoxView = new ImageView();
@@ -117,10 +121,15 @@ public class MainController {
         scrollPaneRootFileRibbon = new ScrollPane();
         thumbnailContainerRibbon = new HBox();
 
+
     }
 
     public void setHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
+    }
+
+    public void setServicesForPhotoController() {
+        photoConversionPopupController.setHelperObjectClasses(directoryReader, conversionLogicClass, fileHandling, this);
     }
 
     @FXML
@@ -132,7 +141,7 @@ public class MainController {
         this.photoConversionPopupController = photoConversionPopupController;
 
         //This needs to be called here to prevent NPE
-        photoConversionPopupController.setConversionLogic(conversionLogicClass);
+        //photoConversionPopupController.setConversionLogic(conversionLogicClass);
     }
 
     @FXML
@@ -395,5 +404,7 @@ public class MainController {
         }
     }
 
-
+    public FileHandling getFileHandling() {
+        return fileHandling;
+    }
 }

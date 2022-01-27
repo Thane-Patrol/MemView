@@ -14,7 +14,7 @@ public class UserPreferences {
     public void setMetadataGPSLabel(boolean state) {
         userPreferences.putBoolean("SHOW_GPS_METADATA", state);
     }
-    //todo change all defaults to false when proper menu functionality is implemented
+
     public boolean getMetadataGPSLabel() {
         return userPreferences.getBoolean("SHOW_GPS_METADATA", false);
     }
