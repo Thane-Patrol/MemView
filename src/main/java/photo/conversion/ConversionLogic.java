@@ -27,11 +27,12 @@ public class ConversionLogic {
 
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
     public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
-                                                  boolean toResize, int finalHeight, int finalWidth) {
+                                                  boolean toResize, int finalHeight, int finalWidth, boolean toRotate, int rotationAmount) {
         //this strips the . off the file format as ImageIO.write needs the extension without the dot
         String extensionCleaned = stripPeriodOffFileExtension(extensionToSaveAs);
         for (Path path : listOfFilesToConvert) {
             try {
+                //todo have a series of switch statements to cover every option of resizing combinations (resolution, rotation, watermark, etc)
                 //Read Image into bufferedImage object, this makes the image file agnostic due to TwelveMonkeys
                 BufferedImage originalImage = ImageIO.read(path.toFile());
                 BufferedImage finalImage = originalImage;
@@ -40,6 +41,13 @@ public class ConversionLogic {
                 if(toResize) {
                     finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
 
+                }
+
+                //Rotate file
+                if(toRotate) {
+                    //todo make this dependent on size specified or original size, whatever is specified by the user
+                    finalImage = Thumbnails.of(originalImage).size(160, 160).rotate(rotationAmount).asBufferedImage();
+                    System.out.println("rotation occuring");
                 }
                 //Get filename without the extension included
                 String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
@@ -124,6 +132,20 @@ public class ConversionLogic {
     public boolean checkForValidDirectoryChosen(RadioButton radioButton, Label directoryLabel) {
         return radioButton.isSelected() || !directoryLabel.getText().isEmpty() || !directoryLabel.getText().equals("Chosen Directory");
 
+    }
+
+    //returns true if invalid input is found in rotation textfield
+    public boolean doesContainInvalidInputForRotation(String input) {
+        String regex1 = "[^0-9]+";
+        if(input.contains(regex1)) {
+            return true;
+        }
+        int unsanitizedValue = Integer.valueOf(input);
+
+        if (unsanitizedValue > 360) {
+            return true;
+        }
+         return false;
     }
 
     public DirectoryReader getDirectoryReader() {

@@ -43,6 +43,10 @@ public class PhotoConversionPopupController {
     private RadioButton saveToCurrentDirectoryRadioButton;
     @FXML
     private ChoiceBox outputFileFormatChoiceBox;
+    @FXML
+    private CheckBox toRotateCheckBox;
+    @FXML
+    private TextField rotationAmountTextField;
 
     //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, MainController
 
@@ -135,14 +139,21 @@ public class PhotoConversionPopupController {
         }
         System.out.println("File path to save as: " + amendedFilePath);
 
-
+        //Checks for rotation and checks for valid input
+        boolean toRotate = toRotateCheckBox.isSelected();
+        int rotationAmount = 0;
+        if(toRotate && conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
+            showInvalidRotationAmountEntered();
+            return;
+        } else {
+            rotationAmount = Integer.valueOf(rotationAmountTextField.getText());
+        }
 
         //If the user wants to save to the current directory the chosen directory button should be updated
 
         //todo Record target filetype, destination path and final size
         conversionLogic.convertListOfFilesToConvert(pathListToConvert, fileFormat, amendedFilePath,
-                toResize, finalPixelHeight, finalPixelWidth);
-
+                toResize, finalPixelHeight, finalPixelWidth, toRotate, rotationAmount);
         /*
         if(succesesfulConversion) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Conversion successful!");
@@ -199,6 +210,16 @@ public class PhotoConversionPopupController {
      private boolean showInvalidFileExtensionSpecifiedAlert() {
         if(outputFileFormatChoiceBox.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "No output file format selected. Please select a output format");
+            alert.showAndWait().filter(response -> response == ButtonType.OK);
+            return true;
+        }
+        return false;
+     }
+
+     //returns true if Alert shows
+     private boolean showInvalidRotationAmountEntered() {
+        if(conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers from 0 to 360 are allowed for rotation");
             alert.showAndWait().filter(response -> response == ButtonType.OK);
             return true;
         }
