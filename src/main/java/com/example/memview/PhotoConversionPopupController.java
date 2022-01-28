@@ -5,6 +5,7 @@ import directory.handling.FileHandling;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -27,6 +28,8 @@ public class PhotoConversionPopupController {
     private List<RadioButton> radioButtonList;
     private List<Path> pathList;
     private DirectoryReader directoryReader;
+    private boolean watermarkChosen = false;
+    private File watermarkFile;
     @FXML
     private VBox radioButtonFileSelectVBox;
     @FXML
@@ -47,6 +50,8 @@ public class PhotoConversionPopupController {
     private CheckBox toRotateCheckBox;
     @FXML
     private TextField rotationAmountTextField;
+    @FXML
+    private Button chooseWaterMarkButton;
 
     //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, MainController
 
@@ -70,6 +75,7 @@ public class PhotoConversionPopupController {
 
     @FXML
     private void initialize() {
+
     }
 
     private void addListOfFilesToUserList() {
@@ -145,7 +151,7 @@ public class PhotoConversionPopupController {
         if(toRotate && conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
             showInvalidRotationAmountEntered();
             return;
-        } else {
+        } else if (toRotate) {
             rotationAmount = Integer.valueOf(rotationAmountTextField.getText());
         }
 
@@ -153,7 +159,7 @@ public class PhotoConversionPopupController {
 
         //todo Record target filetype, destination path and final size
         conversionLogic.convertListOfFilesToConvert(pathListToConvert, fileFormat, amendedFilePath,
-                toResize, finalPixelHeight, finalPixelWidth, toRotate, rotationAmount);
+                toResize, finalPixelHeight, finalPixelWidth, toRotate, rotationAmount, watermarkChosen, watermarkFile);
         /*
         if(succesesfulConversion) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Conversion successful!");
@@ -178,13 +184,28 @@ public class PhotoConversionPopupController {
         this.stage = popup;
     }
 
+    //Chosen output file directory
     public void openFileDirectoryToSpecifyOutputPath() {
         //This needs to be called before calling DirectoryChooser
         fileHandling.getPhotoConversionStage(this.stage);
         //The below needs to be called before calling the DirectoryChooser
-        fileHandling.setDirectoryReader(conversionLogic.getDirectoryReader());
-        String toSetLabel = fileHandling.createDirectoryChoosingWindow();
+
+        String toSetLabel = fileHandling.createDirectoryChoosingWindowForOutput();
         chosenDirectoryLabel.setText(toSetLabel);
+    }
+
+    //Choose watermark directory
+    @FXML
+    private void setWatermarkFromUserSpecifiedImage() {
+        String toSetWatermarkButton = fileHandling.createFileChoosingWindowForWatermark();
+        chooseWaterMarkButton.setText(toSetWatermarkButton);
+        if (toSetWatermarkButton.contains("No Watermark Chosen")) {
+            watermarkChosen = false;
+        } else {
+            watermarkChosen = true;
+            chooseWaterMarkButton.setText(toSetWatermarkButton);
+            watermarkFile = new File(toSetWatermarkButton);
+        }
     }
 
     //Will return true if Alert is shown
