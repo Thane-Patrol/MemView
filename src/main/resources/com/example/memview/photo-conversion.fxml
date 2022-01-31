@@ -50,6 +50,7 @@
             <ChoiceBox fx:id="outputFileFormatChoiceBox" prefWidth="150.0" />
             <CheckBox fx:id="toRotateCheckBox" mnemonicParsing="false" text="Rotate?" />
             <TextField fx:id="rotationAmountTextField" promptText="Rotation amount" />
+            <Button fx:id="chooseWaterMarkButton" mnemonicParsing="false" onAction="#setWatermarkFromUserSpecifiedImage" text="Choose watermark" />
          </children>
       </VBox>
       </VBox>

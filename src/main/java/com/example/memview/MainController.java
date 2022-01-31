@@ -109,7 +109,7 @@ public class MainController {
         userPreferences = new UserPreferences();
         applicationLogic = new PhotoViewerApplicationLogic(directoryReader, this);
         metadataWrangler = new MetadataWrangler(userPreferences, applicationLogic);
-        fileHandling = new FileHandling();
+        fileHandling = new FileHandling(directoryReader);
 
         mainImageView = new ImageView();
         zoomBoxView = new ImageView();

@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.imageio.ImageIO;
@@ -27,7 +28,7 @@ public class ConversionLogic {
 
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
     public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
-                                                  boolean toResize, int finalHeight, int finalWidth, boolean toRotate, int rotationAmount) {
+                                                  boolean toResize, int finalHeight, int finalWidth, boolean toRotate, int rotationAmount, boolean toApplyWatermark, File watermarkFile) {
         //this strips the . off the file format as ImageIO.write needs the extension without the dot
         String extensionCleaned = stripPeriodOffFileExtension(extensionToSaveAs);
         for (Path path : listOfFilesToConvert) {
@@ -49,6 +50,14 @@ public class ConversionLogic {
                     finalImage = Thumbnails.of(originalImage).size(160, 160).rotate(rotationAmount).asBufferedImage();
                     System.out.println("rotation occuring");
                 }
+
+                //Apply watermark
+                if(toApplyWatermark) {
+                    finalImage = Thumbnails.of(originalImage).scale(1.0).watermark(Positions.BOTTOM_RIGHT, ImageIO.read(watermarkFile), 0.5f).asBufferedImage();
+                    System.out.println("watermark applying");
+                }
+
+
                 //Get filename without the extension included
                 String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
                 System.out.println("FileName Sanitized: " + fileNameSanitized);
@@ -60,6 +69,8 @@ public class ConversionLogic {
                 ImageIO.write(finalImage, extensionCleaned, toSave);
 
             } catch (IOException e) {
+                System.out.println("Printing Error message");
+                System.out.println("---------------------------------");
                 e.printStackTrace();
             }
         }

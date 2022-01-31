@@ -12,8 +12,9 @@ public class FileHandling {
     private static Stage photoConversionStage;
     private static DirectoryChooser directoryChooser;
     private static DirectoryReader directoryReader;
+    private static FileChooser fileChooser;
 
-    public FileHandling() {
+    public FileHandling(DirectoryReader directoryReader) {
         String s = System.getProperty("os.name").toLowerCase();
 
         if(s.contains("win")) {
@@ -25,12 +26,19 @@ public class FileHandling {
         if (s.contains("linux")) {
             OPERATING_SYSTEM = "linux";
         }
+        this.directoryReader = directoryReader;
         this.directoryChooser = new DirectoryChooser();
-    }
-
-    public String createDirectoryChoosingWindow() {
         directoryChooser.setTitle("Select a directory");
         directoryChooser.setInitialDirectory(directoryReader.getCurrentImage().getParent().toFile().getAbsoluteFile());
+
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a watermark");
+        fileChooser.setInitialDirectory(new File(directoryReader.getDirectoryAsString()));
+
+
+    }
+
+    public String createDirectoryChoosingWindowForOutput() {
         final File selectedDirectory = directoryChooser.showDialog(photoConversionStage);
 
         if(selectedDirectory != null) {
@@ -38,9 +46,19 @@ public class FileHandling {
         } else {
             return "No Directory Chosen";
         }
-
         return selectedDirectory.getAbsolutePath();
+    }
 
+    public String createFileChoosingWindowForWatermark() {
+        final File selectedFile = fileChooser.showOpenDialog(photoConversionStage);
+
+        if(selectedFile != null) {
+            selectedFile.getAbsolutePath();
+        } else {
+            return "No Watermark Chosen";
+        }
+        System.out.println(selectedFile.getAbsolutePath());
+        return selectedFile.getAbsolutePath();
     }
 
     //todo mention in the README that linux OS need to have xdg-utils installed
@@ -66,10 +84,6 @@ public class FileHandling {
 
     public void getPhotoConversionStage(Stage stage) {
         photoConversionStage = stage;
-    }
-
-    public void setDirectoryReader(DirectoryReader directoryReader) {
-        this.directoryReader = directoryReader;
     }
 
     public String getPathInCorrectFormat(String path) {
