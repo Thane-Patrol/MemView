@@ -33,7 +33,6 @@ public class ConversionLogic {
         String extensionCleaned = stripPeriodOffFileExtension(extensionToSaveAs);
         for (Path path : listOfFilesToConvert) {
             try {
-                //todo have a series of switch statements to cover every option of resizing combinations (resolution, rotation, watermark, etc)
                 //Read Image into bufferedImage object, this makes the image file agnostic due to TwelveMonkeys
                 BufferedImage originalImage = ImageIO.read(path.toFile());
                 BufferedImage finalImage = originalImage;
@@ -41,7 +40,6 @@ public class ConversionLogic {
                 //Make the decision on further file manipulation with if statements
                 if(toResize) {
                     finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
-
                 }
 
                 //Rotate file
@@ -166,4 +164,55 @@ public class ConversionLogic {
     private String stripPeriodOffFileExtension(String foo) {
         return foo.replace(".", "");
     }
+
+    //returns the resized image if the only selected option is resize
+    private BufferedImage getResizedImage(BufferedImage originalBufferedImage, int finalHeight, int finalWidth, double scalingFactor) {
+        BufferedImage toRtn = null;
+        if(scalingFactor == 0) {
+            try {
+                toRtn = Thumbnails.of(originalBufferedImage).size(finalWidth, finalHeight).asBufferedImage();
+            } catch (IOException e) {
+                System.out.println("IOException in ConversionLogic.getResizedImage method");
+                System.out.println("Printing stack trace");
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                toRtn = Thumbnails.of(originalBufferedImage).scale(scalingFactor).asBufferedImage();
+            } catch (IOException e) {
+                System.out.println("IOException in ConversionLogic.getResizedImage method");
+                System.out.println("Printing stack trace");
+                e.printStackTrace();
+            }
+        }
+        return toRtn;
+    }
+
+    //returns the rotated Image if the only selected option is rotate
+    private BufferedImage getRotatedImage(BufferedImage originalBufferedImage, double rotationAmount) {
+        int height = originalBufferedImage.getHeight();
+        int width = originalBufferedImage.getWidth();
+        BufferedImage toRtn = null;
+        try {
+            toRtn = Thumbnails.of(originalBufferedImage).size(width, height).rotate(rotationAmount).asBufferedImage();
+        } catch (IOException e) {
+            System.out.println("IOException in ConversionLogic.getRotatedImage method");
+            System.out.println("--------------------");
+            e.printStackTrace();
+        }
+        return toRtn;
+    }
+    //returns the rotated AND resized image
+    private BufferedImage getRotatedAndResizedImage(BufferedImage bufferedImage, double rotationAmount, int finalHeight, int finalWidth) {
+        BufferedImage toRtn = null;
+        try {
+            toRtn = Thumbnails.of(bufferedImage).size(finalWidth, finalHeight).rotate(rotationAmount).asBufferedImage();
+        } catch (IOException e) {
+            System.out.println("IOException in ConversionLogic.getRotatedAndResizedImage method");
+            System.out.println("---------------");
+            e.printStackTrace();
+        }
+        return toRtn;
+    }
+
 }
