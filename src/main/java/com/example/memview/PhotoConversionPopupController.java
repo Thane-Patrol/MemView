@@ -10,13 +10,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import net.coobird.thumbnailator.geometry.Positions;
 import photo.conversion.ConversionLogic;
 
 import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PhotoConversionPopupController {
@@ -30,6 +33,7 @@ public class PhotoConversionPopupController {
     private DirectoryReader directoryReader;
     private boolean watermarkChosen = false;
     private File watermarkFile;
+    private HashMap<String, Positions> positionHashMap;
     @FXML
     private VBox radioButtonFileSelectVBox;
     @FXML
@@ -52,6 +56,14 @@ public class PhotoConversionPopupController {
     private TextField rotationAmountTextField;
     @FXML
     private Button chooseWaterMarkButton;
+    @FXML
+    private ChoiceBox watermarkPositionCheckBox;
+    @FXML
+    private Slider watermarkScaleSlider;
+    @FXML
+    private Slider scalingFactorSlider;
+    @FXML
+    private Slider watermarkOpacitySlider;
 
     //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, MainController
 
@@ -101,6 +113,8 @@ public class PhotoConversionPopupController {
         //todo have a method for checking file renaming
         //todo implement checks to ensure files will not be converted into file types that will fail
 
+        //todo make the option to rotate and Apply watermark mutually exclusive
+
         //Checks for no photos selected otherwise they are added to the converted list
         if(showNoPhotosSelectedAlert()) {
             return;
@@ -111,14 +125,21 @@ public class PhotoConversionPopupController {
         //Checks for the resizing option being selected then checks for invalid characters in resolution TextFields
         //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
         boolean toResize = toResizeCheckBox.isSelected();
+        boolean resizeViaPixels = false;
+        boolean resizeViaScale = false;
         int finalPixelHeight = 0;
         int finalPixelWidth = 0;
+        double scalingFactor = 0;
         if (toResize) {
             if(showIncorrectResolutionSpecifiedAlert()) {
                 return;
-            } else {
+            } else if (heightTextField.getText() != null){
                 finalPixelHeight = Integer.valueOf(heightTextField.getText());
                 finalPixelWidth = Integer.valueOf(widthTextField.getText());
+                resizeViaPixels = true;
+            } else {
+                scalingFactor = scalingFactorSlider.getValue();
+                resizeViaScale = true;
             }
         }
 
@@ -159,7 +180,10 @@ public class PhotoConversionPopupController {
 
         //todo Record target filetype, destination path and final size
         conversionLogic.convertListOfFilesToConvert(pathListToConvert, fileFormat, amendedFilePath,
-                toResize, finalPixelHeight, finalPixelWidth, toRotate, rotationAmount, watermarkChosen, watermarkFile);
+                resizeViaPixels, finalPixelHeight, finalPixelWidth,
+                resizeViaScale, scalingFactor,
+                toRotate, rotationAmount,
+                watermarkChosen, watermarkScaleSlider.getValue(), getPositionFromCheckBox(), watermarkFile, (float) watermarkOpacitySlider.getValue());
         /*
         if(succesesfulConversion) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Conversion successful!");
@@ -173,6 +197,27 @@ public class PhotoConversionPopupController {
         outputFileFormatChoiceBox.getItems().addAll(directoryReader.getWritableFileExtensionList());
         outputFileFormatChoiceBox.setValue(".jpg");
         addListOfFilesToUserList();
+
+        createPositionHashMap();
+        watermarkPositionCheckBox.getItems().addAll("Top Left", "Top Center", "Top Right", "Center Left", "Center", "Center Right", "Bottom Left", "Bottom Center", "Bottom Right");
+        watermarkPositionCheckBox.setValue("Bottom Right");
+    }
+
+    private void createPositionHashMap() {
+        positionHashMap = new HashMap<>(9);
+        positionHashMap.put("Top Left", Positions.TOP_LEFT);
+        positionHashMap.put("Top Center", Positions.TOP_CENTER);
+        positionHashMap.put("Top Right", Positions.TOP_RIGHT);
+        positionHashMap.put("Center Left", Positions.CENTER_LEFT);
+        positionHashMap.put("Center", Positions.CENTER);
+        positionHashMap.put("Center Right", Positions.CENTER_RIGHT);
+        positionHashMap.put("Bottom Left", Positions.BOTTOM_LEFT);
+        positionHashMap.put("Bottom Center", Positions.BOTTOM_CENTER);
+        positionHashMap.put("Bottom Right", Positions.BOTTOM_RIGHT);
+    }
+
+    private Positions getPositionFromCheckBox() {
+        return positionHashMap.get(watermarkPositionCheckBox.getValue().toString());
     }
 
     public void showPopup() {
@@ -246,4 +291,6 @@ public class PhotoConversionPopupController {
         }
         return false;
      }
+
+
 }

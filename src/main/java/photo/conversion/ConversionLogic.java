@@ -28,7 +28,10 @@ public class ConversionLogic {
 
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
     public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
-                                                  boolean toResize, int finalHeight, int finalWidth, boolean toRotate, int rotationAmount, boolean toApplyWatermark, File watermarkFile) {
+                                                  boolean toResizeViaNumber, int finalHeight, int finalWidth,
+                                            boolean resizeViaScalingFactor, double scalingFactor,
+                                            boolean toRotate, int rotationAmount,
+                                            boolean toApplyWatermark, double watermarkScale, Positions watermarkPosition, File watermarkFile, float opaquenessFactor) {
         //this strips the . off the file format as ImageIO.write needs the extension without the dot
         String extensionCleaned = stripPeriodOffFileExtension(extensionToSaveAs);
         for (Path path : listOfFilesToConvert) {
@@ -37,10 +40,19 @@ public class ConversionLogic {
                 BufferedImage originalImage = ImageIO.read(path.toFile());
                 BufferedImage finalImage = originalImage;
 
+                //Pass of the conditional statements and checking to a helper class
+                ThumbnailParameterBuilderObject thumbnailParameterBuilderObject = new ThumbnailParameterBuilderObject(finalImage, finalWidth, finalHeight, toResizeViaNumber,
+                        scalingFactor, resizeViaScalingFactor,
+                        toRotate, rotationAmount,
+                        toApplyWatermark, watermarkScale, watermarkPosition, watermarkFile, opaquenessFactor);
+
+                finalImage = thumbnailParameterBuilderObject.createFinalImageToReturn(finalImage);
+
                 //Make the decision on further file manipulation with if statements
-                if(toResize) {
-                    finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
-                }
+                /*
+               // if(toResize) {
+                   // finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
+                //}
 
                 //Rotate file
                 if(toRotate) {
@@ -54,6 +66,8 @@ public class ConversionLogic {
                     finalImage = Thumbnails.of(originalImage).scale(1.0).watermark(Positions.BOTTOM_RIGHT, ImageIO.read(watermarkFile), 0.5f).asBufferedImage();
                     System.out.println("watermark applying");
                 }
+
+                 */
 
 
                 //Get filename without the extension included
