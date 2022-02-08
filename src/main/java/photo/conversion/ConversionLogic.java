@@ -28,21 +28,31 @@ public class ConversionLogic {
 
     //The pathToSaveOutput is assumed to be given as the root directory. The filename is obtained from the List<Path> parameter
     public void convertListOfFilesToConvert(List<Path> listOfFilesToConvert, String extensionToSaveAs, String pathToSaveOutput,
-                                                  boolean toResize, int finalHeight, int finalWidth, boolean toRotate, int rotationAmount, boolean toApplyWatermark, File watermarkFile) {
+                                                  boolean toResizeViaNumber, int finalHeight, int finalWidth,
+                                            boolean resizeViaScalingFactor, double scalingFactor,
+                                            boolean toRotate, int rotationAmount,
+                                            boolean toApplyWatermark, double watermarkScale, Positions watermarkPosition, File watermarkFile, float opaquenessFactor) {
         //this strips the . off the file format as ImageIO.write needs the extension without the dot
         String extensionCleaned = stripPeriodOffFileExtension(extensionToSaveAs);
         for (Path path : listOfFilesToConvert) {
             try {
-                //todo have a series of switch statements to cover every option of resizing combinations (resolution, rotation, watermark, etc)
                 //Read Image into bufferedImage object, this makes the image file agnostic due to TwelveMonkeys
                 BufferedImage originalImage = ImageIO.read(path.toFile());
                 BufferedImage finalImage = originalImage;
 
-                //Make the decision on further file manipulation with if statements
-                if(toResize) {
-                    finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
+                //Pass of the conditional statements and checking to a helper class
+                ThumbnailParameterBuilderObject thumbnailParameterBuilderObject = new ThumbnailParameterBuilderObject(finalImage, finalWidth, finalHeight, toResizeViaNumber,
+                        scalingFactor, resizeViaScalingFactor,
+                        toRotate, rotationAmount,
+                        toApplyWatermark, watermarkScale, watermarkPosition, watermarkFile, opaquenessFactor);
 
-                }
+                finalImage = thumbnailParameterBuilderObject.createFinalImageToReturn(finalImage);
+
+                //Make the decision on further file manipulation with if statements
+                /*
+               // if(toResize) {
+                   // finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
+                //}
 
                 //Rotate file
                 if(toRotate) {
@@ -56,6 +66,8 @@ public class ConversionLogic {
                     finalImage = Thumbnails.of(originalImage).scale(1.0).watermark(Positions.BOTTOM_RIGHT, ImageIO.read(watermarkFile), 0.5f).asBufferedImage();
                     System.out.println("watermark applying");
                 }
+
+                 */
 
 
                 //Get filename without the extension included
@@ -166,4 +178,55 @@ public class ConversionLogic {
     private String stripPeriodOffFileExtension(String foo) {
         return foo.replace(".", "");
     }
+
+    //returns the resized image if the only selected option is resize
+    private BufferedImage getResizedImage(BufferedImage originalBufferedImage, int finalHeight, int finalWidth, double scalingFactor) {
+        BufferedImage toRtn = null;
+        if(scalingFactor == 0) {
+            try {
+                toRtn = Thumbnails.of(originalBufferedImage).size(finalWidth, finalHeight).asBufferedImage();
+            } catch (IOException e) {
+                System.out.println("IOException in ConversionLogic.getResizedImage method");
+                System.out.println("Printing stack trace");
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                toRtn = Thumbnails.of(originalBufferedImage).scale(scalingFactor).asBufferedImage();
+            } catch (IOException e) {
+                System.out.println("IOException in ConversionLogic.getResizedImage method");
+                System.out.println("Printing stack trace");
+                e.printStackTrace();
+            }
+        }
+        return toRtn;
+    }
+
+    //returns the rotated Image if the only selected option is rotate
+    private BufferedImage getRotatedImage(BufferedImage originalBufferedImage, double rotationAmount) {
+        int height = originalBufferedImage.getHeight();
+        int width = originalBufferedImage.getWidth();
+        BufferedImage toRtn = null;
+        try {
+            toRtn = Thumbnails.of(originalBufferedImage).size(width, height).rotate(rotationAmount).asBufferedImage();
+        } catch (IOException e) {
+            System.out.println("IOException in ConversionLogic.getRotatedImage method");
+            System.out.println("--------------------");
+            e.printStackTrace();
+        }
+        return toRtn;
+    }
+    //returns the rotated AND resized image
+    private BufferedImage getRotatedAndResizedImage(BufferedImage bufferedImage, double rotationAmount, int finalHeight, int finalWidth) {
+        BufferedImage toRtn = null;
+        try {
+            toRtn = Thumbnails.of(bufferedImage).size(finalWidth, finalHeight).rotate(rotationAmount).asBufferedImage();
+        } catch (IOException e) {
+            System.out.println("IOException in ConversionLogic.getRotatedAndResizedImage method");
+            System.out.println("---------------");
+            e.printStackTrace();
+        }
+        return toRtn;
+    }
+
 }

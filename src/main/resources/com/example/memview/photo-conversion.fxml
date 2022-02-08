@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="640.0" styleClass="root" stylesheets="src/main/resources/image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionPopupController">
+<AnchorPane prefHeight="497.0" prefWidth="711.0" styleClass="root" stylesheets="src/main/resources/image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionPopupController">
       <VBox layoutX="14.0" layoutY="23.0" prefHeight="434.0" prefWidth="241.0">
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="241.0" text="List of files">
                <font>
@@ -28,20 +28,20 @@
       <CheckBox fx:id="toResizeCheckBox" mnemonicParsing="false" text="Resize?" />
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="100.0" text="Resize" />
             <HBox prefHeight="100.0" prefWidth="200.0">
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                        <Label alignment="CENTER" prefHeight="16.0" prefWidth="102.0" text="Ratio slider" />
-                        <Slider />
+                  <VBox prefHeight="88.0" prefWidth="186.0">
                         <HBox prefHeight="100.0" prefWidth="200.0">
                               <TextField fx:id="heightTextField" prefHeight="25.0" prefWidth="44.0" />
                               <Label text="x" />
                               <TextField fx:id="widthTextField" prefHeight="25.0" prefWidth="44.0" />
                         </HBox>
+            <Label text="Scaling Factor:" />
+            <Slider fx:id="scalingFactorSlider" blockIncrement="0.25" majorTickUnit="1.0" max="5.0" min="0.25" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                   </VBox>
             </HBox>
             <HBox prefHeight="60.0" prefWidth="100.0">
                   <CheckBox fx:id="keepAspectRatioCheckBox" mnemonicParsing="false" prefHeight="34.0" prefWidth="100.0" text="Keep Aspect Ratio" />
             </HBox>
-      <VBox prefHeight="302.0" prefWidth="100.0">
+      <VBox prefHeight="245.0" prefWidth="315.0">
          <children>
             <Label alignment="CENTER" contentDisplay="TOP" prefHeight="16.0" prefWidth="102.0" text="Save to:" />
             <RadioButton fx:id="saveToCurrentDirectoryRadioButton" mnemonicParsing="false" text="Current directory" />
@@ -51,10 +51,12 @@
             <CheckBox fx:id="toRotateCheckBox" mnemonicParsing="false" text="Rotate?" />
             <TextField fx:id="rotationAmountTextField" promptText="Rotation amount" />
             <Button fx:id="chooseWaterMarkButton" mnemonicParsing="false" onAction="#setWatermarkFromUserSpecifiedImage" text="Choose watermark" />
+            <Slider fx:id="watermarkSlider" majorTickUnit="0.05" max="1.0" min="0.1" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+            <ChoiceBox fx:id="watermarkPositionCheckBox" prefWidth="150.0" />
          </children>
       </VBox>
       </VBox>
-   <HBox layoutX="368.0" layoutY="391.0" prefHeight="49.0" prefWidth="250.0">
+   <HBox layoutX="457.0" layoutY="427.0" prefHeight="33.0" prefWidth="186.0">
       <children>
             <Button mnemonicParsing="false" onAction="#hidePopup" text="Cancel" />
                <Button mnemonicParsing="false" onAction="#storeListOfImagesToConvert" prefHeight="25.0" prefWidth="108.0" text="Convert" />
