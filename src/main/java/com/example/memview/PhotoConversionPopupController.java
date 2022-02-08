@@ -2,7 +2,6 @@ package com.example.memview;
 
 import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -10,12 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import net.coobird.thumbnailator.geometry.Positions;
 import photo.conversion.ConversionLogic;
 
-import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -25,7 +22,7 @@ import java.util.List;
 public class PhotoConversionPopupController {
     private Stage stage;
     private Stage mainStage;
-    private MainController mainController;
+    private PhotoViewerController photoViewerController;
     private ConversionLogic conversionLogic;
     private FileHandling fileHandling;
     private List<RadioButton> radioButtonList;
@@ -65,20 +62,20 @@ public class PhotoConversionPopupController {
     @FXML
     private Slider watermarkOpacitySlider;
 
-    //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, MainController
+    //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, PhotoViewerController
 
     public PhotoConversionPopupController() {
     }
 
-    public void setHelperObjectClasses(DirectoryReader directoryReader, ConversionLogic conversionLogic, FileHandling fileHandling, MainController mainController) {
+    public void setHelperObjectClasses(DirectoryReader directoryReader, ConversionLogic conversionLogic, FileHandling fileHandling, PhotoViewerController photoViewerController) {
         this.directoryReader = directoryReader;
         this.conversionLogic = conversionLogic;
         this.fileHandling = fileHandling;
-        this.mainController = mainController;
+        this.photoViewerController = photoViewerController;
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+    public void setMainController(PhotoViewerController photoViewerController) {
+        this.photoViewerController = photoViewerController;
     }
 
     public void setMainStage(Stage mainStage) {

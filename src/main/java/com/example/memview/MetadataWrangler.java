@@ -1,10 +1,8 @@
 package com.example.memview;
 
 import com.drew.lang.GeoLocation;
-import javafx.scene.control.Label;
 import preferences.UserPreferences;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,8 +12,8 @@ import java.text.SimpleDateFormat;
 
 public class MetadataWrangler {
 
-    private UserPreferences userPreferences;
-    private PhotoViewerApplicationLogic applicationLogic;
+    private final UserPreferences userPreferences;
+    private final PhotoViewerApplicationLogic applicationLogic;
     private boolean GPSInformationExist = false;
     private double latitude;
     private double longitude;
@@ -29,9 +27,7 @@ public class MetadataWrangler {
     public String setMetadataLabel(Path filePath) throws IOException {
         BasicFileAttributes basicFileAttributes = Files.readAttributes(filePath, BasicFileAttributes.class);
 
-        String textToSet = getFileCreationDate(basicFileAttributes) + getFileSize(filePath) + getGPSMetadata(filePath);
-
-        return textToSet;
+        return getFileCreationDate(basicFileAttributes) + getFileSize(filePath) + getGPSMetadata(filePath);
 
     }
 
@@ -81,9 +77,7 @@ public class MetadataWrangler {
     }
 
     public String getGoogleMapsURL() {
-        String url = "https://maps.google.com/?q=" + latitude + "," + longitude;
-
-        return url;
+        return "https://maps.google.com/?q=" + latitude + "," + longitude;
     }
 
 

@@ -8,7 +8,6 @@ import javafx.scene.layout.HBox;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.io.FilenameUtils;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -75,7 +74,7 @@ public class ConversionLogic {
                 System.out.println("FileName Sanitized: " + fileNameSanitized);
 
                 File toSave = new File(pathToSaveOutput +  fileNameSanitized  + extensionToSaveAs);
-                System.out.println("Final output for something not resized: " + toSave.toString());
+                System.out.println("Final output for something not resized: " + toSave);
 
                 //Save the image to File as the extension requested, to the directory requested by user
                 ImageIO.write(finalImage, extensionCleaned, toSave);
@@ -163,16 +162,9 @@ public class ConversionLogic {
         if(input.contains(regex1)) {
             return true;
         }
-        int unsanitizedValue = Integer.valueOf(input);
+        int unsanitizedValue = Integer.parseInt(input);
 
-        if (unsanitizedValue > 360) {
-            return true;
-        }
-         return false;
-    }
-
-    public DirectoryReader getDirectoryReader() {
-        return directoryReader;
+        return unsanitizedValue > 360;
     }
 
     private String stripPeriodOffFileExtension(String foo) {

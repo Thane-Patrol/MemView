@@ -7,7 +7,6 @@ import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
@@ -21,14 +20,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import photo.conversion.ConversionLogic;
 import preferences.UserPreferences;
-
-import javax.imageio.ImageReader;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class MainController {
+public class PhotoViewerController {
 
     @FXML
     private ImageView mainImageView;
@@ -43,60 +39,32 @@ public class MainController {
     @FXML
     private HBox thumbnailContainerRibbon;
     @FXML
-    private Button backButton;
-    @FXML
-    private Button nextButton;
-    @FXML
-    private HBox buttonHolder;
-    @FXML
-    private Image zoomedImage;
-
-    @FXML
     private StackPane root;
-
     private final DirectoryReader directoryReader;
-
     //Tracks the last key press to ensure key press isn't registered when key is held
     private KeyCode eventTracker = null;
-
     //Used to store screenBounds dimensions as a variable to automatically resize imageView components to suit monitor
     private final Rectangle2D screenBounds;
-
-    private ScrollEvent scrollEventTracker = null;
-
-    //Used to allow reading of metadata, read multiple images in the background, independent of user interaction
-    private ImageReader imageReader;
-
     //Used for application logic and data handling to make this method a bit cleaner
-    private PhotoViewerApplicationLogic applicationLogic;
-
+    private final PhotoViewerApplicationLogic applicationLogic;
     //Class used to handle the logic of photo resizing, cropping, etc
-    private ConversionLogic conversionLogicClass;
-
+    private final ConversionLogic conversionLogicClass;
     //Class used for handling metadata
-    private MetadataWrangler metadataWrangler;
-
+    private final MetadataWrangler metadataWrangler;
     //Class used for user preferences
-    private UserPreferences userPreferences;
+    private final UserPreferences userPreferences;
     //Class used for opening directory
-    private FileHandling fileHandling;
-
+    private final FileHandling fileHandling;
     //Label to display the metadata
     @FXML
     private Label metadataLabel;
-
-    @FXML
-    private MenuBar menuBar;
-
     private PhotoConversionPopupController photoConversionPopupController;
-
-    private GeoLocation geoLocation;
     private HostServices hostServices;
 
     //Used for keeping track of the amount of level of scrolling for zoom calculations
     private double scrollAmountTracker = 0.0;
 
-    public MainController() {
+    public PhotoViewerController() {
 
         root = new StackPane();
 
@@ -139,9 +107,6 @@ public class MainController {
 
     public void setPhotoConversionPopupController(PhotoConversionPopupController photoConversionPopupController) {
         this.photoConversionPopupController = photoConversionPopupController;
-
-        //This needs to be called here to prevent NPE
-        //photoConversionPopupController.setConversionLogic(conversionLogicClass);
     }
 
     @FXML
@@ -159,7 +124,6 @@ public class MainController {
 
         resizeImageForScreen(mainImageView);
 
-        //buttonHolder.toFront();
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
         applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
@@ -167,12 +131,9 @@ public class MainController {
         thumbnailContainerRibbon.setSpacing(75);
 
         scrollPaneRootFileRibbon.setFitToWidth(true);
-        scrollPaneRootFileRibbon.setPrefHeight(applicationLogic.getVboxHeight());
+        scrollPaneRootFileRibbon.setPrefHeight(screenBounds.getHeight() / 5);
         scrollPaneRootFileRibbon.setPrefWidth(screenBounds.getWidth() - 100);
 
-        
-        //todo make the binding property work with any size/ resolution photo
-        //mainImageView.fitHeightProperty().bind(root.widthProperty());
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
         zoomBoxContainer.setOpacity(0.0);
         zoomBoxContainer.setScaleX(mainImageView.getScaleX() / 4);
@@ -183,7 +144,6 @@ public class MainController {
     public void nextButtonAction() throws IOException{
         Path nextImageFilePath = directoryReader.getNextImage();
         getImageMetadata(nextImageFilePath);
-        File nextImageFile = nextImageFilePath.toFile();
 
         Image nextImage = directoryReader.loadImage();
         mainImageView.setImage(nextImage);
@@ -193,19 +153,13 @@ public class MainController {
     public void backButtonAction() throws IOException {
         Path previousImagePath = directoryReader.getPreviousImage();
         getImageMetadata(previousImagePath);
-        File previousImageFilePath = previousImagePath.toFile();
 
         Image previousImage = directoryReader.loadImage();
-
         mainImageView.setImage(previousImage);
     }
 
     public ImageView resizeImageForScreen(ImageView imageView) {
         imageView.setPreserveRatio(true);
-
-        System.out.println("Height: " + imageView.getFitHeight());
-
-        //imageView.setFitWidth(screenBounds.getWidth());
         imageView.setFitHeight(screenBounds.getHeight() - 100);
         return imageView;
     }
@@ -250,12 +204,10 @@ public class MainController {
             String url = metadataWrangler.getGoogleMapsURL();
             hostServices.showDocument(url);
         }
-        return;
     }
 
     @FXML
     private void scrollHandler(ScrollEvent scrollEvent) throws IOException{
-        scrollEventTracker = scrollEvent;
         //scrollAmountTracker used to keep track of different stages of zoom.
 
         boolean controlKeyPressed = eventTracker == KeyCode.CONTROL;
@@ -267,10 +219,10 @@ public class MainController {
 
         } else if (controlKeyPressed && scrollEventAmount < 0 && scrollAmountTracker < -41) {
             zoomOutActionSecondLevel();
-            scrollAmountTracker += scrollEventTracker.getDeltaY();
+            scrollAmountTracker += scrollEvent.getDeltaY();
 
         } else if (controlKeyPressed && scrollEventAmount < 0 && scrollAmountTracker > -40) {
-            scrollAmountTracker += scrollEventTracker.getDeltaY();
+            scrollAmountTracker += scrollEvent.getDeltaY();
             zoomOutActionFirstLevel();
 
         } else if (controlKeyPressed && scrollEventAmount > 0 && scrollAmountTracker < 40) {
@@ -309,6 +261,7 @@ public class MainController {
         scrollAmountTracker = 40;
     }
 
+
     //Trigger should be on mouseclick on the ImageView object itself
     @FXML
     private void createZoomBoxOnClick(MouseEvent event){
@@ -319,12 +272,13 @@ public class MainController {
 
         //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
         //todo implement the above functionality
-        zoomedImage = mainImageView.getImage();
+
 
         zoomBoxView.setImage(mainImageView.getImage());
         zoomBoxView.setScaleX(10);
         zoomBoxView.setScaleY(10);
     }
+
 
     @FXML
     private void moveZoomBoxWithMouse(MouseEvent event) {
@@ -352,22 +306,18 @@ public class MainController {
     }
 
     @FXML
-    private void hideZoomBoxOnRelease(MouseEvent event) {
+    private void hideZoomBoxOnRelease() {
         zoomBoxContainer.setOpacity(0.0);
     }
 
     @FXML
-    private void keyReleasedHandler(KeyEvent event) {
+    private void keyReleasedHandler() {
         eventTracker = null;
     }
 
     private HelloApplication mainApp;
 
     public void setMainApp(HelloApplication mainApp) {this.mainApp = mainApp;}
-
-    public DirectoryReader getDirectoryReader() {
-        return directoryReader;
-    }
 
     //todo Make sure radio buttons reflect the preferences file
     @FXML
@@ -402,9 +352,5 @@ public class MainController {
             userPreferences.setMetadataCreationLabel(true);
             getImageMetadata(directoryReader.getCurrentImage());
         }
-    }
-
-    public FileHandling getFileHandling() {
-        return fileHandling;
     }
 }

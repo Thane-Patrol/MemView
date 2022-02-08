@@ -25,12 +25,12 @@ public class PhotoViewerApplicationLogic {
 
     private final DirectoryReader directoryReader;
     private double vboxHeight;
-    private final MainController mainController;
+    private final PhotoViewerController photoViewerController;
 
-    public PhotoViewerApplicationLogic(DirectoryReader directoryReader, MainController mainController) {
+    public PhotoViewerApplicationLogic(DirectoryReader directoryReader, PhotoViewerController photoViewerController) {
         this.directoryReader = directoryReader;
         this.vboxHeight = 250;
-        this.mainController = mainController;
+        this.photoViewerController = photoViewerController;
 
     }
 
@@ -97,12 +97,12 @@ public class PhotoViewerApplicationLogic {
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
                 try {
-                    mainController.gotoImageOnClick(directoryReader.loadImage());
+                    photoViewerController.gotoImageOnClick(directoryReader.loadImage());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    mainController.updateMetadataLabel(directoryReader.getCurrentImage());
+                    photoViewerController.updateMetadataLabel(directoryReader.getCurrentImage());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

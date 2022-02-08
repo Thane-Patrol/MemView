@@ -22,7 +22,7 @@ public class HelloApplication extends Application {
         //main FXML file
         FXMLLoader fxmlLoaderMain = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoaderMain.load(), 640, 480);
-        MainController controller = fxmlLoaderMain.getController();
+        PhotoViewerController controller = fxmlLoaderMain.getController();
         controller.setMainApp(this);
         controller.setHostServices(this.getHostServices());
 
@@ -39,8 +39,6 @@ public class HelloApplication extends Application {
         controller.setPhotoConversionPopupController(photoConversionPopupController);
         controller.setServicesForPhotoController();
 
-        //popup.getContent().add(popupScene.getRoot());
-        //photoConversionPopupController.setPopup(popup);
         popupStage.setScene(popupScene);
         photoConversionPopupController.setPopupStage(popupStage);
         popupStage.setTitle("Photo Resizing");
@@ -49,7 +47,7 @@ public class HelloApplication extends Application {
         mainStage.setScene(scene);
 
         //Set to start as Maximised Window to prevent weird multiMonitor issues
-        mainStage.setMaximized(false);
+        mainStage.setMaximized(true);
         mainStage.show();
         scene.getRoot().requestFocus();
 

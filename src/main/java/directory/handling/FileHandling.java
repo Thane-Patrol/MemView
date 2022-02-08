@@ -5,13 +5,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 
 public class FileHandling {
     private static String OPERATING_SYSTEM;
     private static Stage photoConversionStage;
     private static DirectoryChooser directoryChooser;
-    private static DirectoryReader directoryReader;
     private static FileChooser fileChooser;
 
     public FileHandling(DirectoryReader directoryReader) {
@@ -26,7 +24,6 @@ public class FileHandling {
         if (s.contains("linux")) {
             OPERATING_SYSTEM = "linux";
         }
-        this.directoryReader = directoryReader;
         this.directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select a directory");
         directoryChooser.setInitialDirectory(directoryReader.getCurrentImage().getParent().toFile().getAbsoluteFile());
@@ -59,10 +56,6 @@ public class FileHandling {
         }
         System.out.println(selectedFile.getAbsolutePath());
         return selectedFile.getAbsolutePath();
-    }
-
-    public String getOperatingSystem() {
-        return OPERATING_SYSTEM;
     }
 
     public void getPhotoConversionStage(Stage stage) {

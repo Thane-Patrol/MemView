@@ -1,5 +1,10 @@
 package directory.handling;
 
+import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import org.apache.commons.io.FilenameUtils;
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -8,15 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import org.apache.commons.io.FilenameUtils;
-
-import javax.imageio.ImageIO;
 
 public class DirectoryReader {
 
@@ -167,8 +163,7 @@ public class DirectoryReader {
     }
 
     public String getPhotoExtension() {
-        String extension = FilenameUtils.getExtension(getCurrentImage().toString());
-        return extension;
+        return FilenameUtils.getExtension(getCurrentImage().toString());
     }
 
     public Image loadImage() throws IOException {
@@ -197,21 +192,12 @@ public class DirectoryReader {
         return image;
     }
 
-    //For debugging purposes
-    public void printAllFilesAsString() {
-        fileNames.stream().forEach(s -> System.out.println("File: " + s));
-    }
-
     public List<Path> getListOfFilePaths() {
         return fileNames;
     }
 
     public String getDirectoryAsString() {
         return getCurrentImage().getParent().toString();
-    }
-
-    public List<String> getFileExtensionList() {
-        return fileExtensionList;
     }
 
     public List<String> getWritableFileExtensionList() {
