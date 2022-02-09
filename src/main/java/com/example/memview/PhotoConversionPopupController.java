@@ -65,6 +65,7 @@ public class PhotoConversionPopupController {
     //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, PhotoViewerController
 
     public PhotoConversionPopupController() {
+        this.watermarkOpacitySlider = new Slider();
     }
 
     public void setHelperObjectClasses(DirectoryReader directoryReader, ConversionLogic conversionLogic, FileHandling fileHandling, PhotoViewerController photoViewerController) {
@@ -198,6 +199,14 @@ public class PhotoConversionPopupController {
         createPositionHashMap();
         watermarkPositionCheckBox.getItems().addAll("Top Left", "Top Center", "Top Right", "Center Left", "Center", "Center Right", "Bottom Left", "Bottom Center", "Bottom Right");
         watermarkPositionCheckBox.setValue("Bottom Right");
+
+        setWatermarkScaleSlider();
+    }
+
+    private void setWatermarkScaleSlider() {
+
+        watermarkScaleSlider.setValue(0);
+        watermarkOpacitySlider.setValue(0);
     }
 
     private void createPositionHashMap() {

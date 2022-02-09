@@ -11,21 +11,21 @@ import java.io.IOException;
 
 public class ThumbnailParameterBuilderObject {
     //variables for resizing via number
-    private int finalHeight;
-    private int finalWidth;
-    private boolean toResizeViaNumber;
+    private final int finalHeight;
+    private final int finalWidth;
+    private final boolean toResizeViaNumber;
     //variables for resizing via scaling factor
-    private double scalingFactor;
+    private final double scalingFactor;
     private boolean toResizeViaScalingFactor;
     //variables for applying rotation;
-    private boolean toRotate;
-    private double rotationFactor;
+    private final boolean toRotate;
+    private final double rotationFactor;
     //variables for applying watermark
-    private boolean toApplyWatermark;
-    private double watermarkScale;
-    private Positions watermarkPosition;
-    private File watermarkFile;
-    private float opaquenessFactor;
+    private final boolean toApplyWatermark;
+    private final double watermarkScale;
+    private final Positions watermarkPosition;
+    private final File watermarkFile;
+    private final float opaquenessFactor;
     //object to be built and returned
     private BufferedImage bufferedImageToRtn;
     //builder for thumbnailParameter object
@@ -37,14 +37,26 @@ public class ThumbnailParameterBuilderObject {
                                            boolean toApplyWatermark, double watermarkScale, Positions watermarkPosition, File watermarkFile, float opaquenessFactor) throws IOException {
         thumbnailParameterBuilder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
 
+        this.finalWidth = finalWidth;
+        this.finalHeight = finalHeight;
+        this.toResizeViaNumber = toResizeViaNumber;
+        this.scalingFactor = scalingFactor;
+        this.toRotate = toRotate;
+        this.rotationFactor = rotationFactor;
+        this.watermarkScale = watermarkScale;
+        this.watermarkPosition = watermarkPosition;
+        this.watermarkFile = watermarkFile;
+        this.opaquenessFactor = opaquenessFactor;
+        this.toApplyWatermark = toApplyWatermark;
 
-         //todo add functionality for outputquality
+         //todo add functionality for output quality
          //todo implement watermark and rotation functionality into the Thumbnailator github project in the thumbnailBuilder class
          //from here on user options are mutually exclusive due to the above deficiency in the Thumbnailator project
 
     }
 
     public BufferedImage createFinalImageToReturn(BufferedImage bufferedImage) {
+        bufferedImageToRtn = bufferedImage;
         if(toResizeViaNumber) {
             thumbnailParameterBuilder.size(finalWidth, finalHeight);
         }
@@ -53,6 +65,7 @@ public class ThumbnailParameterBuilderObject {
             thumbnailParameterBuilder.scale(scalingFactor);
         }
 
+        //From here on options become mutually exclusive due to limitations in libraries.
         thumbnailParameter = thumbnailParameterBuilder.build();
         if(toRotate) {
             rotateImage(bufferedImage);
@@ -64,16 +77,13 @@ public class ThumbnailParameterBuilderObject {
     }
 
     //returns true if image is to be scaled
-    private boolean checkForScaleOrRotate() {
-        if (thumbnailParameter.getSize().width != 0) {
-            return true;
-        }
-        return false;
+    private boolean checkForScaleOrResize() {
+        return thumbnailParameter.getSize().width != 0;
     }
 
     private BufferedImage rotateImage(BufferedImage bufferedImage) {
         try {
-            if (checkForScaleOrRotate()) {
+            if (checkForScaleOrResize()) {
                 bufferedImageToRtn = Thumbnails.of(bufferedImage)
                         .scale(thumbnailParameter.getWidthScalingFactor(), thumbnailParameter.getHeightScalingFactor())
                         .rotate(rotationFactor)
@@ -92,7 +102,7 @@ public class ThumbnailParameterBuilderObject {
 
     private BufferedImage applyWatermark(BufferedImage bufferedImage) {
         try {
-            if(checkForScaleOrRotate()) {
+            if(checkForScaleOrResize()) {
                 bufferedImageToRtn = Thumbnails.of(bufferedImage)
                         .scale(thumbnailParameter.getWidthScalingFactor(), thumbnailParameter.getHeightScalingFactor())
                         .watermark(watermarkPosition, ImageIO.read(watermarkFile), opaquenessFactor)

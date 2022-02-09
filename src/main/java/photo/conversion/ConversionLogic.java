@@ -38,6 +38,7 @@ public class ConversionLogic {
                 //Read Image into bufferedImage object, this makes the image file agnostic due to TwelveMonkeys
                 BufferedImage originalImage = ImageIO.read(path.toFile());
                 BufferedImage finalImage = originalImage;
+                System.out.println("OG final image: " + finalImage.toString());
 
                 //Pass of the conditional statements and checking to a helper class
                 ThumbnailParameterBuilderObject thumbnailParameterBuilderObject = new ThumbnailParameterBuilderObject(finalImage, finalWidth, finalHeight, toResizeViaNumber,
@@ -46,6 +47,7 @@ public class ConversionLogic {
                         toApplyWatermark, watermarkScale, watermarkPosition, watermarkFile, opaquenessFactor);
 
                 finalImage = thumbnailParameterBuilderObject.createFinalImageToReturn(finalImage);
+                System.out.println("final image = " + finalImage.getHeight());
 
                 //Make the decision on further file manipulation with if statements
                 /*

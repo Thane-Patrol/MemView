@@ -51,7 +51,7 @@
             <CheckBox fx:id="toRotateCheckBox" mnemonicParsing="false" text="Rotate?" />
             <TextField fx:id="rotationAmountTextField" promptText="Rotation amount" />
             <Button fx:id="chooseWaterMarkButton" mnemonicParsing="false" onAction="#setWatermarkFromUserSpecifiedImage" text="Choose watermark" />
-            <Slider fx:id="watermarkSlider" majorTickUnit="0.05" max="1.0" min="0.1" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+            <Slider fx:id="watermarkScaleSlider" majorTickUnit="0.05" max="1.0" min="0.1" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
             <ChoiceBox fx:id="watermarkPositionCheckBox" prefWidth="150.0" />
          </children>
       </VBox>
