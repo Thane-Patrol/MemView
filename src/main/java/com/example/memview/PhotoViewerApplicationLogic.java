@@ -72,12 +72,7 @@ public class PhotoViewerApplicationLogic {
             Label fileName = new Label();
             fileName.setText(s.getFileName().toString());
 
-            Image image = null;
-            try {
-                image = directoryReader.loadImageFromPath(s);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Image image = directoryReader.loadImageFromPath(s);
 
 
             ImageView imageView = new ImageView(image);
@@ -96,11 +91,7 @@ public class PhotoViewerApplicationLogic {
             //Set the mainImage view to the thumbnail when clicked on
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
-                try {
-                    photoViewerController.gotoImageOnClick(directoryReader.loadImage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                photoViewerController.gotoImageOnClick(directoryReader.loadImage());
                 try {
                     photoViewerController.updateMetadataLabel(directoryReader.getCurrentImage());
                 } catch (IOException e) {
