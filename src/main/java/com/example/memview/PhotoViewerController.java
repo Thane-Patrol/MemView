@@ -68,7 +68,7 @@ public class PhotoViewerController {
 
         root = new StackPane();
 
-        String directory =  "/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
+        String directory =  "/home/hugh/Documents/Development/javaMemView/1.png";//"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         //Instantiation of all the helper classes needed, Order is important
@@ -301,8 +301,13 @@ public class PhotoViewerController {
         mainImageView.setImage(imageToGoTo);
     }
 
-    public void updateMetadataLabel(Path imagePath) throws IOException {
-        getImageMetadata(imagePath);
+    public void updateMetadataLabel(Path imagePath) {
+        try {
+            getImageMetadata(imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @FXML

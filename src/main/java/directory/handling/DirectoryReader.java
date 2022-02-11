@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DirectoryReader {
 
@@ -39,6 +40,7 @@ public class DirectoryReader {
 
         addPhotosToList(originalFilePath);
         getFirstFileIndex(originalFilePath);
+        fileNames.toString();
     }
 
     private void addPhotosToList(File originalFilePath) {
@@ -46,15 +48,17 @@ public class DirectoryReader {
             //For each loop to loop through all photos and add them to the fileNames list
             for (Path photos : directoryStream) {
                 //makes the extension lowercase
-                String unknownCapsExtension = FilenameUtils.getExtension(photos.toString());
-                String lowerCaseExtension = unknownCapsExtension.toLowerCase();
+                String lowerCaseExtension = FilenameUtils.getExtension(photos.toString()).toLowerCase(Locale.ROOT);
+
                 String fileNameAsString = FilenameUtils.removeExtension(photos.toString());
                 String amendedPhoto = fileNameAsString + "." + lowerCaseExtension;
                 Path amendedPhotoPath = Paths.get(amendedPhoto);
                 //Checks to see if there is a recursive directory, if so do not add
                 if(!Files.isDirectory(photos) && fileIsAPhoto(amendedPhotoPath)) {
                     fileNames.add(amendedPhotoPath);
+                    System.out.println(amendedPhotoPath);
                 }
+                //todo figure out how to add photos to the fileName list while ignoring their case
             }
         } catch (Exception e) {
             System.out.println("Error Message:");
@@ -90,9 +94,10 @@ public class DirectoryReader {
         readableExtensionList.add(16, ".hdr");
         readableExtensionList.add(17, ".gif");
         readableExtensionList.add(18, ".tiff");
-        readableExtensionList.add(19, ".pcx");
-        readableExtensionList.add(20, ".dcx");
-        readableExtensionList.add(21, ".sgi");
+        readableExtensionList.add(19, ".tif");
+        readableExtensionList.add(20, ".pcx");
+        readableExtensionList.add(21, ".dcx");
+        readableExtensionList.add(22, ".sgi");
     }
 
     private void addWriteableFileExtensionsToList() {
@@ -158,8 +163,9 @@ public class DirectoryReader {
     }
 
     private boolean fileIsAPhoto(Path photoPath) {
+        String extension = FilenameUtils.getExtension(photoPath.toString());
         for(String fileExtensionName : readableExtensionList) {
-            if (photoPath.getFileName().toString().contains(fileExtensionName)) {
+            if (fileExtensionName.contains(extension)) {
                 return true;
             }
         }

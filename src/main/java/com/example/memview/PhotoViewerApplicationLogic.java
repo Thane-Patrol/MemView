@@ -63,7 +63,6 @@ public class PhotoViewerApplicationLogic {
     }
 
     public void addPhotoThumbnailsToHBox(HBox hBox) {
-
         List<Path> filePaths = directoryReader.getListOfFilePaths();
 
         //Stream through this path, Create the labels, thumbnails and Vboxs to contain them and add all of them to the hbox then return it
@@ -72,37 +71,19 @@ public class PhotoViewerApplicationLogic {
             Label fileName = new Label();
             fileName.setText(s.getFileName().toString());
 
-            Image image = directoryReader.loadImageFromPath(s);
-
-
-            ImageView imageView = new ImageView(image);
-            imageView.setPreserveRatio(true);
-            //imageView.setStyle("-fx-background-color:#47474700;");
-
+            ImageView imageView = new ImageView(directoryReader.loadImageFromPath(s));
             //todo set height based upon reasonable screenbounds and/or current window size
             imageView.setFitHeight(200);
-            //fileName.setStyle("-fx-text-fill: #f0f0f0; -fx-font-size: 24px; -fx-font-family: sans-serif; -fx-font-weight: 300;");
-
-            VBox vBox = new VBox();
-            vBox.getChildren().addAll(imageView, fileName);
-            //vBox.setStyle("-fx-background-color:#47474700; -fx-font-size: 24px; -fx-font-family: sans-serif; -fx-padding: 10px; -fx-font-weight: 300;");
-
+            VBox vBox = new VBox(imageView, fileName);
 
             //Set the mainImage view to the thumbnail when clicked on
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
                 photoViewerController.gotoImageOnClick(directoryReader.loadImage());
-                try {
-                    photoViewerController.updateMetadataLabel(directoryReader.getCurrentImage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                photoViewerController.updateMetadataLabel(directoryReader.getCurrentImage());
             });
 
-            //vBox.setId(String.valueOf(i.incrementAndGet()));
             hBox.getChildren().add(vBox);
-
-            //To keep track of the height of a single vbox
         });
 
 
