@@ -34,8 +34,14 @@ public class PhotoViewerApplicationLogic {
 
     }
 
-    public String getPhotoSizeInUnits(Path imagePath) throws IOException {
-        BasicFileAttributes fileAttributes = Files.readAttributes(imagePath, BasicFileAttributes.class);
+    public String getPhotoSizeInUnits(Path imagePath) {
+        BasicFileAttributes fileAttributes;
+        try {
+            fileAttributes = Files.readAttributes(imagePath, BasicFileAttributes.class);
+        } catch(IOException e) {
+            e.printStackTrace();
+            fileAttributes = null;
+        }
 
         String fileSizeWithBytes;
 
@@ -90,35 +96,9 @@ public class PhotoViewerApplicationLogic {
     }
 
     //Used to get the region of the image underneath the main image
+    //todo implement
     public Image getImageUnderneathZoomBoxContainer(Pane zoomBox, ImageView mainImageView, MouseEvent mouseEvent) {
-
-        //System.out.println("width: " + zoomBox.getTranslateX());
-        //System.out.println("Height: " + zoomBox.getTranslateY());
-//
-        //System.out.println(zoomBox.getBoundsInParent().getCenterX());
-//
-        //System.out.println("Size of bounding box: " + "Height: " + zoomBox.getBoundsInParent().getHeight() + "width: " + zoomBox.getBoundsInParent().getWidth());
-
-        //Integers used for specifying the region that is underneath the zoombox
-        int topLeftPixel_X = (int) mouseEvent.getSceneX();
-        int topLeftPixel_Y = (int) mouseEvent.getSceneY();
-
-        WritableImage zoomedImageSection = new WritableImage(50, 50);
-
-        PixelReader pixelReader = mainImageView.getImage().getPixelReader();
-        WritablePixelFormat<IntBuffer> intBufferPixelFormat = PixelFormat.getIntArgbInstance();
-
-        int[] pixelArray = new int[2500];
-        pixelReader.getPixels(topLeftPixel_X, topLeftPixel_Y, 50, 50, intBufferPixelFormat, pixelArray, 0, 50);
-
-        PixelWriter pixelWriter = zoomedImageSection.getPixelWriter();
-        pixelWriter.setPixels(0, 0, 50, 50, intBufferPixelFormat, pixelArray, 0, 50);
-
-
-        //todo better tracking of the mouse to create zoombox on section of image underneath
-        //todo A robust check of whether the zoomBox is creating a box over the imageView, this is to prevent IOOBExceptions
-
-        return zoomedImageSection;
+        return null;
     }
 
     public boolean isZoomBoxOverTheMainImage(Pane zoomBox, ImageView mainImageView) {
