@@ -121,7 +121,7 @@ public class PhotoViewerApplicationLogicTest {
     }
 
     @Test
-    public void testGetGPSCoordinates() {
+    public GeoLocation testGetGPSCoordinates() {
         File imageFile = Paths.get("src/test/test.resources/images/IMG_20201230_130710_0006.jpg").toFile();
         Metadata metadata = null;
         try {
@@ -140,6 +140,7 @@ public class PhotoViewerApplicationLogicTest {
         }
 
         Assertions.assertFalse(geoLocation == null);
+        return geoLocation;
     }
 
 

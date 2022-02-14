@@ -45,7 +45,7 @@ public class MetadataWrangler {
         return toRtn;
     }
 
-    private String getFileSize(Path filePath) throws IOException {
+    private String getFileSize(Path filePath) {
         String toRtn = "";
         if(userPreferences.getMetadataFileSizeLabel()) {
             toRtn = " Size: " + applicationLogic.getPhotoSizeInUnits(filePath);

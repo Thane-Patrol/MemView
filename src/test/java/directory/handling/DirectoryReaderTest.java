@@ -66,7 +66,7 @@ public class DirectoryReaderTest {
         }
         System.out.println("filename size = " + fileNames.size() );
         fileNames.stream().forEach(s -> System.out.println(s.getFileName()));
-        Assertions.assertTrue(fileNames.size() == 9);
+        Assertions.assertTrue(fileNames.size() == 10);
     }
 
     @Test
