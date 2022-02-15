@@ -24,11 +24,14 @@ public class MetadataWrangler {
     }
 
     //This method should be called for every image
-    public String setMetadataLabel(Path filePath) throws IOException {
-        BasicFileAttributes basicFileAttributes = Files.readAttributes(filePath, BasicFileAttributes.class);
-
-        return getFileCreationDate(basicFileAttributes) + getFileSize(filePath) + getGPSMetadata(filePath);
-
+    public String setMetadataLabel(Path filePath){
+        try {
+            BasicFileAttributes basicFileAttributes = Files.readAttributes(filePath, BasicFileAttributes.class);
+            return getFileCreationDate(basicFileAttributes) + getFileSize(filePath) + getGPSMetadata(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private String getFileCreationDate(BasicFileAttributes fileAttributes) {
@@ -42,7 +45,7 @@ public class MetadataWrangler {
         return toRtn;
     }
 
-    private String getFileSize(Path filePath) throws IOException {
+    private String getFileSize(Path filePath) {
         String toRtn = "";
         if(userPreferences.getMetadataFileSizeLabel()) {
             toRtn = " Size: " + applicationLogic.getPhotoSizeInUnits(filePath);

@@ -4,12 +4,11 @@ import com.drew.lang.GeoLocation;
 import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
 import javafx.application.HostServices;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -18,11 +17,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 import photo.conversion.ConversionLogic;
 import preferences.UserPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class PhotoViewerController {
 
@@ -39,7 +40,15 @@ public class PhotoViewerController {
     @FXML
     private HBox thumbnailContainerRibbon;
     @FXML
+    private CheckMenuItem creationDateCheckMenu;
+    @FXML
+    private CheckMenuItem fileSizeCheckMenu;
+    @FXML
+    private CheckMenuItem GPSCheckMenu;
+    @FXML
     private StackPane root;
+    //Path of the outofBoundsImage
+    private final Path outOfBoundsPath = Paths.get("src/main/resources/image.Resources/41nrqdLzutL._AC_SY580_.jpg");
     private final DirectoryReader directoryReader;
     //Tracks the last key press to ensure key press isn't registered when key is held
     private KeyCode eventTracker = null;
@@ -68,7 +77,7 @@ public class PhotoViewerController {
 
         root = new StackPane();
 
-        String directory =  "/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
+        String directory =  "/home/hugh/Documents/Development/javaMemView/1.png";//"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         //Instantiation of all the helper classes needed, Order is important
@@ -110,7 +119,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() {
 
         //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images unless a GIF then use native Image object
         File firstImagePath = directoryReader.getCurrentImage().toFile();
@@ -126,13 +135,18 @@ public class PhotoViewerController {
 
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
+        galleryThumbnailParentToolbar.setPrefHeight(screenBounds.getHeight() / 6);
+        galleryThumbnailParentToolbar.setPrefWidth(root.getPrefWidth());
         applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
 
         thumbnailContainerRibbon.setSpacing(75);
+        thumbnailContainerRibbon.setPrefWidth(root.getPrefWidth());
 
         scrollPaneRootFileRibbon.setFitToWidth(true);
-        scrollPaneRootFileRibbon.setPrefHeight(screenBounds.getHeight() / 5);
-        scrollPaneRootFileRibbon.setPrefWidth(screenBounds.getWidth() - 100);
+        scrollPaneRootFileRibbon.setFitToHeight(true);
+        scrollPaneRootFileRibbon.setMinViewportHeight(180);
+        scrollPaneRootFileRibbon.setPrefWidth(root.getPrefWidth());
+
 
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
         zoomBoxContainer.setOpacity(0.0);
@@ -141,8 +155,12 @@ public class PhotoViewerController {
     }
 
     @FXML
-    public void nextButtonAction() throws IOException{
+    public void nextButtonAction() {
         Path nextImageFilePath = directoryReader.getNextImage();
+        if(nextImageFilePath.equals(outOfBoundsPath)) {
+            mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
+            return;
+        }
         getImageMetadata(nextImageFilePath);
 
         Image nextImage = directoryReader.loadImage();
@@ -150,8 +168,12 @@ public class PhotoViewerController {
     }
 
     @FXML
-    public void backButtonAction() throws IOException {
+    public void backButtonAction() {
         Path previousImagePath = directoryReader.getPreviousImage();
+        if(previousImagePath.equals(outOfBoundsPath)) {
+            mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
+            return;
+        }
         getImageMetadata(previousImagePath);
 
         Image previousImage = directoryReader.loadImage();
@@ -174,7 +196,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    public void keyPressHandler(KeyEvent event) throws IOException {
+    public void keyPressHandler(KeyEvent event) {
         if(event.getCode() == KeyCode.CONTROL) {
             eventTracker = event.getCode();
         }
@@ -192,9 +214,10 @@ public class PhotoViewerController {
         }
     }
 
-    public void getImageMetadata(Path imageFile) throws IOException{
+    public void getImageMetadata(Path imageFile) {
         metadataLabel.toFront();
         metadataLabel.setText(metadataWrangler.setMetadataLabel(imageFile));
+
     }
 
     //This method must always be called after the getImageMetadata method
@@ -207,7 +230,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    private void scrollHandler(ScrollEvent scrollEvent) throws IOException{
+    private void scrollHandler(ScrollEvent scrollEvent) {
         //scrollAmountTracker used to keep track of different stages of zoom.
 
         boolean controlKeyPressed = eventTracker == KeyCode.CONTROL;
@@ -301,7 +324,7 @@ public class PhotoViewerController {
         mainImageView.setImage(imageToGoTo);
     }
 
-    public void updateMetadataLabel(Path imagePath) throws IOException {
+    public void updateMetadataLabel(Path imagePath) {
         getImageMetadata(imagePath);
     }
 
@@ -315,41 +338,35 @@ public class PhotoViewerController {
         eventTracker = null;
     }
 
-    private HelloApplication mainApp;
-
-    public void setMainApp(HelloApplication mainApp) {this.mainApp = mainApp;}
-
-    //todo Make sure radio buttons reflect the preferences file
     @FXML
-    private void toggleGPSExifPreferences() throws IOException {
-        //If currently set to true, set to false - default is false
-        if(userPreferences.getMetadataGPSLabel()) {
-            userPreferences.setMetadataGPSLabel(false);
-            getImageMetadata(directoryReader.getCurrentImage());
-        } else {
+    private void toggleGPSExifPreferences() {
+        if(GPSCheckMenu.isSelected()) {
             userPreferences.setMetadataGPSLabel(true);
             getImageMetadata(directoryReader.getCurrentImage());
+        } else {
+            userPreferences.setMetadataGPSLabel(false);
+            getImageMetadata(directoryReader.getCurrentImage());
         }
     }
 
     @FXML
-    private void toggleFileSizePreferences() throws IOException {
-        if(userPreferences.getMetadataFileSizeLabel()) {
-            userPreferences.setMetadataFileSizeLabel(false);
-            getImageMetadata(directoryReader.getCurrentImage());
-        } else {
+    private void toggleFileSizePreferences(){
+        if(fileSizeCheckMenu.isSelected()) {
             userPreferences.setMetadataFileSizeLabel(true);
             getImageMetadata(directoryReader.getCurrentImage());
+        } else {
+            userPreferences.setMetadataFileSizeLabel(false);
+            getImageMetadata(directoryReader.getCurrentImage());
         }
     }
 
     @FXML
-    private void toggleCreationDatePreferences() throws IOException {
-        if(userPreferences.getMetadataCreationLabel()) {
-            userPreferences.setMetadataCreationLabel(false);
+    private void toggleCreationDatePreferences() {
+        if(creationDateCheckMenu.isSelected()) {
+            userPreferences.setMetadataCreationLabel(true);
             getImageMetadata(directoryReader.getCurrentImage());
         } else {
-            userPreferences.setMetadataCreationLabel(true);
+            userPreferences.setMetadataCreationLabel(false);
             getImageMetadata(directoryReader.getCurrentImage());
         }
     }

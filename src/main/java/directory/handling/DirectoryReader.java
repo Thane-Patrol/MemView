@@ -13,52 +13,51 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DirectoryReader {
 
     private final List<Path> fileNames;
     private int currentFileIndex;
-    private final Path outOfBoundsImagePath;
-    private final List<String> fileExtensionList;
+    private final List<String> readableExtensionList;
     private final List<String> writableFileExtensionList;
+    private final Path outOfBoundsImagePath;
 
     // Creates the DirectoryReader object to index all the files in the directory of the open file
     // THe originalFile object is the absolute Path of the file opened
     public DirectoryReader(String unsanitizedFileName) {
+        outOfBoundsImagePath = Paths.get("src/main/resources/image.Resources/41nrqdLzutL._AC_SY580_.jpg");
 
         String sanitisedFileName = unsanitizedFileName.replaceAll("//s","");
 
         File originalFilePath = new File(sanitisedFileName);
         fileNames = new ArrayList<>();
-        outOfBoundsImagePath = Paths.get("src/main/resources/testOutOfBoundsImage.png");
         //Readable File Extensions
-        fileExtensionList = FXCollections.observableArrayList();
-        addFileExtensionsToList();
+        readableExtensionList = FXCollections.observableArrayList();
+        addReadableExtensionList();
         //Writable File Extensions
         writableFileExtensionList = FXCollections.observableArrayList();
         addWriteableFileExtensionsToList();
 
+        addPhotosToList(originalFilePath);
+        getFirstFileIndex(originalFilePath);
+    }
 
-        //String representation of potential end of file paths, used for checking if the filetype is a photo or not
-
-        //Reads the originalFilePath object and streams the list of
-        // files in the directory to the fileNames List
-        //Does this to get an index of the images in a certain directory
+    private void addPhotosToList(File originalFilePath) {
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(originalFilePath.toPath().getParent())) {
             //For each loop to loop through all photos and add them to the fileNames list
             for (Path photos : directoryStream) {
-                //Checks to see if there is a recursive directory, if so do not add
                 if(!Files.isDirectory(photos) && fileIsAPhoto(photos)) {
                     fileNames.add(photos);
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error Message:");
+            System.out.println("Error Message in addPhotosToList method ");
             System.out.println(e.getMessage());
         }
-        System.out.println(fileNames);
+    }
 
-        // Finding the index of the first photo
+    private void getFirstFileIndex(File originalFilePath) {
         for (int i = 0; i < fileNames.size(); i++) {
             if (fileNames.get(i).equals(originalFilePath.toPath())) {
                 currentFileIndex = i;
@@ -66,29 +65,30 @@ public class DirectoryReader {
         }
     }
 
-    private void addFileExtensionsToList() {
-        fileExtensionList.add(0, ".png");
-        fileExtensionList.add(1, ".jpg");
-        fileExtensionList.add(2, ".bmp");
-        fileExtensionList.add(3, ".cur");
-        fileExtensionList.add(4, ".ico");
-        fileExtensionList.add(5, ".pict");
-        fileExtensionList.add(6, ".pntg");
-        fileExtensionList.add(7, ".pam");
-        fileExtensionList.add(8, ".pbm");
-        fileExtensionList.add(9, ".pgm");
-        fileExtensionList.add(10, ".ppm");
-        fileExtensionList.add(11, ".pfm");
-        fileExtensionList.add(12, ".psd");
-        fileExtensionList.add(12, ".psb");
-        fileExtensionList.add(13, ".tga");
-        fileExtensionList.add(15, ".webp");
-        fileExtensionList.add(16, ".hdr");
-        fileExtensionList.add(17, ".gif");
-        fileExtensionList.add(18, ".tiff");
-        fileExtensionList.add(19, ".pcx");
-        fileExtensionList.add(20, ".dcx");
-        fileExtensionList.add(21, ".sgi");
+    private void addReadableExtensionList() {
+        readableExtensionList.add(0, ".png");
+        readableExtensionList.add(1, ".jpg");
+        readableExtensionList.add(2, ".bmp");
+        readableExtensionList.add(3, ".cur");
+        readableExtensionList.add(4, ".ico");
+        readableExtensionList.add(5, ".pict");
+        readableExtensionList.add(6, ".pntg");
+        readableExtensionList.add(7, ".pam");
+        readableExtensionList.add(8, ".pbm");
+        readableExtensionList.add(9, ".pgm");
+        readableExtensionList.add(10, ".ppm");
+        readableExtensionList.add(11, ".pfm");
+        readableExtensionList.add(12, ".psd");
+        readableExtensionList.add(12, ".psb");
+        readableExtensionList.add(13, ".tga");
+        readableExtensionList.add(15, ".webp");
+        readableExtensionList.add(16, ".hdr");
+        readableExtensionList.add(17, ".gif");
+        readableExtensionList.add(18, ".tiff");
+        readableExtensionList.add(19, ".tif");
+        readableExtensionList.add(20, ".pcx");
+        readableExtensionList.add(21, ".dcx");
+        readableExtensionList.add(22, ".sgi");
     }
 
     private void addWriteableFileExtensionsToList() {
@@ -154,8 +154,9 @@ public class DirectoryReader {
     }
 
     private boolean fileIsAPhoto(Path photoPath) {
-        for(String fileExtensionName : fileExtensionList) {
-            if (photoPath.getFileName().toString().contains(fileExtensionName)) {
+        String extension = FilenameUtils.getExtension(photoPath.toString()).toLowerCase(Locale.ROOT);
+        for(String fileExtensionName : readableExtensionList) {
+            if (fileExtensionName.contains(extension)) {
                 return true;
             }
         }
@@ -166,30 +167,40 @@ public class DirectoryReader {
         return FilenameUtils.getExtension(getCurrentImage().toString());
     }
 
-    public Image loadImage() throws IOException {
-        File firstImagePath = this.getCurrentImage().toFile();
+    public Image loadImage() {
         Image image;
+        try {
+            File firstImagePath = this.getCurrentImage().toFile();
 
-        if(this.getPhotoExtension().equals("gif")) {
-            image = new Image(firstImagePath.toURI().toString());
-        } else {
-            image = SwingFXUtils.toFXImage(ImageIO.read(firstImagePath), null);
+            if(this.getPhotoExtension().equals("gif")) {
+                image = new Image(firstImagePath.toURI().toString());
+            } else {
+                image = SwingFXUtils.toFXImage(ImageIO.read(firstImagePath), null);
+            }
+
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return image;
     }
 
-    public Image loadImageFromPath(Path imagePath) throws IOException {
-        File imageFile = imagePath.toFile();
+    public Image loadImageFromPath(Path imagePath) {
         Image image;
+        try {
+            File imageFile = imagePath.toFile();
 
-        if(this.getPhotoExtension().equals("gif")) {
-            image = new Image(imageFile.toURI().toString());
-        } else {
-            image = SwingFXUtils.toFXImage(ImageIO.read(imageFile), null);
+            if(this.getPhotoExtension().equals("gif")) {
+                image = new Image(imageFile.toURI().toString());
+            } else {
+                image = SwingFXUtils.toFXImage(ImageIO.read(imageFile), null);
+            }
+
+            return image;
+        }  catch(IOException ioException) {
+            ioException.printStackTrace();
+            return null;
         }
-
-        return image;
     }
 
     public List<Path> getListOfFilePaths() {
