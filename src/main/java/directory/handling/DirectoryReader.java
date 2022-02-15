@@ -41,28 +41,18 @@ public class DirectoryReader {
 
         addPhotosToList(originalFilePath);
         getFirstFileIndex(originalFilePath);
-        fileNames.toString();
     }
 
     private void addPhotosToList(File originalFilePath) {
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(originalFilePath.toPath().getParent())) {
             //For each loop to loop through all photos and add them to the fileNames list
             for (Path photos : directoryStream) {
-                //makes the extension lowercase
-                String lowerCaseExtension = FilenameUtils.getExtension(photos.toString()).toLowerCase(Locale.ROOT);
-
-                String fileNameAsString = FilenameUtils.removeExtension(photos.toString());
-                String amendedPhoto = fileNameAsString + "." + lowerCaseExtension;
-                Path amendedPhotoPath = Paths.get(amendedPhoto);
-                //Checks to see if there is a recursive directory, if so do not add
-                if(!Files.isDirectory(photos) && fileIsAPhoto(amendedPhotoPath)) {
-                    fileNames.add(amendedPhotoPath);
-                    System.out.println(amendedPhotoPath);
+                if(!Files.isDirectory(photos) && fileIsAPhoto(photos)) {
+                    fileNames.add(photos);
                 }
-                //todo figure out how to add photos to the fileName list while ignoring their case
             }
         } catch (Exception e) {
-            System.out.println("Error Message:");
+            System.out.println("Error Message in addPhotosToList method ");
             System.out.println(e.getMessage());
         }
     }
@@ -164,7 +154,7 @@ public class DirectoryReader {
     }
 
     private boolean fileIsAPhoto(Path photoPath) {
-        String extension = FilenameUtils.getExtension(photoPath.toString());
+        String extension = FilenameUtils.getExtension(photoPath.toString()).toLowerCase(Locale.ROOT);
         for(String fileExtensionName : readableExtensionList) {
             if (fileExtensionName.contains(extension)) {
                 return true;

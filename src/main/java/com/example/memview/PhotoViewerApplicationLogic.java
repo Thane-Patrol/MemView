@@ -25,12 +25,10 @@ import javafx.stage.Screen;
 public class PhotoViewerApplicationLogic {
 
     private final DirectoryReader directoryReader;
-    private double vboxHeight;
     private final PhotoViewerController photoViewerController;
 
     public PhotoViewerApplicationLogic(DirectoryReader directoryReader, PhotoViewerController photoViewerController) {
         this.directoryReader = directoryReader;
-        this.vboxHeight = 250;
         this.photoViewerController = photoViewerController;
 
     }
@@ -41,17 +39,15 @@ public class PhotoViewerApplicationLogic {
             fileAttributes = Files.readAttributes(imagePath, BasicFileAttributes.class);
         } catch(IOException e) {
             e.printStackTrace();
-            fileAttributes = null;
+            return null;
         }
 
         String fileSizeWithBytes;
-
         //Variables used to improve code readability and ease of future expandability
         long fileSize = fileAttributes.size();
         int KBCondition = 1000;
         int MBCondition = 1000_000;
         int GBCondition = 1000_000_000;
-
 
         if (fileSize >= KBCondition && fileSize < MBCondition) {
             fileSizeWithBytes = fileSize/1000 + " KB";
@@ -77,6 +73,7 @@ public class PhotoViewerApplicationLogic {
 
             Label fileName = new Label();
             fileName.setText(s.getFileName().toString());
+            System.out.println("loading: " + s.getFileName().toString());
 
             ImageView imageView = new ImageView(directoryReader.loadImageFromPath(s));
             //todo set height based upon reasonable screenbounds and/or current window size
@@ -112,11 +109,8 @@ public class PhotoViewerApplicationLogic {
         Metadata metadata = null;
         try {
             metadata = ImageMetadataReader.readMetadata(imageFile);
-        } catch (ImageProcessingException imageProcessingException) {
+        } catch (ImageProcessingException | IOException imageProcessingException) {
             imageProcessingException.fillInStackTrace();
-
-        } catch (IOException ioException) {
-            ioException.fillInStackTrace();
         }
 
         GeoLocation geoLocation = null;
@@ -135,13 +129,6 @@ public class PhotoViewerApplicationLogic {
     }
 
     public boolean checkGeolocationForNull(GeoLocation geoLocation) {
-        if (geoLocation == null || geoLocation.isZero()) {
-            return true;
-        }
-        return false;
-    }
-
-    public double getVboxHeight() {
-        return vboxHeight;
+        return geoLocation == null || geoLocation.isZero();
     }
 }
