@@ -16,12 +16,12 @@
 <?import javafx.scene.layout.StackPane?>
 
 <StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" styleClass="root" stylesheets="@../../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoViewerController">
-   <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="60.0" prefWidth="200.0" styleClass="scroll-ribbon" translateY="40.0" StackPane.alignment="TOP_CENTER">
+   <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="140.0" prefWidth="282.0" styleClass="scroll-ribbon" translateY="40.0" StackPane.alignment="TOP_CENTER">
          <ScrollPane fx:id="scrollPaneRootFileRibbon" fitToHeight="true" fitToWidth="true" styleClass="scroll">
                <HBox fx:id="thumbnailContainerRibbon" prefHeight="100.0" prefWidth="200.0" styleClass="scroll" />
          </ScrollPane>
       <StackPane.margin>
-         <Insets top="20.0" />
+         <Insets left="-10.0" right="-10.0" top="-6.0" />
       </StackPane.margin>
    </ToolBar>
    <Label fx:id="metadataLabel" alignment="TOP_LEFT" onMouseClicked="#openGoogleMapsGPS" styleClass="root" StackPane.alignment="BOTTOM_LEFT">
@@ -34,14 +34,14 @@
          <Blend />
       </effect>
    </ImageView>
-   <HBox fx:id="buttonHolder" alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
-      <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" opacity="0.5" text="&lt;">
+   <HBox alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
+      <Button mnemonicParsing="false" onAction="#backButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" opacity="0.5" text="&lt;">
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin>
       </Button>
       <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-      <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onScroll="#nextButtonAction" opacity="0.5" text="&gt;">
+      <Button mnemonicParsing="false" onAction="#nextButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onScroll="#nextButtonAction" opacity="0.5" text="&gt;">
          <HBox.margin>
             <Insets right="10.0" />
          </HBox.margin>
@@ -51,29 +51,19 @@
             <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#createZoomBoxOnClick" onMouseDragged="#moveZoomBoxWithMouse" onMouseReleased="#hideZoomBoxOnRelease" pickOnBounds="true" preserveRatio="true" />
    </Pane>
    <MenuBar fx:id="mainMenuBar" styleClass="menu" StackPane.alignment="TOP_LEFT">
-     <menus>
        <Menu mnemonicParsing="false" text="Options">
-         <items>
                <Menu mnemonicParsing="false" text="EXIF">
-                 <items>
                      <CheckMenuItem fx:id="creationDateCheckMenu" mnemonicParsing="false" onAction="#toggleCreationDatePreferences" text="Show Creation Date" />
                      <CheckMenuItem fx:id="fileSizeCheckMenu" mnemonicParsing="false" onAction="#toggleFileSizePreferences" text="Show File Size" />
                      <CheckMenuItem fx:id="GPSCheckMenu" mnemonicParsing="false" onAction="#toggleGPSExifPreferences" text="Show GPS Info" />
-                 </items>
                </Menu>
-         </items>
        </Menu>
        <Menu mnemonicParsing="false" text="Convert">
-         <items>
            <MenuItem mnemonicParsing="false" onAction="#showConversionPopup" text="Photo Conversion" />
-         </items>
        </Menu>
        <Menu mnemonicParsing="false" text="Help">
-         <items>
            <MenuItem mnemonicParsing="false" text="About" />
-         </items>
        </Menu>
-     </menus>
       <StackPane.margin>
          <Insets left="-10.0" right="-10.0" top="-10.0" />
       </StackPane.margin>

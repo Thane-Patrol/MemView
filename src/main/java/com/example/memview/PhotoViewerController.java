@@ -46,8 +46,6 @@ public class PhotoViewerController {
     @FXML
     private CheckMenuItem GPSCheckMenu;
     @FXML
-    private MenuBar mainMenuBar;
-    @FXML
     private StackPane root;
     //Path of the outofBoundsImage
     private final Path outOfBoundsPath = Paths.get("src/main/resources/image.Resources/41nrqdLzutL._AC_SY580_.jpg");
@@ -137,13 +135,18 @@ public class PhotoViewerController {
 
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
+        galleryThumbnailParentToolbar.setPrefHeight(screenBounds.getHeight() / 6);
+        galleryThumbnailParentToolbar.setPrefWidth(root.getPrefWidth());
         applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
 
         thumbnailContainerRibbon.setSpacing(75);
+        thumbnailContainerRibbon.setPrefWidth(root.getPrefWidth());
 
         scrollPaneRootFileRibbon.setFitToWidth(true);
-        scrollPaneRootFileRibbon.setPrefHeight(screenBounds.getHeight() / 5);
-        scrollPaneRootFileRibbon.setPrefWidth(screenBounds.getWidth() - 100);
+        scrollPaneRootFileRibbon.setFitToHeight(true);
+        scrollPaneRootFileRibbon.setMinViewportHeight(180);
+        scrollPaneRootFileRibbon.setPrefWidth(root.getPrefWidth());
+
 
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
         zoomBoxContainer.setOpacity(0.0);

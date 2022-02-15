@@ -11,8 +11,6 @@ import java.io.IOException;
 public class HelloApplication extends Application {
 
     private Stage mainStage;
-    private static HostServices hostServices;
-    private Stage photoConversionStage;
 
     @Override
     public void start(Stage stage) throws IOException {
