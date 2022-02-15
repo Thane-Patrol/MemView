@@ -23,7 +23,6 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoaderMain = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoaderMain.load(), 640, 480);
         PhotoViewerController controller = fxmlLoaderMain.getController();
-        controller.setMainApp(this);
         controller.setHostServices(this.getHostServices());
 
         //popup FXML file for conversion of photos
@@ -50,6 +49,7 @@ public class HelloApplication extends Application {
         mainStage.setMaximized(true);
         mainStage.show();
         scene.getRoot().requestFocus();
+
 
     }
 

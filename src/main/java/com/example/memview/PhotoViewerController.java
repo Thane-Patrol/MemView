@@ -4,13 +4,11 @@ import com.drew.lang.GeoLocation;
 import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
 import javafx.application.HostServices;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -19,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 import photo.conversion.ConversionLogic;
 import preferences.UserPreferences;
 import java.io.File;
@@ -47,9 +46,11 @@ public class PhotoViewerController {
     @FXML
     private CheckMenuItem GPSCheckMenu;
     @FXML
+    private MenuBar mainMenuBar;
+    @FXML
     private StackPane root;
     //Path of the outofBoundsImage
-    private Path outOfBoundsPath = Paths.get("src/main/resources/image.Resources/41nrqdLzutL._AC_SY580_.jpg");
+    private final Path outOfBoundsPath = Paths.get("src/main/resources/image.Resources/41nrqdLzutL._AC_SY580_.jpg");
     private final DirectoryReader directoryReader;
     //Tracks the last key press to ensure key press isn't registered when key is held
     private KeyCode eventTracker = null;
@@ -120,7 +121,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() {
 
         //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images unless a GIF then use native Image object
         File firstImagePath = directoryReader.getCurrentImage().toFile();
@@ -151,7 +152,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    public void nextButtonAction() throws IOException{
+    public void nextButtonAction() {
         Path nextImageFilePath = directoryReader.getNextImage();
         if(nextImageFilePath.equals(outOfBoundsPath)) {
             mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
@@ -164,7 +165,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    public void backButtonAction() throws IOException {
+    public void backButtonAction() {
         Path previousImagePath = directoryReader.getPreviousImage();
         if(previousImagePath.equals(outOfBoundsPath)) {
             mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
@@ -192,7 +193,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    public void keyPressHandler(KeyEvent event) throws IOException {
+    public void keyPressHandler(KeyEvent event) {
         if(event.getCode() == KeyCode.CONTROL) {
             eventTracker = event.getCode();
         }
@@ -226,7 +227,7 @@ public class PhotoViewerController {
     }
 
     @FXML
-    private void scrollHandler(ScrollEvent scrollEvent) throws IOException{
+    private void scrollHandler(ScrollEvent scrollEvent) {
         //scrollAmountTracker used to keep track of different stages of zoom.
 
         boolean controlKeyPressed = eventTracker == KeyCode.CONTROL;
@@ -333,10 +334,6 @@ public class PhotoViewerController {
     private void keyReleasedHandler() {
         eventTracker = null;
     }
-
-    private HelloApplication mainApp;
-
-    public void setMainApp(HelloApplication mainApp) {this.mainApp = mainApp;}
 
     @FXML
     private void toggleGPSExifPreferences() {

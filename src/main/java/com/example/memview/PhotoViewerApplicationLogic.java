@@ -73,11 +73,14 @@ public class PhotoViewerApplicationLogic {
 
             Label fileName = new Label();
             fileName.setText(s.getFileName().toString());
+            fileName.setMaxWidth(180);
             System.out.println("loading: " + s.getFileName().toString());
 
             ImageView imageView = new ImageView(directoryReader.loadImageFromPath(s));
+            imageView.setPreserveRatio(true);
             //todo set height based upon reasonable screenbounds and/or current window size
-            imageView.setFitHeight(200);
+            imageView.setFitWidth(180);
+            imageView.setFitHeight(180);
             VBox vBox = new VBox(imageView, fileName);
             vBox.setMaxHeight(Screen.getPrimary().getBounds().getHeight()/8);
 
