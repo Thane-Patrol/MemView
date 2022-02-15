@@ -49,11 +49,7 @@ public class HelloApplication extends Application {
         mainStage.setMaximized(true);
         mainStage.show();
         scene.getRoot().requestFocus();
-
-
     }
-
-    public Stage getMainStage() {return this.mainStage;}
 
     public static void main(String[] args) {
 
