@@ -7,6 +7,7 @@ import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
@@ -23,6 +24,7 @@ import preferences.UserPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class PhotoViewerController {
 
@@ -39,7 +41,15 @@ public class PhotoViewerController {
     @FXML
     private HBox thumbnailContainerRibbon;
     @FXML
+    private CheckMenuItem creationDateCheckMenu;
+    @FXML
+    private CheckMenuItem fileSizeCheckMenu;
+    @FXML
+    private CheckMenuItem GPSCheckMenu;
+    @FXML
     private StackPane root;
+    //Path of the outofBoundsImage
+    private Path outOfBoundsPath = Paths.get("src/main/resources/image.Resources/41nrqdLzutL._AC_SY580_.jpg");
     private final DirectoryReader directoryReader;
     //Tracks the last key press to ensure key press isn't registered when key is held
     private KeyCode eventTracker = null;
@@ -143,6 +153,10 @@ public class PhotoViewerController {
     @FXML
     public void nextButtonAction() throws IOException{
         Path nextImageFilePath = directoryReader.getNextImage();
+        if(nextImageFilePath.equals(outOfBoundsPath)) {
+            mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
+            return;
+        }
         getImageMetadata(nextImageFilePath);
 
         Image nextImage = directoryReader.loadImage();
@@ -152,6 +166,10 @@ public class PhotoViewerController {
     @FXML
     public void backButtonAction() throws IOException {
         Path previousImagePath = directoryReader.getPreviousImage();
+        if(previousImagePath.equals(outOfBoundsPath)) {
+            mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
+            return;
+        }
         getImageMetadata(previousImagePath);
 
         Image previousImage = directoryReader.loadImage();
@@ -192,9 +210,10 @@ public class PhotoViewerController {
         }
     }
 
-    public void getImageMetadata(Path imageFile) throws IOException{
+    public void getImageMetadata(Path imageFile) {
         metadataLabel.toFront();
         metadataLabel.setText(metadataWrangler.setMetadataLabel(imageFile));
+
     }
 
     //This method must always be called after the getImageMetadata method
@@ -302,12 +321,7 @@ public class PhotoViewerController {
     }
 
     public void updateMetadataLabel(Path imagePath) {
-        try {
-            getImageMetadata(imagePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        getImageMetadata(imagePath);
     }
 
     @FXML
@@ -324,37 +338,35 @@ public class PhotoViewerController {
 
     public void setMainApp(HelloApplication mainApp) {this.mainApp = mainApp;}
 
-    //todo Make sure radio buttons reflect the preferences file
     @FXML
-    private void toggleGPSExifPreferences() throws IOException {
-        //If currently set to true, set to false - default is false
-        if(userPreferences.getMetadataGPSLabel()) {
-            userPreferences.setMetadataGPSLabel(false);
-            getImageMetadata(directoryReader.getCurrentImage());
-        } else {
+    private void toggleGPSExifPreferences() {
+        if(GPSCheckMenu.isSelected()) {
             userPreferences.setMetadataGPSLabel(true);
             getImageMetadata(directoryReader.getCurrentImage());
+        } else {
+            userPreferences.setMetadataGPSLabel(false);
+            getImageMetadata(directoryReader.getCurrentImage());
         }
     }
 
     @FXML
-    private void toggleFileSizePreferences() throws IOException {
-        if(userPreferences.getMetadataFileSizeLabel()) {
-            userPreferences.setMetadataFileSizeLabel(false);
-            getImageMetadata(directoryReader.getCurrentImage());
-        } else {
+    private void toggleFileSizePreferences(){
+        if(fileSizeCheckMenu.isSelected()) {
             userPreferences.setMetadataFileSizeLabel(true);
             getImageMetadata(directoryReader.getCurrentImage());
+        } else {
+            userPreferences.setMetadataFileSizeLabel(false);
+            getImageMetadata(directoryReader.getCurrentImage());
         }
     }
 
     @FXML
-    private void toggleCreationDatePreferences() throws IOException {
-        if(userPreferences.getMetadataCreationLabel()) {
-            userPreferences.setMetadataCreationLabel(false);
+    private void toggleCreationDatePreferences() {
+        if(creationDateCheckMenu.isSelected()) {
+            userPreferences.setMetadataCreationLabel(true);
             getImageMetadata(directoryReader.getCurrentImage());
         } else {
-            userPreferences.setMetadataCreationLabel(true);
+            userPreferences.setMetadataCreationLabel(false);
             getImageMetadata(directoryReader.getCurrentImage());
         }
     }

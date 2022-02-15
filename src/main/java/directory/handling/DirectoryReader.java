@@ -21,11 +21,12 @@ public class DirectoryReader {
     private int currentFileIndex;
     private final List<String> readableExtensionList;
     private final List<String> writableFileExtensionList;
-    private final Path outOfBoundsImagePath = Paths.get("image.Resources/outOfBoundsImage");
+    private final Path outOfBoundsImagePath;
 
     // Creates the DirectoryReader object to index all the files in the directory of the open file
     // THe originalFile object is the absolute Path of the file opened
     public DirectoryReader(String unsanitizedFileName) {
+        outOfBoundsImagePath = Paths.get("src/main/resources/image.Resources/41nrqdLzutL._AC_SY580_.jpg");
 
         String sanitisedFileName = unsanitizedFileName.replaceAll("//s","");
 
