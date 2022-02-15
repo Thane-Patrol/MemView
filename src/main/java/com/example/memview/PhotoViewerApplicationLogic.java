@@ -20,6 +20,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.List;
 import com.drew.imaging.ImageMetadataReader;
+import javafx.stage.Screen;
 
 public class PhotoViewerApplicationLogic {
 
@@ -81,6 +82,7 @@ public class PhotoViewerApplicationLogic {
             //todo set height based upon reasonable screenbounds and/or current window size
             imageView.setFitHeight(200);
             VBox vBox = new VBox(imageView, fileName);
+            vBox.setMaxHeight(Screen.getPrimary().getBounds().getHeight()/8);
 
             //Set the mainImage view to the thumbnail when clicked on
             vBox.setOnMouseClicked(event -> {
@@ -117,9 +119,13 @@ public class PhotoViewerApplicationLogic {
             ioException.fillInStackTrace();
         }
 
+        GeoLocation geoLocation = null;
+        if(metadata == null) {
+            return geoLocation;
+        }
         Collection<GpsDirectory> gpsDirectories = metadata.getDirectoriesOfType(GpsDirectory.class);
 
-        GeoLocation geoLocation = null;
+
         for(GpsDirectory gpsDirectory : gpsDirectories) {
             geoLocation = gpsDirectory.getGeoLocation();
 
