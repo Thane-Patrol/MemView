@@ -157,27 +157,24 @@ public class PhotoViewerController {
     @FXML
     public void nextButtonAction() {
         Path nextImageFilePath = directoryReader.getNextImage();
-        if(nextImageFilePath.equals(outOfBoundsPath)) {
+        commonNextAndBackButtonAction(nextImageFilePath);
+    }
+
+    private void commonNextAndBackButtonAction(Path path) {
+        if(path.equals(outOfBoundsPath)) {
             mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
             return;
         }
-        getImageMetadata(nextImageFilePath);
-
-        Image nextImage = directoryReader.loadImage();
-        mainImageView.setImage(nextImage);
+        getImageMetadata(path);
+        resetZoom();
+        Image image = directoryReader.loadImage();
+        mainImageView.setImage(image);
     }
 
     @FXML
     public void backButtonAction() {
         Path previousImagePath = directoryReader.getPreviousImage();
-        if(previousImagePath.equals(outOfBoundsPath)) {
-            mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
-            return;
-        }
-        getImageMetadata(previousImagePath);
-
-        Image previousImage = directoryReader.loadImage();
-        mainImageView.setImage(previousImage);
+        commonNextAndBackButtonAction(previousImagePath);
     }
 
     public ImageView resizeImageForScreen(ImageView imageView) {
@@ -259,6 +256,10 @@ public class PhotoViewerController {
             nextButtonAction();
         }
         scrollEvent.consume();
+    }
+
+    private void resetZoom() {
+        zoomOutActionFirstLevel();
     }
 
     //todo scroll in on the section the cursor is over, not the center
