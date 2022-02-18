@@ -101,7 +101,7 @@ public class DirectoryReader {
         writableFileExtensionList.add(6, ".psd");
         writableFileExtensionList.add(7, ".tga");
         writableFileExtensionList.add(8, ".tiff");
-
+        writableFileExtensionList.add(9, ".png");
     }
 
     public Path getCurrentImage() {
