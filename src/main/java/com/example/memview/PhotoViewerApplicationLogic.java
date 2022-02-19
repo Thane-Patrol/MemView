@@ -5,12 +5,15 @@ import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
@@ -21,6 +24,9 @@ import java.util.Collection;
 import java.util.List;
 import com.drew.imaging.ImageMetadataReader;
 import javafx.stage.Screen;
+import net.coobird.thumbnailator.Thumbnails;
+
+import javax.imageio.ImageIO;
 
 public class PhotoViewerApplicationLogic {
 
@@ -76,11 +82,23 @@ public class PhotoViewerApplicationLogic {
             fileName.setMaxWidth(180);
             System.out.println("loading: " + s.getFileName().toString());
 
-            ImageView imageView = new ImageView(directoryReader.loadImageFromPath(s));
+            BufferedImage finalImage;
+            Image image;
+            try {
+                BufferedImage bufferedImage = ImageIO.read(s.toFile());
+                finalImage = Thumbnails.of(bufferedImage).size(150, 150).keepAspectRatio(true).asBufferedImage();
+                image = SwingFXUtils.toFXImage(finalImage, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+
+            ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             //todo set height based upon reasonable screenbounds and/or current window size
             imageView.setFitWidth(180);
-            imageView.setFitHeight(180);
+            imageView.setFitHeight(150);
             VBox vBox = new VBox(imageView, fileName);
             vBox.setMaxHeight(Screen.getPrimary().getBounds().getHeight()/8);
 

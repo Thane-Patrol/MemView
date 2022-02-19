@@ -72,7 +72,11 @@ public class ThumbnailParameterBuilderObject {
 
         } else if(toApplyWatermark) {
             applyWatermark(bufferedImage);
+
+        } else {
+
         }
+
         return bufferedImageToRtn;
     }
 
