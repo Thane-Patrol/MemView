@@ -135,14 +135,13 @@ public class PhotoViewerController {
 
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
-        galleryThumbnailParentToolbar.setPrefHeight(screenBounds.getHeight() / 6);
+        galleryThumbnailParentToolbar.setPrefHeight(screenBounds.getHeight() / 5);
         galleryThumbnailParentToolbar.setPrefWidth(root.getPrefWidth());
         applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
 
         thumbnailContainerRibbon.setSpacing(75);
         thumbnailContainerRibbon.setPrefWidth(root.getPrefWidth());
 
-        scrollPaneRootFileRibbon.setFitToWidth(true);
         scrollPaneRootFileRibbon.setFitToHeight(true);
         scrollPaneRootFileRibbon.setMinViewportHeight(180);
         scrollPaneRootFileRibbon.setPrefWidth(root.getPrefWidth());
