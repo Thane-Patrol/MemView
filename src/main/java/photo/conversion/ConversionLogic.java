@@ -158,8 +158,8 @@ public class ConversionLogic {
             return true;
         } else if(!directoryLabel.getText().isEmpty()) {
             return true;
-        } else if(directoryLabel.getText().contains("Chosen Directory")) {
-            return false;
+        } else if(!directoryLabel.getText().contains("Chosen Directory")) {
+            return true;
         } return false;
     }
 
@@ -226,6 +226,21 @@ public class ConversionLogic {
             e.printStackTrace();
         }
         return toRtn;
+    }
+
+    //returns true with successful conversion
+    public boolean checkForSuccessfulConversion(Path directoryPath, List<Path> pathListResized) {
+        List<File> fileList = new ArrayList<>();
+
+        final File directory = directoryPath.toFile();
+        for(File file : directory.listFiles()) {
+            fileList.add(file);
+        }
+
+        if(fileList.size() == pathListResized.size()) {
+            return true;
+        }
+        return false;
     }
 
 }

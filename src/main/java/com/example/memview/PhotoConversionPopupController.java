@@ -15,6 +15,7 @@ import photo.conversion.ConversionLogic;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,14 +148,12 @@ public class PhotoConversionPopupController {
             return;
         } else {
             fileFormat = outputFileFormatChoiceBox.getSelectionModel().getSelectedItem().toString();
-            System.out.println("File format:" + fileFormat);
         }
 
-        if(conversionLogic.checkForValidDirectoryChosen(saveToCurrentDirectoryRadioButton, chosenDirectoryLabel)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Please specify a valid directory");
-            alert.showAndWait().filter(response -> response == ButtonType.OK);
+        if(checkForInvalidDirectoryChosen()) {
             return;
         }
+
         String amendedFilePath;
         if(saveToCurrentDirectoryRadioButton.isSelected()) {
             amendedFilePath = fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString());
@@ -189,6 +188,14 @@ public class PhotoConversionPopupController {
         }
         //todo add a popup to tell user that conversion is successful or not
         */
+
+        Path directoryPath = Paths.get(amendedFilePath);
+        directoryPath.toString();
+        if(conversionLogic.checkForSuccessfulConversion(directoryPath, pathListToConvert)) {
+            System.out.println("Conversion successfull, all files converted");
+        } else {
+            System.out.println("Conversion not successful, not all files converted");
+        }
     }
 
     private void initializePopup() {
@@ -298,6 +305,16 @@ public class PhotoConversionPopupController {
             return true;
         }
         return false;
+     }
+
+     //return true is Alert shows
+     private boolean checkForInvalidDirectoryChosen() {
+         if(!conversionLogic.checkForValidDirectoryChosen(saveToCurrentDirectoryRadioButton, chosenDirectoryLabel)) {
+             Alert alert = new Alert(Alert.AlertType.ERROR, "Please specify a valid directory");
+             alert.showAndWait().filter(response -> response == ButtonType.OK);
+             return true;
+         }
+         return false;
      }
 
      private boolean checkForAllValidGUISelections() {
