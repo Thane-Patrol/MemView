@@ -26,7 +26,7 @@ public class PhotoConversionPopupController {
     private ConversionLogic conversionLogic;
     private FileHandling fileHandling;
     private List<RadioButton> radioButtonList;
-    private List<Path> pathList;
+    private List<Path> pathList = new ArrayList<>();
     private DirectoryReader directoryReader;
     private boolean watermarkChosen = false;
     private File watermarkFile;
