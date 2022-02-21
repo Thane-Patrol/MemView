@@ -131,7 +131,7 @@ public class ConversionLogic {
     public boolean checkForOneImageSelected(List<RadioButton> radioButtonList) {
         int j = 0;
         for (RadioButton radioButton : radioButtonList) {
-            if(!radioButton.isSelected()) {
+            if(radioButton.isSelected()) {
                 j++;
             }
         }
@@ -154,8 +154,13 @@ public class ConversionLogic {
 
     //return true if valid directory specified by user
     public boolean checkForValidDirectoryChosen(RadioButton radioButton, Label directoryLabel) {
-        return radioButton.isSelected() || !directoryLabel.getText().isEmpty() || !directoryLabel.getText().equals("Chosen Directory");
-
+        if(radioButton.isSelected()) {
+            return true;
+        } else if(!directoryLabel.getText().isEmpty()) {
+            return true;
+        } else if(directoryLabel.getText().contains("Chosen Directory")) {
+            return false;
+        } return false;
     }
 
     //returns true if invalid input is found in rotation textfield

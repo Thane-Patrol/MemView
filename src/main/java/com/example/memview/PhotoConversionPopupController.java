@@ -150,7 +150,7 @@ public class PhotoConversionPopupController {
             System.out.println("File format:" + fileFormat);
         }
 
-        if(!conversionLogic.checkForValidDirectoryChosen(saveToCurrentDirectoryRadioButton, chosenDirectoryLabel)) {
+        if(conversionLogic.checkForValidDirectoryChosen(saveToCurrentDirectoryRadioButton, chosenDirectoryLabel)) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Please specify a valid directory");
             alert.showAndWait().filter(response -> response == ButtonType.OK);
             return;
@@ -261,6 +261,8 @@ public class PhotoConversionPopupController {
 
     //Will return true if Alert is shown
     private boolean showNoPhotosSelectedAlert() {
+        System.out.println("showNoPhotosSelectedAlert method called");
+        System.out.println("radioButtonList size: " + radioButtonList.size());
         if(conversionLogic.checkForOneImageSelected(radioButtonList)) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Please select photos to convert");
             alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -296,6 +298,10 @@ public class PhotoConversionPopupController {
             return true;
         }
         return false;
+     }
+
+     private boolean checkForAllValidGUISelections() {
+        return true;
      }
 
 
