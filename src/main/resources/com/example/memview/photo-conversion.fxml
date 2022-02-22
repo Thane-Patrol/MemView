@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="497.0" prefWidth="711.0" styleClass="root" stylesheets="src/main/resources/image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionPopupController">
+<AnchorPane prefHeight="497.0" prefWidth="711.0" styleClass="root" stylesheets="src/main/resources/image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionController">
       <VBox layoutX="14.0" layoutY="23.0" prefHeight="434.0" prefWidth="241.0">
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="241.0" text="List of files">
                <font>

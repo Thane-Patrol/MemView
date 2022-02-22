@@ -1,10 +1,8 @@
 package com.example.memview;
 
-import com.drew.lang.GeoLocation;
 import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
 import javafx.application.HostServices;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -17,11 +15,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 import photo.conversion.ConversionLogic;
 import preferences.UserPreferences;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -67,7 +63,7 @@ public class PhotoViewerController {
     //Label to display the metadata
     @FXML
     private Label metadataLabel;
-    private PhotoConversionPopupController photoConversionPopupController;
+    private PhotoConversionController photoConversionController;
     private HostServices hostServices;
 
     //Used for keeping track of the amount of level of scrolling for zoom calculations
@@ -77,7 +73,7 @@ public class PhotoViewerController {
 
         root = new StackPane();
 
-        String directory =  "/Users/hugh/Desktop/memview/Back Garden From stairs.png";//"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
+        String directory =  "/home/hugh/Documents/Development/javaMemView/1.png"; //"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         //Instantiation of all the helper classes needed, Order is important
@@ -106,16 +102,16 @@ public class PhotoViewerController {
     }
 
     public void setServicesForPhotoController() {
-        photoConversionPopupController.setHelperObjectClasses(directoryReader, conversionLogicClass, fileHandling, this);
+        photoConversionController.setHelperObjectClasses(directoryReader, conversionLogicClass, fileHandling, this);
     }
 
     @FXML
     public void showConversionPopup() {
-        photoConversionPopupController.showPopup();
+        photoConversionController.showPopup();
     }
 
-    public void setPhotoConversionPopupController(PhotoConversionPopupController photoConversionPopupController) {
-        this.photoConversionPopupController = photoConversionPopupController;
+    public void setPhotoConversionPopupController(PhotoConversionController photoConversionController) {
+        this.photoConversionController = photoConversionController;
     }
 
     @FXML

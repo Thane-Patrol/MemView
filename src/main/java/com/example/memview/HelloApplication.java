@@ -1,7 +1,6 @@
 package com.example.memview;
 
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -28,16 +27,16 @@ public class HelloApplication extends Application {
         Stage popupStage = new Stage();
         FXMLLoader fxmlLoaderPopupConversion = new FXMLLoader(HelloApplication.class.getResource("photo-conversion.fxml"));
         Scene popupScene = new Scene(fxmlLoaderPopupConversion.load(), 640, 480);
-        PhotoConversionPopupController photoConversionPopupController = fxmlLoaderPopupConversion.getController();
+        PhotoConversionController photoConversionController = fxmlLoaderPopupConversion.getController();
 
-        photoConversionPopupController.setMainController(controller);
-        photoConversionPopupController.setMainStage(mainStage);
+        photoConversionController.setMainController(controller);
+        photoConversionController.setMainStage(mainStage);
         //These two methods need to be called in this order
-        controller.setPhotoConversionPopupController(photoConversionPopupController);
+        controller.setPhotoConversionPopupController(photoConversionController);
         controller.setServicesForPhotoController();
 
         popupStage.setScene(popupScene);
-        photoConversionPopupController.setPopupStage(popupStage);
+        photoConversionController.setPopupStage(popupStage);
         popupStage.setTitle("Photo Resizing");
 
         mainStage.setTitle("MemView");

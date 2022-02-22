@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PhotoConversionPopupController {
+public class PhotoConversionController {
     private Stage stage;
     private Stage mainStage;
     private PhotoViewerController photoViewerController;
@@ -65,7 +65,7 @@ public class PhotoConversionPopupController {
 
     //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, PhotoViewerController
 
-    public PhotoConversionPopupController() {
+    public PhotoConversionController() {
         this.watermarkOpacitySlider = new Slider();
     }
 
