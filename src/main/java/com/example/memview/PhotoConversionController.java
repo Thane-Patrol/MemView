@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.coobird.thumbnailator.geometry.Positions;
 import photo.conversion.ConversionLogic;
+import photo.conversion.ParameterHolderHelper;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -114,6 +115,9 @@ public class PhotoConversionController {
 
         //todo make the option to rotate and Apply watermark mutually exclusive
 
+        //Object used to store all the parameters, rather than passing them around
+        ParameterHolderHelper holderHelper = new ParameterHolderHelper();
+
         //Checks for no photos selected otherwise they are added to the converted list
         if(showNoPhotosSelectedAlert()) {
             return;
@@ -124,30 +128,25 @@ public class PhotoConversionController {
         //Checks for the resizing option being selected then checks for invalid characters in resolution TextFields
         //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
         boolean toResize = toResizeCheckBox.isSelected();
-        boolean resizeViaPixels = false;
-        boolean resizeViaScale = false;
-        int finalPixelHeight = 0;
-        int finalPixelWidth = 0;
-        double scalingFactor = 0;
+
         if (toResize) {
             if(showIncorrectResolutionSpecifiedAlert()) {
                 return;
             } else if (heightTextField.getText() != null){
-                finalPixelHeight = Integer.valueOf(heightTextField.getText());
-                finalPixelWidth = Integer.valueOf(widthTextField.getText());
-                resizeViaPixels = true;
-            } else {
-                scalingFactor = scalingFactorSlider.getValue();
-                resizeViaScale = true;
+                holderHelper.setFinalHeight(Integer.valueOf(heightTextField.getText()));
+                holderHelper.setFinalWidth(Integer.valueOf(widthTextField.getText()));
+                holderHelper.setToResizeViaPixels(true);
+            } else if (heightTextField.getText() == null) {
+                holderHelper.setScalingFactor(scalingFactorSlider.getValue());
+                holderHelper.setToScale(true);
             }
         }
 
         //Checks for valid output file type selected
-        String fileFormat;
         if(showInvalidFileExtensionSpecifiedAlert()) {
             return;
         } else {
-            fileFormat = outputFileFormatChoiceBox.getSelectionModel().getSelectedItem().toString();
+            holderHelper.setExtensionToSaveAs(outputFileFormatChoiceBox.getSelectionModel().getSelectedItem().toString());
         }
 
         if(checkForInvalidDirectoryChosen()) {
@@ -156,6 +155,7 @@ public class PhotoConversionController {
 
         String amendedFilePath;
         if(saveToCurrentDirectoryRadioButton.isSelected()) {
+            holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString()));
             amendedFilePath = fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString());
             chosenDirectoryLabel.setText(amendedFilePath);
         } else {
@@ -165,22 +165,22 @@ public class PhotoConversionController {
 
         //Checks for rotation and checks for valid input
         boolean toRotate = toRotateCheckBox.isSelected();
-        int rotationAmount = 0;
         if(toRotate && conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
             showInvalidRotationAmountEntered();
             return;
         } else if (toRotate) {
-            rotationAmount = Integer.valueOf(rotationAmountTextField.getText());
+            holderHelper.setRotationFactor(Double.valueOf(rotationAmountTextField.getText()));
         }
 
-        //If the user wants to save to the current directory the chosen directory button should be updated
+        //todo check if the watermarkChosen boolean actually changes when the user wants it to
+        //Watermark
+        if(watermarkChosen) {
+            holderHelper.setOpaquenessFactor((float) watermarkOpacitySlider.getValue());
+            holderHelper.setWatermarkFile(watermarkFile);
+            holderHelper.setWatermarkPosition(getPositionFromCheckBox());
+        }
 
-        //todo Record target filetype, destination path and final size
-        conversionLogic.convertListOfFilesToConvert(pathListToConvert, fileFormat, amendedFilePath,
-                resizeViaPixels, finalPixelHeight, finalPixelWidth,
-                resizeViaScale, scalingFactor,
-                toRotate, rotationAmount,
-                watermarkChosen, watermarkScaleSlider.getValue(), getPositionFromCheckBox(), watermarkFile, (float) watermarkOpacitySlider.getValue());
+        conversionLogic.convertPhotos(pathListToConvert, holderHelper);
         /*
         if(succesesfulConversion) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Conversion successful!");

@@ -47,28 +47,6 @@ public class ConversionLogic {
                         toApplyWatermark, watermarkScale, watermarkPosition, watermarkFile, opaquenessFactor);
 
                 finalImage = thumbnailParameterBuilderObject.createFinalImageToReturn(finalImage);
-                System.out.println("final image = " + finalImage.getHeight());
-
-                //Make the decision on further file manipulation with if statements
-                /*
-               // if(toResize) {
-                   // finalImage = Thumbnails.of(originalImage).size(finalWidth, finalHeight).asBufferedImage();
-                //}
-
-                //Rotate file
-                if(toRotate) {
-                    //todo make this dependent on size specified or original size, whatever is specified by the user
-                    finalImage = Thumbnails.of(originalImage).size(160, 160).rotate(rotationAmount).asBufferedImage();
-                    System.out.println("rotation occuring");
-                }
-
-                //Apply watermark
-                if(toApplyWatermark) {
-                    finalImage = Thumbnails.of(originalImage).scale(1.0).watermark(Positions.BOTTOM_RIGHT, ImageIO.read(watermarkFile), 0.5f).asBufferedImage();
-                    System.out.println("watermark applying");
-                }
-
-                 */
 
 
                 //Get filename without the extension included
@@ -88,6 +66,40 @@ public class ConversionLogic {
             }
         }
     }
+
+    public void convertPhotos(List<Path> filesToConvert, ParameterHolderHelper holderHelper) {
+        String extensionCleaned = stripPeriodOffFileExtension(holderHelper.getExtensionToSaveAs());
+
+        for(Path path : filesToConvert) {
+            BufferedImage bufferedImage;
+            try {
+                bufferedImage = ImageIO.read(path.toFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+                bufferedImage = null;
+            }
+
+            ThumbnailLogicSwitcher thumbnailLogicSwitcher = new ThumbnailLogicSwitcher(bufferedImage, holderHelper);
+            thumbnailLogicSwitcher.addResizePixels(holderHelper.isToResizeViaPixels());
+            thumbnailLogicSwitcher.addRotate(holderHelper.isToRotate());
+            thumbnailLogicSwitcher.addScalePixels(holderHelper.isToScale());
+            thumbnailLogicSwitcher.addWatermark(holderHelper.isToWatermark());
+
+            BufferedImage finalImage = thumbnailLogicSwitcher.getFinalImage();
+            String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
+
+            File toSave = new File(holderHelper.getOutputPath() + fileNameSanitized + extensionCleaned);
+            System.out.println("Filename to save: " + toSave.getAbsolutePath());
+
+            try {
+                ImageIO.write(finalImage, extensionCleaned, toSave);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 
     public List<List> getListOfRawFilesInDirectory() {
         List<RadioButton> radioButtonList = new ArrayList<>();
