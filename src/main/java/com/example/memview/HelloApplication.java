@@ -29,8 +29,6 @@ public class HelloApplication extends Application {
         Scene popupScene = new Scene(fxmlLoaderPopupConversion.load(), 640, 480);
         PhotoConversionController photoConversionController = fxmlLoaderPopupConversion.getController();
 
-        photoConversionController.setMainController(controller);
-        photoConversionController.setMainStage(mainStage);
         //These two methods need to be called in this order
         controller.setPhotoConversionPopupController(photoConversionController);
         controller.setServicesForPhotoController();

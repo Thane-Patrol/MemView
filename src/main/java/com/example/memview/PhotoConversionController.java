@@ -77,14 +77,6 @@ public class PhotoConversionController {
         this.photoViewerController = photoViewerController;
     }
 
-    public void setMainController(PhotoViewerController photoViewerController) {
-        this.photoViewerController = photoViewerController;
-    }
-
-    public void setMainStage(Stage mainStage) {
-        this.mainStage = mainStage;
-    }
-
     @FXML
     private void initialize() {
 
@@ -106,7 +98,7 @@ public class PhotoConversionController {
 
     @FXML
     private void storeListOfImagesToConvert() {
-        List<Path> pathListToConvert = new ArrayList<>();
+        List<Path> pathListToConvert;
         //todo check if image selected is already of the file type being converted if so do not add it
         //todo create prompt to tell user that particular image/s are already of the selected file type
         //todo then have option to uncheck the images manually or automatically deselect all
@@ -160,6 +152,7 @@ public class PhotoConversionController {
             chosenDirectoryLabel.setText(amendedFilePath);
         } else {
              amendedFilePath = fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText());
+             holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText()));
         }
         System.out.println("File path to save as: " + amendedFilePath);
 
