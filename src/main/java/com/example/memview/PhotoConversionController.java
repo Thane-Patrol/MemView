@@ -105,8 +105,6 @@ public class PhotoConversionController {
         //todo have a method for checking file renaming
         //todo implement checks to ensure files will not be converted into file types that will fail
 
-        //todo make the option to rotate and Apply watermark mutually exclusive
-
         //Object used to store all the parameters, rather than passing them around
         ParameterHolderHelper holderHelper = new ParameterHolderHelper();
 
@@ -121,56 +119,38 @@ public class PhotoConversionController {
         //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
         boolean toResize = toResizeCheckBox.isSelected();
 
-        if (toResize) {
-            if(showIncorrectResolutionSpecifiedAlert()) {
-                return;
-            } else if (heightTextField.getText() != null){
-                holderHelper.setFinalHeight(Integer.valueOf(heightTextField.getText()));
-                holderHelper.setFinalWidth(Integer.valueOf(widthTextField.getText()));
-                holderHelper.setToResizeViaPixels(true);
-            } else if (heightTextField.getText() == null) {
-                holderHelper.setScalingFactor(scalingFactorSlider.getValue());
-                holderHelper.setToScale(true);
-            }
+        if(toResize) {
+            holderHelper = setResizeCheck(holderHelper);
         }
 
         //Checks for valid output file type selected
         if(showInvalidFileExtensionSpecifiedAlert()) {
             return;
         } else {
-            holderHelper.setExtensionToSaveAs(outputFileFormatChoiceBox.getSelectionModel().getSelectedItem().toString());
+            holderHelper = setFileFormatCheck(holderHelper);
         }
 
         if(checkForInvalidDirectoryChosen()) {
             return;
         }
 
-        String amendedFilePath;
-        if(saveToCurrentDirectoryRadioButton.isSelected()) {
-            holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString()));
-            amendedFilePath = fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString());
-            chosenDirectoryLabel.setText(amendedFilePath);
-        } else {
-             amendedFilePath = fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText());
-             holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText()));
-        }
+
+        holderHelper = setFileOutputPath(holderHelper);
+
+        //Debugging to get rid of
+        String amendedFilePath = holderHelper.getOutputPath();
         System.out.println("File path to save as: " + amendedFilePath);
 
         //Checks for rotation and checks for valid input
         boolean toRotate = toRotateCheckBox.isSelected();
-        if(toRotate && conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
-            showInvalidRotationAmountEntered();
-            return;
-        } else if (toRotate) {
-            holderHelper.setRotationFactor(Double.valueOf(rotationAmountTextField.getText()));
+        if(toRotate) {
+            holderHelper = setRotateCheck(holderHelper);
         }
 
         //todo check if the watermarkChosen boolean actually changes when the user wants it to
         //Watermark
         if(watermarkChosen) {
-            holderHelper.setOpaquenessFactor((float) watermarkOpacitySlider.getValue());
-            holderHelper.setWatermarkFile(watermarkFile);
-            holderHelper.setWatermarkPosition(getPositionFromCheckBox());
+            holderHelper = setWatermarkCheck(holderHelper);
         }
 
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
@@ -185,10 +165,58 @@ public class PhotoConversionController {
         Path directoryPath = Paths.get(amendedFilePath);
         directoryPath.toString();
         if(conversionLogic.checkForSuccessfulConversion(directoryPath, pathListToConvert)) {
-            System.out.println("Conversion successfull, all files converted");
+            System.out.println("Conversion successful, all files converted");
         } else {
             System.out.println("Conversion not successful, not all files converted");
         }
+    }
+
+    private ParameterHolderHelper setResizeCheck(ParameterHolderHelper holderHelper) {
+        if(showIncorrectResolutionSpecifiedAlert()) {
+            return holderHelper;
+        } else if (heightTextField.getText() != null){
+            holderHelper.setFinalHeight(Integer.valueOf(heightTextField.getText()));
+            holderHelper.setFinalWidth(Integer.valueOf(widthTextField.getText()));
+            holderHelper.setToResizeViaPixels(true);
+        } else if (heightTextField.getText() == null) {
+            holderHelper.setScalingFactor(scalingFactorSlider.getValue());
+            holderHelper.setToScale(true);
+        }
+        return holderHelper;
+    }
+
+    private ParameterHolderHelper setFileFormatCheck(ParameterHolderHelper holderHelper) {
+        holderHelper.setExtensionToSaveAs(outputFileFormatChoiceBox.getSelectionModel().getSelectedItem().toString());
+        return holderHelper;
+    }
+
+    private ParameterHolderHelper setFileOutputPath(ParameterHolderHelper holderHelper) {
+        if(saveToCurrentDirectoryRadioButton.isSelected()) {
+            holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString()));
+            chosenDirectoryLabel.setText(holderHelper.getOutputPath());
+        } else {
+            holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText()));
+            chosenDirectoryLabel.setText(holderHelper.getOutputPath());
+        }
+        return holderHelper;
+    }
+
+    private ParameterHolderHelper setRotateCheck(ParameterHolderHelper holderHelper) {
+        if(conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
+            showInvalidRotationAmountEntered();
+            return holderHelper;
+        } else  {
+            holderHelper.setRotationFactor(Double.valueOf(rotationAmountTextField.getText()));
+        }
+        return holderHelper;
+    }
+
+    private ParameterHolderHelper setWatermarkCheck(ParameterHolderHelper holderHelper) {
+        //todo implement alert for incorrect/invalid input
+        holderHelper.setOpaquenessFactor((float) watermarkOpacitySlider.getValue());
+        holderHelper.setWatermarkFile(watermarkFile);
+        holderHelper.setWatermarkPosition(getPositionFromCheckBox());
+        return holderHelper;
     }
 
     private void initializePopup() {
