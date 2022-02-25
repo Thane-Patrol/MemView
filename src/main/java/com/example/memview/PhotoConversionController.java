@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.coobird.thumbnailator.geometry.Positions;
+import org.apache.commons.io.FilenameUtils;
 import photo.conversion.ConversionLogic;
 import photo.conversion.ParameterHolderHelper;
 
@@ -33,6 +34,7 @@ public class PhotoConversionController {
     private DirectoryReader directoryReader;
     private File watermarkFile;
     private HashMap<String, Positions> positionHashMap;
+    private List<Path> listOfPathsInSameExtension = new ArrayList<>();
     @FXML
     private VBox radioButtonFileSelectVBox;
     @FXML
@@ -123,6 +125,8 @@ public class PhotoConversionController {
             pathListToConvert = conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
         }
 
+
+
         //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
         boolean toResize = toResizeCheckBox.isSelected();
 
@@ -157,6 +161,12 @@ public class PhotoConversionController {
         boolean toWatermark = toApplyWatermarkCheckBox.isSelected();
         if(toWatermark) {
             holderHelper = setWatermarkCheck(holderHelper);
+        }
+
+        //Check for images of the same file type
+        //Needs to be called just before the actual conversion to understand user intent
+        if(checkForImagesOfTheSameType(pathListToConvert, holderHelper) && holderHelper.checkForAnythingTransformationExceptFiles()) {
+            showAlertFileTypesSelected();
         }
 
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
@@ -383,6 +393,27 @@ public class PhotoConversionController {
             watermarkPositionCheckBox.setDisable(true);
             watermarkOpacityLabel.setDisable(true);
         }
+     }
+
+     //returns true if there are images that have the same extension as the final output path
+     private boolean checkForImagesOfTheSameType(List<Path> pathList, ParameterHolderHelper holderHelper) {
+        String currentExtension;
+        String requestedExtension = holderHelper.getExtensionToSaveAs();
+
+        for(Path path : pathList) {
+            currentExtension = FilenameUtils.getExtension(path.getFileName().toString());
+            System.out.println("Current extension: " + currentExtension);
+            System.out.println("Requested extension: " + requestedExtension);
+            if(requestedExtension.contains(currentExtension)) {
+                listOfPathsInSameExtension.add(path);
+            }
+        }
+        return listOfPathsInSameExtension.size() > 0;
+     }
+
+     private void showAlertFileTypesSelected() {
+         Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid file extension - You have selected files to convert that are already in this file format");
+         alert.showAndWait().filter(response -> response == ButtonType.OK);
      }
 
      private boolean checkForAllValidGUISelections() {
