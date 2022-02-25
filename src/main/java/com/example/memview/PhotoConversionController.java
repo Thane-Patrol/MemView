@@ -160,13 +160,7 @@ public class PhotoConversionController {
         }
 
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
-        /*
-        if(succesesfulConversion) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Conversion successful!");
-            alert.showAndWait().filter(response -> response == ButtonType.FINISH);
-        }
         //todo add a popup to tell user that conversion is successful or not
-        */
 
         Path directoryPath = Paths.get(amendedFilePath);
         directoryPath.toString();
@@ -180,11 +174,11 @@ public class PhotoConversionController {
     private ParameterHolderHelper setResizeCheck(ParameterHolderHelper holderHelper) {
         if(showIncorrectResolutionSpecifiedAlert()) {
             return holderHelper;
-        } else if (heightTextField.getText() != null){
+        } else if (!heightTextField.getText().equals("")){
             holderHelper.setFinalHeight(Integer.valueOf(heightTextField.getText()));
             holderHelper.setFinalWidth(Integer.valueOf(widthTextField.getText()));
             holderHelper.setToResizeViaPixels(true);
-        } else if (heightTextField.getText() == null) {
+        } else if (heightTextField.getText().equals("")) {
             holderHelper.setScalingFactor(scalingFactorSlider.getValue());
             holderHelper.setToScale(true);
         }
@@ -307,12 +301,16 @@ public class PhotoConversionController {
 
     //Will return true if Alert is shown
     private boolean showIncorrectResolutionSpecifiedAlert() {
-        if(!conversionLogic.checkForCorrectInputInImageSize(heightTextField, widthTextField)) {
+        if(conversionLogic.checkForCorrectInputInImageSize(heightTextField, widthTextField)) {
+            return false;
+        } else if(!(scalingFactorSlider.getValue() == 0)) {
+            return false;
+
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers are allowed for resolution");
             alert.showAndWait().filter(response -> response == ButtonType.OK);
             return true;
         }
-        return false;
     }
     //Will return true if Alert is shown
      private boolean showInvalidFileExtensionSpecifiedAlert() {
