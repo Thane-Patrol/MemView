@@ -18,6 +18,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,7 +31,6 @@ public class PhotoConversionController {
     private List<RadioButton> radioButtonList;
     private List<Path> pathList = new ArrayList<>();
     private DirectoryReader directoryReader;
-    private boolean watermarkChosen = false;
     private File watermarkFile;
     private HashMap<String, Positions> positionHashMap;
     @FXML
@@ -42,9 +42,13 @@ public class PhotoConversionController {
     @FXML
     private TextField widthTextField;
     @FXML
+    private Label resizeLabel;
+    @FXML
     private Label chosenDirectoryLabel;
     @FXML
     private CheckBox toResizeCheckBox;
+    @FXML
+    private CheckBox toApplyWatermarkCheckBox;
     @FXML
     private RadioButton saveToCurrentDirectoryRadioButton;
     @FXML
@@ -60,11 +64,13 @@ public class PhotoConversionController {
     @FXML
     private Slider watermarkScaleSlider;
     @FXML
+    private Label watermarkOpacityLabel;
+    @FXML
+    private Label scalingLabel;
+    @FXML
     private Slider scalingFactorSlider;
     @FXML
     private Slider watermarkOpacitySlider;
-
-    //todo list of all objects that need to be initalized before calling: DirectoryReader, FileHandling, ConversionLogic, PhotoViewerController
 
     public PhotoConversionController() {
         this.watermarkOpacitySlider = new Slider();
@@ -79,7 +85,9 @@ public class PhotoConversionController {
 
     @FXML
     private void initialize() {
-
+        setResizeNodesToggle();
+        setRotateNodesToggle();
+        setWatermarkNodesToggle();
     }
 
     private void addListOfFilesToUserList() {
@@ -115,7 +123,6 @@ public class PhotoConversionController {
             pathListToConvert = conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
         }
 
-        //Checks for the resizing option being selected then checks for invalid characters in resolution TextFields
         //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
         boolean toResize = toResizeCheckBox.isSelected();
 
@@ -123,7 +130,6 @@ public class PhotoConversionController {
             holderHelper = setResizeCheck(holderHelper);
         }
 
-        //Checks for valid output file type selected
         if(showInvalidFileExtensionSpecifiedAlert()) {
             return;
         } else {
@@ -148,8 +154,8 @@ public class PhotoConversionController {
         }
 
         //todo check if the watermarkChosen boolean actually changes when the user wants it to
-        //Watermark
-        if(watermarkChosen) {
+        boolean toWatermark = toApplyWatermarkCheckBox.isSelected();
+        if(toWatermark) {
             holderHelper = setWatermarkCheck(holderHelper);
         }
 
@@ -273,15 +279,15 @@ public class PhotoConversionController {
         chosenDirectoryLabel.setText(toSetLabel);
     }
 
+
     //Choose watermark directory
     @FXML
     private void setWatermarkFromUserSpecifiedImage() {
         String toSetWatermarkButton = fileHandling.createFileChoosingWindowForWatermark();
         chooseWaterMarkButton.setText(toSetWatermarkButton);
         if (toSetWatermarkButton.contains("No Watermark Chosen")) {
-            watermarkChosen = false;
+
         } else {
-            watermarkChosen = true;
             chooseWaterMarkButton.setText(toSetWatermarkButton);
             watermarkFile = new File(toSetWatermarkButton);
         }
@@ -336,6 +342,49 @@ public class PhotoConversionController {
              return true;
          }
          return false;
+     }
+
+     @FXML
+     private void setResizeNodesToggle() {
+        if(toResizeCheckBox.isSelected()) {
+            heightTextField.setDisable(false);
+            widthTextField.setDisable(false);
+            scalingFactorSlider.setDisable(false);
+            scalingLabel.setDisable(false);
+            resizeLabel.setDisable(false);
+        } else {
+            heightTextField.setDisable(true);
+            widthTextField.setDisable(true);
+            scalingFactorSlider.setDisable(true);
+            scalingLabel.setDisable(true);
+            resizeLabel.setDisable(true);
+        }
+     }
+
+     @FXML
+     private void setRotateNodesToggle() {
+        if(toRotateCheckBox.isSelected()) {
+            rotationAmountTextField.setDisable(false);
+        } else {
+            rotationAmountTextField.setDisable(true);
+        }
+     }
+
+     @FXML
+     private void setWatermarkNodesToggle() {
+        if(toApplyWatermarkCheckBox.isSelected()) {
+            chooseWaterMarkButton.setDisable(false);
+            watermarkOpacitySlider.setDisable(false);
+            watermarkScaleSlider.setDisable(false);
+            watermarkPositionCheckBox.setDisable(false);
+            watermarkOpacityLabel.setDisable(false);
+        } else {
+            chooseWaterMarkButton.setDisable(true);
+            watermarkOpacitySlider.setDisable(true);
+            watermarkScaleSlider.setDisable(true);
+            watermarkPositionCheckBox.setDisable(true);
+            watermarkOpacityLabel.setDisable(true);
+        }
      }
 
      private boolean checkForAllValidGUISelections() {
