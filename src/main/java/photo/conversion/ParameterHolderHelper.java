@@ -129,4 +129,19 @@ public class ParameterHolderHelper {
     public Positions getWatermarkPosition() {
         return watermarkPosition;
     }
+
+    public boolean checkForAnythingTransformationExceptFiles() {
+        if(toWatermark) {
+            return false;
+        } else if(toRotate) {
+            return false;
+        } else if(toScale) {
+            return false;
+        } else if(toResizeViaPixels) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
 }
