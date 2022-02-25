@@ -93,13 +93,8 @@ public class DirectoryReader {
 
     private void addWriteableFileExtensionsToList() {
         writableFileExtensionList.add(0, ".bmp");
-        //writableFileExtensionList.add(1, ".ico");
-        //writableFileExtensionList.add(2, ".icns");
         writableFileExtensionList.add(1, ".jpg");
         writableFileExtensionList.add(2, ".png");
-        //writableFileExtensionList.add(4, ".pict");
-        //writableFileExtensionList.add(5, ".pnm");
-        //writableFileExtensionList.add(6, ".psd");
         writableFileExtensionList.add(3, ".tga");
         writableFileExtensionList.add(4, ".tiff");
 
