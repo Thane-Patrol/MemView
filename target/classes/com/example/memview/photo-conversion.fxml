@@ -25,8 +25,8 @@
             </ScrollPane>
       </VBox>
       <VBox layoutX="286.0" layoutY="14.0" prefHeight="357.0" prefWidth="315.0" AnchorPane.bottomAnchor="86.0" AnchorPane.topAnchor="14.0">
-      <CheckBox fx:id="toResizeCheckBox" mnemonicParsing="false" text="Resize?" />
-            <Label alignment="CENTER" prefHeight="25.0" prefWidth="100.0" text="Resize" />
+      <CheckBox fx:id="toResizeCheckBox" mnemonicParsing="false" onAction="#setResizeNodesToggle" text="Resize?" />
+            <Label fx:id="resizeLabel" alignment="CENTER" prefHeight="25.0" prefWidth="100.0" text="Resize" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                   <VBox prefHeight="88.0" prefWidth="186.0">
                         <HBox prefHeight="100.0" prefWidth="200.0">
@@ -34,7 +34,7 @@
                               <Label text="x" />
                               <TextField fx:id="widthTextField" prefHeight="25.0" prefWidth="44.0" />
                         </HBox>
-            <Label text="Scaling Factor:" />
+            <Label fx:id="scalingLabel" text="Scaling Factor:" />
             <Slider fx:id="scalingFactorSlider" blockIncrement="0.25" majorTickUnit="1.0" max="5.0" min="0.25" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                   </VBox>
             </HBox>
@@ -48,13 +48,14 @@
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#openFileDirectoryToSpecifyOutputPath" prefHeight="25.0" prefWidth="165.0" text="Somewhere else" />
             <Label fx:id="chosenDirectoryLabel" alignment="CENTER" prefHeight="49.0" prefWidth="314.0" text="Chosen Directory" />
             <ChoiceBox fx:id="outputFileFormatChoiceBox" prefWidth="150.0" />
-            <CheckBox fx:id="toRotateCheckBox" mnemonicParsing="false" text="Rotate?" />
+            <CheckBox fx:id="toRotateCheckBox" mnemonicParsing="false" onAction="#setRotateNodesToggle" text="Rotate?" />
             <TextField fx:id="rotationAmountTextField" promptText="Rotation amount" />
+            <CheckBox fx:id="toApplyWatermarkCheckBox" mnemonicParsing="false" onAction="#setWatermarkNodesToggle" text="Apply Watermark?" />
             <Button fx:id="chooseWaterMarkButton" mnemonicParsing="false" onAction="#setWatermarkFromUserSpecifiedImage" text="Choose watermark" />
             <Slider fx:id="watermarkScaleSlider" majorTickUnit="0.05" max="1.0" min="0.1" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
             <ChoiceBox fx:id="watermarkPositionCheckBox" prefWidth="150.0" />
-            <Label text="Watermark opacity" />
-            <Slider blockIncrement="0.1" majorTickUnit="0.1" max="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+            <Label fx:id="watermarkOpacityLabel" text="Watermark opacity" />
+            <Slider fx:id="watermarkOpacitySlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
          </children>
       </VBox>
       </VBox>
