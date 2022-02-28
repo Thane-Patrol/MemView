@@ -166,14 +166,15 @@ public class PhotoConversionController {
         }
 
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
-        //todo add a popup to tell user that conversion is successful or not
 
         Path directoryPath = Paths.get(amendedFilePath);
         directoryPath.toString();
         if(conversionLogic.checkForSuccessfulConversion(directoryPath, pathListToConvert)) {
             System.out.println("Conversion successful, all files converted");
+            sendSuccessfulConversionAlert();
         } else {
             System.out.println("Conversion not successful, not all files converted");
+            sendUnsuccessfulConversionAlert();
         }
     }
 
@@ -415,6 +416,18 @@ public class PhotoConversionController {
      private boolean checkForAllValidGUISelections() {
         return true;
      }
+
+     private void sendSuccessfulConversionAlert() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All files successfully converted");
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+     }
+
+     //todo retrieve list of unsuccessful conversions and add them to alert
+     private void sendUnsuccessfulConversionAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Not all files successfully converted: \n" );
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+     }
+
 
 
 }
