@@ -43,6 +43,10 @@ public class ConversionLogic {
             thumbnailLogicSwitcher.addScalePixels(holderHelper.isToScale());
             thumbnailLogicSwitcher.addWatermark(holderHelper.isToWatermark());
 
+            //debugging
+            thumbnailLogicSwitcher.printAllSetParameters();
+            bufferedImage.toString();
+
             BufferedImage finalImage = thumbnailLogicSwitcher.getFinalImage();
             String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
 
@@ -59,10 +63,11 @@ public class ConversionLogic {
     }
 
 
-    public List<List> getListOfRawFilesInDirectory() {
+    public ListHolder getListOfRawFilesInDirectory() {
+        ListHolder listHolder = new ListHolder();
         List<RadioButton> radioButtonList = new ArrayList<>();
         List<HBox> hBoxList = new ArrayList<>();
-        List<List> arrayOfLists = new ArrayList<>();
+        List<Path> filePathList = directoryReader.getListOfFilePaths();
 
 
         for(Path path : directoryReader.getListOfFilePaths()) {
@@ -77,12 +82,11 @@ public class ConversionLogic {
             hBox.getChildren().addAll(thumbnail, radioButton);
             hBoxList.add(hBox);
         }
-        arrayOfLists.add(0, radioButtonList);
-        arrayOfLists.add(1, hBoxList);
-        arrayOfLists.add(2, directoryReader.getListOfFilePaths());
 
-
-        return arrayOfLists;
+        listHolder.setHBoxList(hBoxList);
+        listHolder.setRadioButtonList(radioButtonList);
+        listHolder.setFilePathList(filePathList);
+        return listHolder;
     }
 
     //return true if valid input is found
@@ -146,14 +150,15 @@ public class ConversionLogic {
         return foo.replace(".", "");
     }
 
-    //returns true with successful conversion
+    //returns true with successful conversion has occurred, the check being if the number of files requested for conversion
+    // is the same as the number of files actually converted
     public boolean checkForSuccessfulConversion(Path directoryPath, List<Path> pathListResized) {
         List<File> fileList = new ArrayList<>();
 
         final File directory = directoryPath.toFile();
         fileList.addAll(Arrays.asList(directory.listFiles()));
 
-        return fileList.size() == pathListResized.size();
+        return fileList.size() - 1 == pathListResized.size();
     }
 
 }

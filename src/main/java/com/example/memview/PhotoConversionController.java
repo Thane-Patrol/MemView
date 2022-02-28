@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.io.FilenameUtils;
 import photo.conversion.ConversionLogic;
+import photo.conversion.ListHolder;
 import photo.conversion.ParameterHolderHelper;
 
 import java.io.File;
@@ -37,8 +38,6 @@ public class PhotoConversionController {
     private List<Path> listOfPathsInSameExtension = new ArrayList<>();
     @FXML
     private VBox radioButtonFileSelectVBox;
-    @FXML
-    private CheckBox keepAspectRatioCheckBox;
     @FXML
     private TextField heightTextField;
     @FXML
@@ -93,11 +92,11 @@ public class PhotoConversionController {
     }
 
     private void addListOfFilesToUserList() {
-        List<List> arrayOfLists = conversionLogic.getListOfRawFilesInDirectory();
+        ListHolder listHolder = conversionLogic.getListOfRawFilesInDirectory();
 
-        pathList = arrayOfLists.get(2);
-        radioButtonList = arrayOfLists.get(0);
-        List<HBox> hBoxList = arrayOfLists.get(1);
+        pathList = listHolder.getFilePathList();
+        radioButtonList = listHolder.getRadioButtonList();
+        List<HBox> hBoxList = listHolder.getHBoxList();
         radioButtonFileSelectVBox.getChildren().addAll(hBoxList);
     }
 
@@ -125,19 +124,16 @@ public class PhotoConversionController {
             pathListToConvert = conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
         }
 
-
-
-        //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
         boolean toResize = toResizeCheckBox.isSelected();
 
         if(toResize) {
-            holderHelper = setResizeCheck(holderHelper);
+            setResizeCheck(holderHelper);
         }
 
         if(showInvalidFileExtensionSpecifiedAlert()) {
             return;
         } else {
-            holderHelper = setFileFormatCheck(holderHelper);
+            setFileFormatCheck(holderHelper);
         }
 
         if(checkForInvalidDirectoryChosen()) {
@@ -145,7 +141,7 @@ public class PhotoConversionController {
         }
 
 
-        holderHelper = setFileOutputPath(holderHelper);
+        setFileOutputPath(holderHelper);
 
         //Debugging to get rid of
         String amendedFilePath = holderHelper.getOutputPath();
@@ -154,13 +150,12 @@ public class PhotoConversionController {
         //Checks for rotation and checks for valid input
         boolean toRotate = toRotateCheckBox.isSelected();
         if(toRotate) {
-            holderHelper = setRotateCheck(holderHelper);
+            setRotateCheck(holderHelper);
         }
 
-        //todo check if the watermarkChosen boolean actually changes when the user wants it to
         boolean toWatermark = toApplyWatermarkCheckBox.isSelected();
         if(toWatermark) {
-            holderHelper = setWatermarkCheck(holderHelper);
+            setWatermarkCheck(holderHelper);
         }
 
         //Check for images of the same file type
@@ -170,14 +165,15 @@ public class PhotoConversionController {
         }
 
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
-        //todo add a popup to tell user that conversion is successful or not
 
         Path directoryPath = Paths.get(amendedFilePath);
         directoryPath.toString();
         if(conversionLogic.checkForSuccessfulConversion(directoryPath, pathListToConvert)) {
             System.out.println("Conversion successful, all files converted");
+            sendSuccessfulConversionAlert();
         } else {
             System.out.println("Conversion not successful, not all files converted");
+            sendUnsuccessfulConversionAlert();
         }
     }
 
@@ -419,6 +415,18 @@ public class PhotoConversionController {
      private boolean checkForAllValidGUISelections() {
         return true;
      }
+
+     private void sendSuccessfulConversionAlert() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All files successfully converted");
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+     }
+
+     //todo retrieve list of unsuccessful conversions and add them to alert
+     private void sendUnsuccessfulConversionAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Not all files successfully converted: \n" );
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+     }
+
 
 
 }

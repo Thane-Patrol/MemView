@@ -38,9 +38,6 @@
             <Slider fx:id="scalingFactorSlider" blockIncrement="0.25" majorTickUnit="1.0" max="5.0" min="0.25" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                   </VBox>
             </HBox>
-            <HBox prefHeight="60.0" prefWidth="100.0">
-                  <CheckBox fx:id="keepAspectRatioCheckBox" mnemonicParsing="false" prefHeight="34.0" prefWidth="100.0" text="Keep Aspect Ratio" />
-            </HBox>
       <VBox prefHeight="293.0" prefWidth="321.0">
          <children>
             <Label alignment="CENTER" contentDisplay="TOP" prefHeight="16.0" prefWidth="102.0" text="Save to:" />
