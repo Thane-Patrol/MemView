@@ -97,4 +97,8 @@ public class ThumbnailBuilder {
     public void setOpaquenessFactor(float opaquenessFactor) {
         this.opaquenessFactor = opaquenessFactor;
     }
+
+    public int getPixelSize() {
+        return this.finalHeight;
+    }
 }

@@ -125,9 +125,6 @@ public class PhotoConversionController {
             pathListToConvert = conversionLogic.addImagesToConvertToList(radioButtonList, pathList);
         }
 
-
-
-        //todo grey out all the resizing options if toResize is not selected, also make it not necessary to specify resolution heights if it is selected
         boolean toResize = toResizeCheckBox.isSelected();
 
         if(toResize) {
@@ -157,7 +154,6 @@ public class PhotoConversionController {
             holderHelper = setRotateCheck(holderHelper);
         }
 
-        //todo check if the watermarkChosen boolean actually changes when the user wants it to
         boolean toWatermark = toApplyWatermarkCheckBox.isSelected();
         if(toWatermark) {
             holderHelper = setWatermarkCheck(holderHelper);

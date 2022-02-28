@@ -43,6 +43,10 @@ public class ConversionLogic {
             thumbnailLogicSwitcher.addScalePixels(holderHelper.isToScale());
             thumbnailLogicSwitcher.addWatermark(holderHelper.isToWatermark());
 
+            //debugging
+            thumbnailLogicSwitcher.printAllSetParameters();
+            bufferedImage.toString();
+
             BufferedImage finalImage = thumbnailLogicSwitcher.getFinalImage();
             String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
 

@@ -42,6 +42,9 @@ public class ThumbnailLogicSwitcher {
         if(parameterMap.get("scale")) {
             thumbnailBuilder.setScalingFactor(parameterHolderHelper.getScalingFactor());
             thumbnailBuilder.setScale();
+        } else if(thumbnailBuilder.getPixelSize() == 0){
+            thumbnailBuilder.setScalingFactor(1.0);
+            thumbnailBuilder.setScale();
         }
     }
 
@@ -76,6 +79,14 @@ public class ThumbnailLogicSwitcher {
 
     public void addWatermark(boolean toWatermark) {
         parameterMap.put("watermark", toWatermark);
+    }
+
+    public void printAllSetParameters() {
+        System.out.println("Printing Parameter Map: ");
+
+        for(String string : parameterMap.keySet()) {
+            System.out.println(string + ", value: " + parameterMap.get(string));
+        }
     }
 
 
