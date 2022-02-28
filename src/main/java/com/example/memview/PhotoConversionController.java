@@ -128,13 +128,13 @@ public class PhotoConversionController {
         boolean toResize = toResizeCheckBox.isSelected();
 
         if(toResize) {
-            holderHelper = setResizeCheck(holderHelper);
+            setResizeCheck(holderHelper);
         }
 
         if(showInvalidFileExtensionSpecifiedAlert()) {
             return;
         } else {
-            holderHelper = setFileFormatCheck(holderHelper);
+            setFileFormatCheck(holderHelper);
         }
 
         if(checkForInvalidDirectoryChosen()) {
@@ -142,7 +142,7 @@ public class PhotoConversionController {
         }
 
 
-        holderHelper = setFileOutputPath(holderHelper);
+        setFileOutputPath(holderHelper);
 
         //Debugging to get rid of
         String amendedFilePath = holderHelper.getOutputPath();
@@ -151,12 +151,12 @@ public class PhotoConversionController {
         //Checks for rotation and checks for valid input
         boolean toRotate = toRotateCheckBox.isSelected();
         if(toRotate) {
-            holderHelper = setRotateCheck(holderHelper);
+            setRotateCheck(holderHelper);
         }
 
         boolean toWatermark = toApplyWatermarkCheckBox.isSelected();
         if(toWatermark) {
-            holderHelper = setWatermarkCheck(holderHelper);
+            setWatermarkCheck(holderHelper);
         }
 
         //Check for images of the same file type
