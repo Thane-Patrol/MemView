@@ -26,8 +26,15 @@ public class ThumbnailLogicSwitcher {
         setRotate();
         setScale();
         setWatermark();
+        checkForNoResizing();
         return thumbnailBuilder.buildBufferedImage();
+    }
 
+    private void checkForNoResizing() {
+        if(thumbnailBuilder.getPixelSize() == 0 && thumbnailBuilder.getScalingFactor() == 0) {
+            thumbnailBuilder.setScalingFactor(1.0);
+            thumbnailBuilder.setScale();
+        }
     }
 
     private void setResize() {
@@ -41,9 +48,6 @@ public class ThumbnailLogicSwitcher {
     private void setScale() {
         if(parameterMap.get("scale")) {
             thumbnailBuilder.setScalingFactor(parameterHolderHelper.getScalingFactor());
-            thumbnailBuilder.setScale();
-        } else if(thumbnailBuilder.getPixelSize() == 0){
-            thumbnailBuilder.setScalingFactor(1.0);
             thumbnailBuilder.setScale();
         }
     }

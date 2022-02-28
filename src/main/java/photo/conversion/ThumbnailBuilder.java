@@ -101,4 +101,8 @@ public class ThumbnailBuilder {
     public int getPixelSize() {
         return this.finalHeight;
     }
+
+    public double getScalingFactor() {
+        return this.scalingFactor;
+    }
 }
