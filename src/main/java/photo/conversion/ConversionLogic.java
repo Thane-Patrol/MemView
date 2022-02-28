@@ -150,14 +150,15 @@ public class ConversionLogic {
         return foo.replace(".", "");
     }
 
-    //returns true with successful conversion
+    //returns true with successful conversion has occurred, the check being if the number of files requested for conversion
+    // is the same as the number of files actually converted
     public boolean checkForSuccessfulConversion(Path directoryPath, List<Path> pathListResized) {
         List<File> fileList = new ArrayList<>();
 
         final File directory = directoryPath.toFile();
         fileList.addAll(Arrays.asList(directory.listFiles()));
 
-        return fileList.size() == pathListResized.size();
+        return fileList.size() - 1 == pathListResized.size();
     }
 
 }
