@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.io.FilenameUtils;
 import photo.conversion.ConversionLogic;
+import photo.conversion.ListHolder;
 import photo.conversion.ParameterHolderHelper;
 
 import java.io.File;
@@ -37,8 +38,6 @@ public class PhotoConversionController {
     private List<Path> listOfPathsInSameExtension = new ArrayList<>();
     @FXML
     private VBox radioButtonFileSelectVBox;
-    @FXML
-    private CheckBox keepAspectRatioCheckBox;
     @FXML
     private TextField heightTextField;
     @FXML
@@ -93,11 +92,11 @@ public class PhotoConversionController {
     }
 
     private void addListOfFilesToUserList() {
-        List<List> arrayOfLists = conversionLogic.getListOfRawFilesInDirectory();
+        ListHolder listHolder = conversionLogic.getListOfRawFilesInDirectory();
 
-        pathList = arrayOfLists.get(2);
-        radioButtonList = arrayOfLists.get(0);
-        List<HBox> hBoxList = arrayOfLists.get(1);
+        pathList = listHolder.getFilePathList();
+        radioButtonList = listHolder.getRadioButtonList();
+        List<HBox> hBoxList = listHolder.getHBoxList();
         radioButtonFileSelectVBox.getChildren().addAll(hBoxList);
     }
 
