@@ -63,10 +63,11 @@ public class ConversionLogic {
     }
 
 
-    public List<List> getListOfRawFilesInDirectory() {
+    public ListHolder getListOfRawFilesInDirectory() {
+        ListHolder listHolder = new ListHolder();
         List<RadioButton> radioButtonList = new ArrayList<>();
         List<HBox> hBoxList = new ArrayList<>();
-        List<List> arrayOfLists = new ArrayList<>();
+        List<Path> filePathList = directoryReader.getListOfFilePaths();
 
 
         for(Path path : directoryReader.getListOfFilePaths()) {
@@ -81,12 +82,11 @@ public class ConversionLogic {
             hBox.getChildren().addAll(thumbnail, radioButton);
             hBoxList.add(hBox);
         }
-        arrayOfLists.add(0, radioButtonList);
-        arrayOfLists.add(1, hBoxList);
-        arrayOfLists.add(2, directoryReader.getListOfFilePaths());
 
-
-        return arrayOfLists;
+        listHolder.setHBoxList(hBoxList);
+        listHolder.setRadioButtonList(radioButtonList);
+        listHolder.setFilePathList(filePathList);
+        return listHolder;
     }
 
     //return true if valid input is found
