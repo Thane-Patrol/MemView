@@ -102,7 +102,7 @@ public class PhotoViewerController {
     }
 
     public void setServicesForPhotoController() {
-        photoConversionController.setHelperObjectClasses(directoryReader, conversionLogicClass, fileHandling, this);
+        photoConversionController.setHelperObjectClasses(directoryReader, conversionLogicClass, fileHandling);
     }
 
     @FXML

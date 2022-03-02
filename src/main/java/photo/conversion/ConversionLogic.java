@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ConversionLogic {
@@ -43,10 +44,6 @@ public class ConversionLogic {
             thumbnailLogicSwitcher.addScalePixels(holderHelper.isToScale());
             thumbnailLogicSwitcher.addWatermark(holderHelper.isToWatermark());
 
-            //debugging
-            thumbnailLogicSwitcher.printAllSetParameters();
-            bufferedImage.toString();
-
             BufferedImage finalImage = thumbnailLogicSwitcher.getFinalImage();
             String fileNameSanitized = FilenameUtils.removeExtension(String.valueOf(path.getFileName()));
 
@@ -58,7 +55,6 @@ public class ConversionLogic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -90,15 +86,15 @@ public class ConversionLogic {
     }
 
     //return true if valid input is found
-    public boolean checkForCorrectInputInImageSize(TextField leftTextbox, TextField rightTextbox) {
+    public boolean checkForCorrectInputInImageSize(TextField heightTextField, TextField widthTextField) {
 
-        if(leftTextbox.getText().isBlank() || rightTextbox.getText().isBlank()) {
+        if(heightTextField.getText().isBlank() || widthTextField.getText().isBlank()) {
             return false;
         }
 
         //This regex checks for all input that contains anything except numbers, including characters or periods "."
         String regexForChecking = "[^0-9]+";
-        return !leftTextbox.getText().contains(regexForChecking) && !rightTextbox.getText().contains(regexForChecking);
+        return !heightTextField.getText().contains(regexForChecking) && !widthTextField.getText().contains(regexForChecking);
     }
 
     //return true if no images are selected
@@ -153,10 +149,10 @@ public class ConversionLogic {
     //returns true with successful conversion has occurred, the check being if the number of files requested for conversion
     // is the same as the number of files actually converted
     public boolean checkForSuccessfulConversion(Path directoryPath, List<Path> pathListResized) {
-        List<File> fileList = new ArrayList<>();
+
 
         final File directory = directoryPath.toFile();
-        fileList.addAll(Arrays.asList(directory.listFiles()));
+        List<File> fileList = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
 
         return fileList.size() - 1 == pathListResized.size();
     }
