@@ -27,7 +27,6 @@ import java.util.List;
 public class PhotoConversionController {
     private Stage stage;
     private Stage mainStage;
-    private PhotoViewerController photoViewerController;
     private ConversionLogic conversionLogic;
     private FileHandling fileHandling;
     private List<RadioButton> radioButtonList;
@@ -35,7 +34,7 @@ public class PhotoConversionController {
     private DirectoryReader directoryReader;
     private File watermarkFile;
     private HashMap<String, Positions> positionHashMap;
-    private List<Path> listOfPathsInSameExtension = new ArrayList<>();
+    private boolean hasListOfFilesForConversionBeenAdded = false;
     @FXML
     private VBox radioButtonFileSelectVBox;
     @FXML
@@ -53,7 +52,7 @@ public class PhotoConversionController {
     @FXML
     private RadioButton saveToCurrentDirectoryRadioButton;
     @FXML
-    private ChoiceBox outputFileFormatChoiceBox;
+    private ChoiceBox<String> outputFileFormatChoiceBox;
     @FXML
     private CheckBox toRotateCheckBox;
     @FXML
@@ -61,7 +60,7 @@ public class PhotoConversionController {
     @FXML
     private Button chooseWaterMarkButton;
     @FXML
-    private ChoiceBox watermarkPositionCheckBox;
+    private ChoiceBox<String> watermarkPositionCheckBox;
     @FXML
     private Slider watermarkScaleSlider;
     @FXML
@@ -77,11 +76,10 @@ public class PhotoConversionController {
         this.watermarkOpacitySlider = new Slider();
     }
 
-    public void setHelperObjectClasses(DirectoryReader directoryReader, ConversionLogic conversionLogic, FileHandling fileHandling, PhotoViewerController photoViewerController) {
+    public void setHelperObjectClasses(DirectoryReader directoryReader, ConversionLogic conversionLogic, FileHandling fileHandling) {
         this.directoryReader = directoryReader;
         this.conversionLogic = conversionLogic;
         this.fileHandling = fileHandling;
-        this.photoViewerController = photoViewerController;
     }
 
     @FXML
@@ -92,12 +90,15 @@ public class PhotoConversionController {
     }
 
     private void addListOfFilesToUserList() {
-        ListHolder listHolder = conversionLogic.getListOfRawFilesInDirectory();
+        if(!hasListOfFilesForConversionBeenAdded) {
+            ListHolder listHolder = conversionLogic.getListOfRawFilesInDirectory();
 
-        pathList = listHolder.getFilePathList();
-        radioButtonList = listHolder.getRadioButtonList();
-        List<HBox> hBoxList = listHolder.getHBoxList();
-        radioButtonFileSelectVBox.getChildren().addAll(hBoxList);
+            pathList = listHolder.getFilePathList();
+            radioButtonList = listHolder.getRadioButtonList();
+            List<HBox> hBoxList = listHolder.getHBoxList();
+            radioButtonFileSelectVBox.getChildren().addAll(hBoxList);
+            hasListOfFilesForConversionBeenAdded = true;
+        }
     }
 
     @FXML
@@ -167,7 +168,6 @@ public class PhotoConversionController {
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
 
         Path directoryPath = Paths.get(amendedFilePath);
-        directoryPath.toString();
         if(conversionLogic.checkForSuccessfulConversion(directoryPath, pathListToConvert)) {
             System.out.println("Conversion successful, all files converted");
             sendSuccessfulConversionAlert();
@@ -177,26 +177,24 @@ public class PhotoConversionController {
         }
     }
 
-    private ParameterHolderHelper setResizeCheck(ParameterHolderHelper holderHelper) {
+    private void setResizeCheck(ParameterHolderHelper holderHelper) {
         if(showIncorrectResolutionSpecifiedAlert()) {
-            return holderHelper;
+            System.out.println("Incorrect Resolution specified Alert");
         } else if (!heightTextField.getText().equals("")){
-            holderHelper.setFinalHeight(Integer.valueOf(heightTextField.getText()));
-            holderHelper.setFinalWidth(Integer.valueOf(widthTextField.getText()));
+            holderHelper.setFinalHeight(Integer.parseInt(heightTextField.getText()));
+            holderHelper.setFinalWidth(Integer.parseInt(widthTextField.getText()));
             holderHelper.setToResizeViaPixels(true);
         } else if (heightTextField.getText().equals("")) {
             holderHelper.setScalingFactor(scalingFactorSlider.getValue());
             holderHelper.setToScale(true);
         }
-        return holderHelper;
     }
 
-    private ParameterHolderHelper setFileFormatCheck(ParameterHolderHelper holderHelper) {
-        holderHelper.setExtensionToSaveAs(outputFileFormatChoiceBox.getSelectionModel().getSelectedItem().toString());
-        return holderHelper;
+    private void setFileFormatCheck(ParameterHolderHelper holderHelper) {
+        holderHelper.setExtensionToSaveAs(outputFileFormatChoiceBox.getSelectionModel().getSelectedItem());
     }
 
-    private ParameterHolderHelper setFileOutputPath(ParameterHolderHelper holderHelper) {
+    private void setFileOutputPath(ParameterHolderHelper holderHelper) {
         if(saveToCurrentDirectoryRadioButton.isSelected()) {
             holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(directoryReader.getDirectoryAsString()));
             chosenDirectoryLabel.setText(holderHelper.getOutputPath());
@@ -204,25 +202,21 @@ public class PhotoConversionController {
             holderHelper.setOutputPath(fileHandling.getPathInCorrectFormat(chosenDirectoryLabel.getText()));
             chosenDirectoryLabel.setText(holderHelper.getOutputPath());
         }
-        return holderHelper;
     }
 
-    private ParameterHolderHelper setRotateCheck(ParameterHolderHelper holderHelper) {
+    private void setRotateCheck(ParameterHolderHelper holderHelper) {
         if(conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
             showInvalidRotationAmountEntered();
-            return holderHelper;
         } else  {
-            holderHelper.setRotationFactor(Double.valueOf(rotationAmountTextField.getText()));
+            holderHelper.setRotationFactor(Double.parseDouble(rotationAmountTextField.getText()));
         }
-        return holderHelper;
     }
 
-    private ParameterHolderHelper setWatermarkCheck(ParameterHolderHelper holderHelper) {
+    private void setWatermarkCheck(ParameterHolderHelper holderHelper) {
         //todo implement alert for incorrect/invalid input
         holderHelper.setOpaquenessFactor((float) watermarkOpacitySlider.getValue());
         holderHelper.setWatermarkFile(watermarkFile);
         holderHelper.setWatermarkPosition(getPositionFromCheckBox());
-        return holderHelper;
     }
 
     private void initializePopup() {
@@ -257,7 +251,7 @@ public class PhotoConversionController {
     }
 
     private Positions getPositionFromCheckBox() {
-        return positionHashMap.get(watermarkPositionCheckBox.getValue().toString());
+        return positionHashMap.get(watermarkPositionCheckBox.getValue());
     }
 
     public void showPopup() {
@@ -286,7 +280,7 @@ public class PhotoConversionController {
         String toSetWatermarkButton = fileHandling.createFileChoosingWindowForWatermark();
         chooseWaterMarkButton.setText(toSetWatermarkButton);
         if (toSetWatermarkButton.contains("No Watermark Chosen")) {
-
+            System.out.println("No watermark Chosen");
         } else {
             chooseWaterMarkButton.setText(toSetWatermarkButton);
             watermarkFile = new File(toSetWatermarkButton);
@@ -329,13 +323,9 @@ public class PhotoConversionController {
      }
 
      //returns true if Alert shows
-     private boolean showInvalidRotationAmountEntered() {
-        if(conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers from 0 to 360 are allowed for rotation");
-            alert.showAndWait().filter(response -> response == ButtonType.OK);
-            return true;
-        }
-        return false;
+     private void showInvalidRotationAmountEntered() {
+         Alert alert = new Alert(Alert.AlertType.ERROR, "Illegal characters found - Please note that only whole numbers from 0 to 360 are allowed for rotation");
+         alert.showAndWait().filter(response -> response == ButtonType.OK);
      }
 
      //return true is Alert shows
@@ -367,11 +357,7 @@ public class PhotoConversionController {
 
      @FXML
      private void setRotateNodesToggle() {
-        if(toRotateCheckBox.isSelected()) {
-            rotationAmountTextField.setDisable(false);
-        } else {
-            rotationAmountTextField.setDisable(true);
-        }
+         rotationAmountTextField.setDisable(!toRotateCheckBox.isSelected());
      }
 
      @FXML
@@ -393,6 +379,7 @@ public class PhotoConversionController {
 
      //returns true if there are images that have the same extension as the final output path
      private boolean checkForImagesOfTheSameType(List<Path> pathList, ParameterHolderHelper holderHelper) {
+        List<Path> listOfPathsInSameExtension = new ArrayList<>();
         String currentExtension;
         String requestedExtension = holderHelper.getExtensionToSaveAs();
 
