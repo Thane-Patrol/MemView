@@ -9,12 +9,10 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
-    private Stage mainStage;
-
     @Override
     public void start(Stage stage) throws IOException {
 
-        this.mainStage = new Stage();
+        Stage mainStage = new Stage();
 
         //main FXML file
         FXMLLoader fxmlLoaderMain = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -26,7 +24,7 @@ public class HelloApplication extends Application {
         //This needs to be called before the main controller
         Stage popupStage = new Stage();
         FXMLLoader fxmlLoaderPopupConversion = new FXMLLoader(HelloApplication.class.getResource("photo-conversion.fxml"));
-        Scene popupScene = new Scene(fxmlLoaderPopupConversion.load(), 640, 480);
+        Scene popupScene = new Scene(fxmlLoaderPopupConversion.load(), 640, 800);
         PhotoConversionController photoConversionController = fxmlLoaderPopupConversion.getController();
 
         //These two methods need to be called in this order
