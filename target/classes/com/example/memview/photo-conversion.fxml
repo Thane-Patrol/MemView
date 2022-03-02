@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="497.0" prefWidth="711.0" styleClass="root" stylesheets="src/main/resources/image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionController">
+<AnchorPane prefHeight="497.0" prefWidth="711.0" styleClass="root" stylesheets="@../../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.memview.PhotoConversionController">
       <VBox layoutX="14.0" layoutY="23.0" prefHeight="434.0" prefWidth="241.0">
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="241.0" text="List of files">
                <font>
@@ -39,7 +39,6 @@
                   </VBox>
             </HBox>
       <VBox prefHeight="293.0" prefWidth="321.0">
-         <children>
             <Label alignment="CENTER" contentDisplay="TOP" prefHeight="16.0" prefWidth="102.0" text="Save to:" />
             <RadioButton fx:id="saveToCurrentDirectoryRadioButton" mnemonicParsing="false" text="Current directory" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#openFileDirectoryToSpecifyOutputPath" prefHeight="25.0" prefWidth="165.0" text="Somewhere else" />
@@ -53,13 +52,10 @@
             <ChoiceBox fx:id="watermarkPositionCheckBox" prefWidth="150.0" />
             <Label fx:id="watermarkOpacityLabel" text="Watermark opacity" />
             <Slider fx:id="watermarkOpacitySlider" blockIncrement="0.1" majorTickUnit="0.1" max="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
-         </children>
       </VBox>
       </VBox>
    <HBox layoutX="501.0" layoutY="453.0" prefHeight="32.0" prefWidth="175.0">
-      <children>
             <Button mnemonicParsing="false" onAction="#hidePopup" text="Cancel" />
                <Button mnemonicParsing="false" onAction="#storeListOfImagesToConvert" prefHeight="25.0" prefWidth="108.0" text="Convert" />
-      </children>
    </HBox>
 </AnchorPane>
