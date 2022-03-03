@@ -216,6 +216,7 @@ public class PhotoConversionController {
     private void setWatermarkCheck(ParameterHolderHelper holderHelper) {
         //todo implement alert for incorrect/invalid input
         holderHelper.setToWatermark(true);
+        holderHelper.setWatermarkScale((float) watermarkScaleSlider.getValue());
         holderHelper.setOpaquenessFactor((float) watermarkOpacitySlider.getValue());
         holderHelper.setWatermarkFile(watermarkFile);
         holderHelper.setWatermarkPosition(getPositionFromCheckBox());

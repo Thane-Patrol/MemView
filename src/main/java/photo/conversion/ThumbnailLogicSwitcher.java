@@ -1,20 +1,20 @@
 package photo.conversion;
 
-import net.coobird.thumbnailator.geometry.Positions;
-
+import net.coobird.thumbnailator.Thumbnails;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ThumbnailLogicSwitcher {
+    private final BufferedImage bufferedImage;
     private ThumbnailBuilder thumbnailBuilder;
     private Map<String, Boolean> parameterMap;
     private ParameterHolderHelper parameterHolderHelper;
 
     public ThumbnailLogicSwitcher(BufferedImage bufferedImage, ParameterHolderHelper parameterHolderHelper) {
+        this.bufferedImage = bufferedImage;
         thumbnailBuilder = new ThumbnailBuilder(bufferedImage);
         parameterMap = new HashMap<>();
         this.parameterHolderHelper = parameterHolderHelper;
@@ -54,21 +54,13 @@ public class ThumbnailLogicSwitcher {
 
     private void setWatermark() {
         if(parameterMap.get("watermark")) {
-            //thumbnailBuilder.setWatermarkScale(parameterHolderHelper.get);
+
+            thumbnailBuilder.setWatermarkScale(parameterHolderHelper.getWatermarkScale());
             thumbnailBuilder.setOpaquenessFactor(parameterHolderHelper.getOpaquenessFactor());
-            thumbnailBuilder.setWatermarkFile(parameterHolderHelper.getWatermarkFile());
+            thumbnailBuilder.setWatermarkFile(resizeWatermarkImage());
             thumbnailBuilder.setWatermarkPosition(parameterHolderHelper.getWatermarkPosition());
             thumbnailBuilder.createWatermarkImage();
             thumbnailBuilder.setWatermarkImage();
-
-            System.out.println("watermark parameters: ");
-            System.out.println("Opaquness factor: " + thumbnailBuilder.getOpaquenessFactor());
-            System.out.println("Position: " + thumbnailBuilder.getWatermarkPosition().toString());
-            System.out.println("Watermark file: " + thumbnailBuilder.getWatermarkFile().toString());
-
-            //todo where i got up to:
-            //todo debugging watermark application, the way forward would be to resize the watermark by a scaling factor
-            //todo eg so the watermark is scaled relative to the final proportion of the parent image
         }
     }
 
@@ -95,12 +87,20 @@ public class ThumbnailLogicSwitcher {
         parameterMap.put("watermark", toWatermark);
     }
 
-    public void printAllSetParameters() {
-        System.out.println("Printing Parameter Map: ");
+    //resizes the watermark to the same size as the parent image
+    private BufferedImage resizeWatermarkImage() {
+        int heightToResizeTo = bufferedImage.getHeight();
+        BufferedImage bufferedImageOfWatermark = null;
 
-        for(String string : parameterMap.keySet()) {
-            System.out.println(string + ", value: " + parameterMap.get(string));
+        try {
+            bufferedImageOfWatermark = ImageIO.read(parameterHolderHelper.getWatermarkFile());
+            double scalingFactor = (double) heightToResizeTo / bufferedImageOfWatermark.getHeight();
+            bufferedImageOfWatermark = Thumbnails.of(bufferedImageOfWatermark).scale(scalingFactor).asBufferedImage();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return bufferedImageOfWatermark;
     }
 
 

@@ -12,6 +12,7 @@ public class ParameterHolderHelper {
     private Positions watermarkPosition;
     private File watermarkFile;
     private float opaquenessFactor;
+    private float watermarkScale;
     private boolean toResizeViaPixels;
     private boolean toScale;
     private boolean toRotate;
@@ -86,6 +87,10 @@ public class ParameterHolderHelper {
         this.watermarkPosition = watermarkPosition;
     }
 
+    public void setWatermarkScale(float watermarkScale) {
+        this.watermarkScale = watermarkScale;
+    }
+
     public void setRotationFactor(double rotationFactor) {
         this.rotationFactor = rotationFactor;
     }
@@ -130,6 +135,10 @@ public class ParameterHolderHelper {
         return watermarkPosition;
     }
 
+    public float getWatermarkScale() {
+        return watermarkScale;
+    }
+
     public boolean checkForAnythingTransformationExceptFiles() {
         if(toWatermark) {
             return false;
@@ -137,11 +146,7 @@ public class ParameterHolderHelper {
             return false;
         } else if(toScale) {
             return false;
-        } else if(toResizeViaPixels) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return !toResizeViaPixels;
 
     }
 }
