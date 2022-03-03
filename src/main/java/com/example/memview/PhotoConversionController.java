@@ -208,12 +208,14 @@ public class PhotoConversionController {
         if(conversionLogic.doesContainInvalidInputForRotation(rotationAmountTextField.getText())) {
             showInvalidRotationAmountEntered();
         } else  {
+            holderHelper.setToRotate(true);
             holderHelper.setRotationFactor(Double.parseDouble(rotationAmountTextField.getText()));
         }
     }
 
     private void setWatermarkCheck(ParameterHolderHelper holderHelper) {
         //todo implement alert for incorrect/invalid input
+        holderHelper.setToWatermark(true);
         holderHelper.setOpaquenessFactor((float) watermarkOpacitySlider.getValue());
         holderHelper.setWatermarkFile(watermarkFile);
         holderHelper.setWatermarkPosition(getPositionFromCheckBox());

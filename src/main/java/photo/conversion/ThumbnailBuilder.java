@@ -105,4 +105,33 @@ public class ThumbnailBuilder {
     public double getScalingFactor() {
         return this.scalingFactor;
     }
+
+    public Positions getWatermarkPosition() {
+        return watermarkPosition;
+    }
+
+    public float getOpaquenessFactor() {
+        return opaquenessFactor;
+    }
+
+    public double getRotationFactor() {
+        return rotationFactor;
+    }
+
+    public File getWatermarkFile() {
+        return watermarkFile;
+    }
+
+    public int getFinalHeight() {
+        return finalHeight;
+    }
+
+    public double getWatermarkScale() {
+        return watermarkScale;
+    }
+
+    public int getFinalWidth() {
+        return finalWidth;
+    }
+
 }
