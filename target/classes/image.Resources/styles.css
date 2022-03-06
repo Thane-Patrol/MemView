@@ -12,6 +12,7 @@
     -fx-background-color: #696969;
     -fx-text-fill: #f0f0f0;
     -fx-opacity: 0.6;
+    -fx-font-size: 20px;
 }
 
 .scroll {
@@ -26,5 +27,4 @@
 .menu {
     -fx-font-size: 16px;
     -fx-opacity: 0.6;
-
 }

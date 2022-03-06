@@ -54,11 +54,21 @@ public class ThumbnailLogicSwitcher {
 
     private void setWatermark() {
         if(parameterMap.get("watermark")) {
+            //thumbnailBuilder.setWatermarkScale(parameterHolderHelper.get);
             thumbnailBuilder.setOpaquenessFactor(parameterHolderHelper.getOpaquenessFactor());
             thumbnailBuilder.setWatermarkFile(parameterHolderHelper.getWatermarkFile());
             thumbnailBuilder.setWatermarkPosition(parameterHolderHelper.getWatermarkPosition());
             thumbnailBuilder.createWatermarkImage();
             thumbnailBuilder.setWatermarkImage();
+
+            System.out.println("watermark parameters: ");
+            System.out.println("Opaquness factor: " + thumbnailBuilder.getOpaquenessFactor());
+            System.out.println("Position: " + thumbnailBuilder.getWatermarkPosition().toString());
+            System.out.println("Watermark file: " + thumbnailBuilder.getWatermarkFile().toString());
+
+            //todo where i got up to:
+            //todo debugging watermark application, the way forward would be to resize the watermark by a scaling factor
+            //todo eg so the watermark is scaled relative to the final proportion of the parent image
         }
     }
 
