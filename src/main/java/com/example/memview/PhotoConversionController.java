@@ -155,7 +155,7 @@ public class PhotoConversionController {
         }
 
         boolean toWatermark = toApplyWatermarkCheckBox.isSelected();
-        if(toWatermark) {
+        if(checkForValidWatermarkSelection() && toWatermark) {
             setWatermarkCheck(holderHelper);
         }
 
@@ -164,6 +164,7 @@ public class PhotoConversionController {
         if(checkForImagesOfTheSameType(pathListToConvert, holderHelper) && holderHelper.checkForAnythingTransformationExceptFiles()) {
             showAlertFileTypesSelected();
         }
+
 
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
 
@@ -216,6 +217,7 @@ public class PhotoConversionController {
     private void setWatermarkCheck(ParameterHolderHelper holderHelper) {
         //todo implement alert for incorrect/invalid input
         holderHelper.setToWatermark(true);
+        holderHelper.setWatermarkScale((float) watermarkScaleSlider.getValue());
         holderHelper.setOpaquenessFactor((float) watermarkOpacitySlider.getValue());
         holderHelper.setWatermarkFile(watermarkFile);
         holderHelper.setWatermarkPosition(getPositionFromCheckBox());
@@ -415,6 +417,21 @@ public class PhotoConversionController {
         Alert alert = new Alert(Alert.AlertType.ERROR, "Not all files successfully converted: \n" );
         alert.showAndWait().filter(response -> response == ButtonType.OK);
      }
+
+     //returns true if invalid user input is given, else Alert
+     private boolean checkForValidWatermarkSelection() {
+        if(chooseWaterMarkButton.getText().contains("No Watermark Chosen") || chooseWaterMarkButton.getText().contains("Choose watermark")) {
+            sendNoWatermarkChosenAlert();
+            return false;
+        }
+       return true;
+     }
+
+     private void sendNoWatermarkChosenAlert() {
+         Alert alert = new Alert(Alert.AlertType.ERROR, "No watermark file chosen");
+         alert.showAndWait().filter(response -> response == ButtonType.OK);
+     }
+
 
 
 

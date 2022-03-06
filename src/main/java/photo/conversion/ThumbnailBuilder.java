@@ -22,7 +22,7 @@ public class ThumbnailBuilder {
     //variables for applying watermark
     private double watermarkScale;
     private Positions watermarkPosition;
-    private File watermarkFile;
+    private BufferedImage watermarkImage;
     private float opaquenessFactor;
 
     private Watermark watermark;
@@ -44,10 +44,11 @@ public class ThumbnailBuilder {
 
     public void createWatermarkImage() {
         try {
-            watermark = new Watermark(watermarkPosition, ImageIO.read(watermarkFile), opaquenessFactor);
-        } catch(IOException e) {
+            watermarkImage = Thumbnails.of(watermarkImage).scale(watermarkScale).asBufferedImage();
+        } catch (IOException e ) {
             e.printStackTrace();
         }
+        watermark = new Watermark(watermarkPosition, watermarkImage, opaquenessFactor);
     }
 
     public void setPixelSize() {
@@ -90,8 +91,8 @@ public class ThumbnailBuilder {
         this.watermarkPosition = watermarkPosition;
     }
 
-    public void setWatermarkFile(File watermarkFile) {
-        this.watermarkFile = watermarkFile;
+    public void setWatermarkFile(BufferedImage watermarkImage) {
+        this.watermarkImage = watermarkImage;
     }
 
     public void setOpaquenessFactor(float opaquenessFactor) {
@@ -106,32 +107,5 @@ public class ThumbnailBuilder {
         return this.scalingFactor;
     }
 
-    public Positions getWatermarkPosition() {
-        return watermarkPosition;
-    }
-
-    public float getOpaquenessFactor() {
-        return opaquenessFactor;
-    }
-
-    public double getRotationFactor() {
-        return rotationFactor;
-    }
-
-    public File getWatermarkFile() {
-        return watermarkFile;
-    }
-
-    public int getFinalHeight() {
-        return finalHeight;
-    }
-
-    public double getWatermarkScale() {
-        return watermarkScale;
-    }
-
-    public int getFinalWidth() {
-        return finalWidth;
-    }
 
 }

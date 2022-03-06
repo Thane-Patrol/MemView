@@ -64,9 +64,16 @@
             <String fx:value="menu" />
          </styleClass>
       </VBox>
+      <VBox>
+         <children>
+               <CheckBox fx:id="toRotateCheckBox" mnemonicParsing="false" onAction="#setRotateNodesToggle" text="Rotate?" />
+               <TextField fx:id="rotationAmountTextField" promptText="Rotation amount" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" top="20.0" />
+         </padding>
+      </VBox>
       <VBox prefHeight="293.0" prefWidth="321.0" styleClass="menu">
-            <CheckBox fx:id="toRotateCheckBox" mnemonicParsing="false" onAction="#setRotateNodesToggle" text="Rotate?" />
-            <TextField fx:id="rotationAmountTextField" promptText="Rotation amount" />
             <CheckBox fx:id="toApplyWatermarkCheckBox" mnemonicParsing="false" onAction="#setWatermarkNodesToggle" text="Apply Watermark?" />
             <Button fx:id="chooseWaterMarkButton" mnemonicParsing="false" onAction="#setWatermarkFromUserSpecifiedImage" text="Choose watermark" />
             <Slider fx:id="watermarkScaleSlider" majorTickUnit="0.05" max="1.0" min="0.1" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
