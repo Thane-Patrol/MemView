@@ -1,5 +1,5 @@
 module com.example.memview {
-    //requires javafx.controls;
+    requires javafx.controls;
     requires javafx.fxml;
     requires javafx.swing;
 

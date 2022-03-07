@@ -22,6 +22,7 @@ import java.util.Objects;
 public class ConversionLogic {
 
     private final DirectoryReader directoryReader;
+    private ConversionLogicHelper conversionLogicHelper = new ConversionLogicHelper();
 
     public ConversionLogic(DirectoryReader directoryReader) {
         this.directoryReader = directoryReader;
@@ -148,13 +149,28 @@ public class ConversionLogic {
 
     //returns true with successful conversion has occurred, the check being if the number of files requested for conversion
     // is the same as the number of files actually converted
-    public boolean checkForSuccessfulConversion(Path directoryPath, List<Path> pathListResized) {
 
 
+    public void checkForSuccessfulFileConversion(Path directoryPath, List<Path> pathList) {
         final File directory = directoryPath.toFile();
         List<File> fileList = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
+        List<Path> listOfFilesNotConverted = new ArrayList<>();
 
-        return fileList.size() - 1 == pathListResized.size();
+        for(Path path : pathList) {
+            if(!fileList.contains(path.toFile())) {
+                listOfFilesNotConverted.add(path);
+            }
+        }
+        conversionLogicHelper.setListOfPathsNotConverted(listOfFilesNotConverted);
+
+        boolean toAssign = fileList.size() - 1 == pathList.size();
+        conversionLogicHelper.setSuccessfulFileConversion(toAssign);
+
     }
+
+    public ConversionLogicHelper getConversionLogicHelper() {
+        return  conversionLogicHelper;
+    }
+
 
 }

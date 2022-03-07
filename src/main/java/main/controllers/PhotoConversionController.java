@@ -20,7 +20,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 
@@ -151,8 +150,10 @@ public class PhotoConversionController {
         }
 
         boolean toWatermark = toApplyWatermarkCheckBox.isSelected();
-        if(checkForValidWatermarkSelection() && toWatermark) {
-            setWatermarkCheck(holderHelper);
+        if(toWatermark) {
+            if(checkForValidWatermarkSelection()) {
+                setWatermarkCheck(holderHelper);
+            }
         }
 
         //Check for images of the same file type
@@ -164,12 +165,13 @@ public class PhotoConversionController {
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
 
         Path directoryPath = Paths.get(amendedFilePath);
-        if(conversionLogic.checkForSuccessfulConversion(directoryPath, pathListToConvert)) {
+        conversionLogic.checkForSuccessfulFileConversion(directoryPath, pathListToConvert);
+        if(conversionLogic.getConversionLogicHelper().isSuccessfulFileConversion()) {
             System.out.println("Conversion successful, all files converted");
             sendSuccessfulConversionAlert();
         } else {
             System.out.println("Conversion not successful, not all files converted");
-            sendUnsuccessfulConversionAlert();
+            sendUnsuccessfulConversionAlert(conversionLogic.getConversionLogicHelper().getListOfPathsNotConverted());
         }
     }
 
@@ -408,8 +410,16 @@ public class PhotoConversionController {
      }
 
      //todo retrieve list of unsuccessful conversions and add them to alert
-     private void sendUnsuccessfulConversionAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Not all files successfully converted: \n" );
+     private void sendUnsuccessfulConversionAlert(List<Path> unconvertedFiles) {
+        StringBuilder alertText = new StringBuilder("Not all files successfully converted: \n");
+        for(Path path : unconvertedFiles) {
+            alertText.append("- ");
+            alertText.append(path.getFileName().toString());
+            alertText.append("\n");
+        }
+        String finalAlertText = alertText.toString();
+
+        Alert alert = new Alert(Alert.AlertType.ERROR, finalAlertText );
         alert.showAndWait().filter(response -> response == ButtonType.OK);
      }
 

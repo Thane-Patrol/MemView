@@ -28,7 +28,6 @@ public class ThumbnailBuilder {
     private Watermark watermark;
 
     //Builds based upon setters, leaving the logic for another class
-    //todo improve logic to reduce extraneous and repeated code
     public ThumbnailBuilder(BufferedImage bufferedImage) {
         bufferedImageBuilder = Thumbnails.of(bufferedImage);
     }
