@@ -1,4 +1,4 @@
-package com.example.memview;
+package main.controllers;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -8,7 +8,6 @@ import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -49,13 +48,15 @@ public class PhotoViewerApplicationLogicTest {
             fileAttributes = null;
         }
         String fileSizeWithBytes;
-
+        if(fileAttributes == null) {
+            Assertions.fail();
+        }
         long fileSize = fileAttributes.size();
         int KBCondition = 1000;
         int MBCondition = 1000_000;
         int GBCondition = 1000_000_000;
         //Used to check which branch was taken for testing
-        int whichPath = 0;
+        int whichPath;
 
 
         if (fileSize >= KBCondition && fileSize < MBCondition) {
@@ -72,7 +73,6 @@ public class PhotoViewerApplicationLogicTest {
             whichPath = 4;
         }
 
-        boolean toAssertValidBranchingChosen = 0 < whichPath && whichPath < 5;
         boolean toAssertCorrectExtension;
         if(fileSizeWithBytes.contains("KB") && whichPath == 1) {
             toAssertCorrectExtension = true;
@@ -80,13 +80,9 @@ public class PhotoViewerApplicationLogicTest {
             toAssertCorrectExtension = true;
         } else if(fileSizeWithBytes.contains("GB") && whichPath == 3) {
             toAssertCorrectExtension = true;
-        } else if(fileSizeWithBytes.contains("bytes") && whichPath == 4) {
-            toAssertCorrectExtension = true;
-        } else {
-            toAssertCorrectExtension = false;
-        }
+        } else toAssertCorrectExtension = fileSizeWithBytes.contains("bytes") && whichPath == 4;
 
-        Assertions.assertTrue(toAssertValidBranchingChosen && toAssertCorrectExtension);
+        Assertions.assertTrue(toAssertCorrectExtension);
 
     }
 
@@ -132,6 +128,10 @@ public class PhotoViewerApplicationLogicTest {
             e.printStackTrace();
         }
 
+        if(metadata == null) {
+            Assertions.fail();
+        }
+
         Collection<GpsDirectory> gpsDirectories = metadata.getDirectoriesOfType(GpsDirectory.class);
 
         GeoLocation geoLocation = null;
@@ -139,7 +139,7 @@ public class PhotoViewerApplicationLogicTest {
             geoLocation = gpsDirectory.getGeoLocation();
         }
 
-        Assertions.assertFalse(geoLocation == null);
+        Assertions.assertNotNull(geoLocation);
         return geoLocation;
     }
 

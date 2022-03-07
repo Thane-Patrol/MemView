@@ -1,4 +1,4 @@
-package com.example.memview;
+package main.controllers;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

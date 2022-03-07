@@ -38,7 +38,7 @@
         <dependency>
             <groupId>net.imagej</groupId>
             <artifactId>ij</artifactId>
-            <version>1.53d</version>
+            <version>1.53j</version>
         </dependency>
         <!--
          https://github.com/palexdev/MaterialFX
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.15</version>
+            <version>0.4.16</version>
             <scope>compile</scope>
         </dependency>
 
@@ -92,19 +92,19 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.1.0</version>
+            <version>11.1.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -114,82 +114,82 @@
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-metadata</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-bmp</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-icns</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-pict</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-pcx</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-pnm</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-psd</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-tga</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-sgi</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-hdr</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-webp</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.common</groupId>
             <artifactId>common-image</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.common</groupId>
             <artifactId>common-io</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.common</groupId>
             <artifactId>common-lang</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-jpeg</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-tiff</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.2</version>
         </dependency>
 
 
@@ -215,7 +215,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                            <mainClass>main.controllers.HelloApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>
@@ -227,7 +227,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                            <mainClass>main.controllers.HelloApplication</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -245,7 +245,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                            <mainClass>main.controllers.HelloApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -263,7 +263,7 @@
                         </goals>
                         <configuration>
                             <!-- mandatory -->
-                            <mainClass>com.example.memview.HelloApplication</mainClass>
+                            <mainClass>main.controllers.HelloApplication</mainClass>
                             <!-- optional -->
                             <!-- bundling JRE causes failures, needs investigation -->
                             <bundleJre>false</bundleJre>

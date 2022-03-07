@@ -1,4 +1,4 @@
-package com.example.memview;
+package main.controllers;
 
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;

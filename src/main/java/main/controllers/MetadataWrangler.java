@@ -1,4 +1,4 @@
-package com.example.memview;
+package main.controllers;
 
 import com.drew.lang.GeoLocation;
 import preferences.UserPreferences;

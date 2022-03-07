@@ -1,4 +1,4 @@
-package com.example.memview;
+package main.controllers;
 
 public class PhotoViewerControllerTest {
 }

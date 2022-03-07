@@ -1,4 +1,4 @@
-package com.example.memview;
+package main.controllers;
 
 import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
@@ -109,10 +109,6 @@ public class PhotoConversionController {
     @FXML
     private void storeListOfImagesToConvert() {
         List<Path> pathListToConvert;
-        //todo check if image selected is already of the file type being converted if so do not add it
-        //todo create prompt to tell user that particular image/s are already of the selected file type
-        //todo then have option to uncheck the images manually or automatically deselect all
-        //todo have a method for checking file renaming
         //todo implement checks to ensure files will not be converted into file types that will fail
 
         //Object used to store all the parameters, rather than passing them around
@@ -164,7 +160,6 @@ public class PhotoConversionController {
         if(checkForImagesOfTheSameType(pathListToConvert, holderHelper) && holderHelper.checkForAnythingTransformationExceptFiles()) {
             showAlertFileTypesSelected();
         }
-
 
         conversionLogic.convertPhotos(pathListToConvert, holderHelper);
 

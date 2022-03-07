@@ -1,10 +1,9 @@
-package com.example.memview;
+package main.controllers;
 
 import com.drew.lang.GeoLocation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import preferences.UserPreferences;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +26,7 @@ public class MetadataWranglerTest {
         photoViewerApplicationLogicTest = new PhotoViewerApplicationLogicTest();
     }
 
-
+    /*
     public void testSetMetadataLabel() {
         String toRtn = null;
         try {
@@ -40,7 +39,7 @@ public class MetadataWranglerTest {
         boolean assertFileFormat = toRtn.contains("MB");
         boolean assertCreationDate = toRtn.contains("2020");
 
-    }
+    } */
 
     @Test
     public void testGetFileCreationDate() {
@@ -51,7 +50,9 @@ public class MetadataWranglerTest {
             e.printStackTrace();
             fileAttributes = null;
         }
-
+        if(fileAttributes == null) {
+            Assertions.fail();
+        }
         FileTime fileTime = fileAttributes.creationTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String toRtn = "Creation: " + simpleDateFormat.format(fileTime.toMillis());
@@ -66,11 +67,9 @@ public class MetadataWranglerTest {
 
     @Test
     public void testGetGPSMetadata() {
-        String toRtn = "";
 
         GeoLocation geoLocation = photoViewerApplicationLogicTest.testGetGPSCoordinates();
 
-        toRtn = "GPS: " + geoLocation.toDMSString();
         latitude = geoLocation.getLatitude();
         longitude = geoLocation.getLongitude();
 

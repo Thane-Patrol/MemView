@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: com.example.memview.HelloApplication
+Main-Class: main.controllers.HelloApplication
 Class-Path: javafx-graphics-16-win.jar reactfx-2.0-M5.jar kotlin-stdlib-
  common-1.3.61.jar javafx-web-16-win.jar javafx-controls-16-win.jar conv
  erter-moshi-2.7.1.jar javafx-base-16-win.jar javafx-fxml-16-win.jar mos

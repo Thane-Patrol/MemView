@@ -1,5 +1,5 @@
 module com.example.memview {
-    requires javafx.controls;
+    //requires javafx.controls;
     requires javafx.fxml;
     requires javafx.swing;
 
@@ -12,6 +12,9 @@ module com.example.memview {
 
     //todo Fix pom.xml by adding exclusions for packages that contain bits of javaFX dependencies, see: https://youtrack.jetbrains.com/issue/IDEA-171320
 
-    opens com.example.memview to javafx.fxml;
-    exports com.example.memview;
+    opens main.controllers to javafx.fxml;
+    exports main.controllers;
+    exports preferences;
+    exports directory.handling;
+    exports photo.conversion;
 }
