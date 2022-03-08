@@ -147,6 +147,5 @@ public class ParameterHolderHelper {
         } else if(toScale) {
             return false;
         } else return !toResizeViaPixels;
-
     }
 }
