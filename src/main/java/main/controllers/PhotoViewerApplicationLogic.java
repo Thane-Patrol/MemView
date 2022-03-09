@@ -1,18 +1,24 @@
 package main.controllers;
 
+import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
+import net.coobird.thumbnailator.Thumbnails;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,16 +27,12 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.List;
-import com.drew.imaging.ImageMetadataReader;
-import javafx.stage.Screen;
-import net.coobird.thumbnailator.Thumbnails;
-
-import javax.imageio.ImageIO;
 
 public class PhotoViewerApplicationLogic {
-
+    private Pane zoomBoxPane;
     private final DirectoryReader directoryReader;
     private final PhotoViewerController photoViewerController;
+
 
     public PhotoViewerApplicationLogic(DirectoryReader directoryReader, PhotoViewerController photoViewerController) {
         this.directoryReader = directoryReader;
@@ -95,7 +97,6 @@ public class PhotoViewerApplicationLogic {
 
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
-            //todo set height based upon reasonable screenbounds and/or current window size
             imageView.setFitWidth(180);
             imageView.setFitHeight(150);
             VBox vBox = new VBox(imageView, fileName);
@@ -110,18 +111,45 @@ public class PhotoViewerApplicationLogic {
 
             hBox.getChildren().add(vBox);
         });
+    }
+
+    private void getRegionUnderMouse(MouseEvent event) {
+        zoomBoxPane.setLayoutX(event.getSceneX());
+        zoomBoxPane.setLayoutY(event.getSceneY());
+    }
+
+    private ImageView scaleImage(ImageView mainImageView) {
+        ImageView imageView = new ImageView(mainImageView.getImage());
+        //zoom up 4x on the main image
+        //imageView.setFitHeight(mainImageView.getFitHeight() * 2);
+        //imageView.setFitWidth(mainImageView.getFitWidth() * 2);
+        return imageView;
+    }
+
+    public Pane setZoomedImage(ImageView mainImageView, MouseEvent mouseEvent) {
+        getRegionUnderMouse(mouseEvent);
+        ImageView imageView = scaleImage(mainImageView);
+        System.out.println("Adding image");
+        zoomBoxPane.getChildren().add(imageView);
+        return zoomBoxPane;
+    }
+
+    public void hideZoomBox() {zoomBoxPane.setOpacity(0);}
 
 
+    public Pane initializeZoomBox(Pane pane) {
+        this.zoomBoxPane = pane;
+        //set size
+        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        zoomBoxPane.setMaxHeight(screenBounds.getHeight() / 6);
+        zoomBoxPane.setMaxWidth(screenBounds.getHeight() / 6);
+        return zoomBoxPane;
     }
 
     //Used to get the region of the image underneath the main image
     //todo implement
     public Image getImageUnderneathZoomBoxContainer(Pane zoomBox, ImageView mainImageView, MouseEvent mouseEvent) {
         return null;
-    }
-
-    public boolean isZoomBoxOverTheMainImage(Pane zoomBox, ImageView mainImageView) {
-        return zoomBox.intersects(mainImageView.getBoundsInLocal());
     }
 
     public GeoLocation getGPSCoordinates(Path imagePath) {

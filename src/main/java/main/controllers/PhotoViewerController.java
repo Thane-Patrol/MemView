@@ -121,7 +121,6 @@ public class PhotoViewerController {
         File firstImagePath = directoryReader.getCurrentImage().toFile();
         Image firstImage = directoryReader.loadImage();
 
-
         mainImageView.setImage(firstImage);
         metadataLabel.setAlignment(Pos.TOP_LEFT);
         metadataLabel.toFront();
@@ -133,8 +132,15 @@ public class PhotoViewerController {
         galleryThumbnailParentToolbar.toFront();
         galleryThumbnailParentToolbar.setPrefHeight(screenBounds.getHeight() / 5);
         galleryThumbnailParentToolbar.setPrefWidth(root.getPrefWidth());
+
+
         applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
 
+        //zoomBox initialization
+        zoomBoxContainer = applicationLogic.initializeZoomBox(zoomBoxContainer);
+        zoomBoxContainer.setOpacity(0.0);
+
+        // Top file view ribbon initialization
         thumbnailContainerRibbon.setSpacing(75);
         thumbnailContainerRibbon.setPrefWidth(root.getPrefWidth());
 
@@ -142,11 +148,7 @@ public class PhotoViewerController {
         scrollPaneRootFileRibbon.setMinViewportHeight(180);
         scrollPaneRootFileRibbon.setPrefWidth(root.getPrefWidth());
 
-
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
-        zoomBoxContainer.setOpacity(0.0);
-        zoomBoxContainer.setScaleX(mainImageView.getScaleX() / 4);
-        zoomBoxContainer.setScaleY(mainImageView.getScaleY() / 4);
     }
 
     @FXML
@@ -283,35 +285,27 @@ public class PhotoViewerController {
     //Trigger should be on mouseclick on the ImageView object itself
     @FXML
     private void createZoomBoxOnClick(MouseEvent event){
+        System.out.println("createZoomBoxOnClick method called+");
         zoomBoxContainer.setOpacity(100);
-        double xCoordinates = event.getSceneX();
-        double yCoordinates = event.getSceneY();
-        //Pos xyCoordinates = new Pos(yCoordinates, xCoordinates);
-
+        zoomBoxContainer = applicationLogic.setZoomedImage(mainImageView, event);
         //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
         //todo implement the above functionality
 
-
-        zoomBoxView.setImage(mainImageView.getImage());
-        zoomBoxView.setScaleX(10);
-        zoomBoxView.setScaleY(10);
     }
-
 
     @FXML
     private void moveZoomBoxWithMouse(MouseEvent event) {
         if(zoomBoxContainer.getOpacity() == 100) {
-
-            double mouseXCoordinates = event.getSceneX();
-            double mouseYCoordinates = event.getSceneY();
-
-            zoomBoxContainer.setTranslateX(mouseXCoordinates - zoomBoxContainer.getWidth()/3);
-            zoomBoxContainer.setTranslateY(mouseYCoordinates - zoomBoxContainer.getHeight()/3);
-
-            zoomBoxView.setImage(applicationLogic.getImageUnderneathZoomBoxContainer(zoomBoxContainer, mainImageView, event));
-
-            //todo Make the zoombox actually zooms in, not just providing a smaller version of the main image
+            //applicationLogic.setZoomedImage(mainImageView, event);
+            System.out.println("Move zoombox with mouse method called");
         }
+    }
+
+    @FXML
+    private void hideZoomBoxOnRelease() {
+        System.out.println("Hide zoombox method called");
+        applicationLogic.hideZoomBox();
+        zoomBoxContainer.setOpacity(0.0);
     }
 
 
@@ -323,10 +317,7 @@ public class PhotoViewerController {
         getImageMetadata(imagePath);
     }
 
-    @FXML
-    private void hideZoomBoxOnRelease() {
-        zoomBoxContainer.setOpacity(0.0);
-    }
+
 
     @FXML
     private void keyReleasedHandler() {

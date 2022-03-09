@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" styleClass="root" stylesheets="@../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.PhotoViewerController">
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" styleClass="root" stylesheets="@../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.PhotoViewerController">
    <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="140.0" prefWidth="282.0" styleClass="scroll-ribbon" translateY="40.0" StackPane.alignment="TOP_CENTER">
          <ScrollPane fx:id="scrollPaneRootFileRibbon" fitToHeight="true" fitToWidth="true" styleClass="scroll">
                <HBox fx:id="thumbnailContainerRibbon" prefHeight="100.0" prefWidth="200.0" styleClass="scroll" />
@@ -29,7 +29,7 @@
          <Insets left="15.0" />
       </padding>
    </Label>
-   <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+   <ImageView fx:id="mainImageView" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseMoved="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
       <effect>
          <Blend />
       </effect>
@@ -47,7 +47,7 @@
          </HBox.margin>
       </Button>
    </HBox>
-   <Pane fx:id="zoomBoxContainer" prefHeight="200.0" prefWidth="319.0">
+   <Pane fx:id="zoomBoxContainer" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" prefHeight="200.0" prefWidth="319.0">
             <ImageView fx:id="zoomBoxView" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#createZoomBoxOnClick" onMouseDragged="#moveZoomBoxWithMouse" onMouseReleased="#hideZoomBoxOnRelease" pickOnBounds="true" preserveRatio="true" />
    </Pane>
    <MenuBar fx:id="mainMenuBar" styleClass="menu" StackPane.alignment="TOP_LEFT">
