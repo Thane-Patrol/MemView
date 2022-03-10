@@ -286,6 +286,7 @@ public class PhotoViewerController {
     @FXML
     private void createZoomBoxOnClick(MouseEvent event){
         System.out.println("createZoomBoxOnClick method called+");
+        zoomBoxContainer.toFront();
         zoomBoxContainer.setOpacity(100);
         zoomBoxContainer = applicationLogic.setZoomedImage(mainImageView, event);
         //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
@@ -306,6 +307,7 @@ public class PhotoViewerController {
         System.out.println("Hide zoombox method called");
         applicationLogic.hideZoomBox();
         zoomBoxContainer.setOpacity(0.0);
+        zoomBoxContainer.toBack();
     }
 
 
