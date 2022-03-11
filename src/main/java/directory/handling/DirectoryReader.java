@@ -18,6 +18,7 @@ import java.util.Locale;
 public class DirectoryReader {
 
     private final List<Path> fileNames;
+    private final List<Image> imageList;
     private int currentFileIndex;
     private final List<String> readableExtensionList;
     private final List<String> writableFileExtensionList;
@@ -32,6 +33,7 @@ public class DirectoryReader {
 
         File originalFilePath = new File(sanitisedFileName);
         fileNames = new ArrayList<>();
+        imageList = new ArrayList<>();
         //Readable File Extensions
         readableExtensionList = FXCollections.observableArrayList();
         addReadableExtensionList();
@@ -39,16 +41,19 @@ public class DirectoryReader {
         writableFileExtensionList = FXCollections.observableArrayList();
         addWriteableFileExtensionsToList();
 
-        addPhotosToList(originalFilePath);
-        getFirstFileIndex(originalFilePath);
+        addPhotosToPathList(originalFilePath);
+        getFirstPathIndex(originalFilePath);
+
+
     }
 
-    private void addPhotosToList(File originalFilePath) {
+    private void addPhotosToPathList(File originalFilePath) {
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(originalFilePath.toPath().getParent())) {
-            //For each loop to loop through all photos and add them to the fileNames list
+            //For each loop to loop through all photos and add them to the fileNames list and Image list
             for (Path photos : directoryStream) {
                 if(!Files.isDirectory(photos) && fileIsAPhoto(photos)) {
                     fileNames.add(photos);
+                    imageList.add(loadGIFRespectingImage(photos));
                 }
             }
         } catch (Exception e) {
@@ -57,7 +62,8 @@ public class DirectoryReader {
         }
     }
 
-    private void getFirstFileIndex(File originalFilePath) {
+
+    private void getFirstPathIndex(File originalFilePath) {
         for (int i = 0; i < fileNames.size(); i++) {
             if (fileNames.get(i).equals(originalFilePath.toPath())) {
                 currentFileIndex = i;
@@ -100,43 +106,53 @@ public class DirectoryReader {
 
     }
 
-    public Path getCurrentImage() {
+    public Image getCurrentImage() {
+        return imageList.get(currentFileIndex);
+    }
+
+    public Path getCurrentImagePath() {
         return fileNames.get(currentFileIndex);
     }
 
-    public Path getPreviousImage() {
-
+    public ImageAndPathHolder getPreviousImage() {
+        ImageAndPathHolder imageAndPathHolder = new ImageAndPathHolder();
         if(fileNames.size() == 1) {
-            return outOfBoundsImagePath;
+            imageAndPathHolder.setPath(outOfBoundsImagePath);
+            return imageAndPathHolder;
         } else if (-1 == currentFileIndex - 1) {
-            return outOfBoundsImagePath;
-
+            imageAndPathHolder.setPath(outOfBoundsImagePath);
+            return imageAndPathHolder;
         } else if (fileNames.size() == 0){
-            return outOfBoundsImagePath;
-
+            imageAndPathHolder.setPath(outOfBoundsImagePath);
+            return imageAndPathHolder;
         } else {
-            Path toRtn = fileNames.get(currentFileIndex - 1);
+            imageAndPathHolder.setImage(imageList.get(currentFileIndex - 1));
+            imageAndPathHolder.setPath(fileNames.get(currentFileIndex - 1));
             currentFileIndex--;
-            return toRtn;
+            return imageAndPathHolder;
         }
 
     }
 
-    public Path getNextImage() {
-
+    public ImageAndPathHolder getNextImage() {
+        ImageAndPathHolder imageAndPathHolder = new ImageAndPathHolder();
         if(fileNames.size() == 1) {
-            return outOfBoundsImagePath;
+            imageAndPathHolder.setPath(outOfBoundsImagePath);
+            return imageAndPathHolder;
 
         } else if (fileNames.size() == currentFileIndex + 1) {
-            return outOfBoundsImagePath;
+            imageAndPathHolder.setPath(outOfBoundsImagePath);
+            return imageAndPathHolder;
 
         } else if (fileNames.size() == 0) {
-            return outOfBoundsImagePath;
+            imageAndPathHolder.setPath(outOfBoundsImagePath);
+            return imageAndPathHolder;
 
         } else {
-            Path toRtn = fileNames.get(currentFileIndex + 1);
+            imageAndPathHolder.setImage(imageList.get(currentFileIndex + 1));
+            imageAndPathHolder.setPath(fileNames.get(currentFileIndex + 1));
             currentFileIndex++;
-            return toRtn;
+            return imageAndPathHolder;
         }
     }
 
@@ -163,10 +179,25 @@ public class DirectoryReader {
         return FilenameUtils.getExtension(getCurrentImage().toString());
     }
 
+    private Image loadGIFRespectingImage(Path imagePath) {
+        Image toRtn;
+        if(FilenameUtils.getExtension(imagePath.toString()).equals("gif")) {
+            toRtn = new Image(imagePath.toUri().toString());
+        } else {
+            try {
+                toRtn = SwingFXUtils.toFXImage(ImageIO.read(imagePath.toFile()), null);
+            } catch (IOException e) {
+                e.printStackTrace();
+                toRtn = null;
+            }
+        }
+        return toRtn;
+    }
+
     public Image loadImage() {
         Image image;
         try {
-            File firstImagePath = this.getCurrentImage().toFile();
+            File firstImagePath = this.getCurrentImagePath().toFile();
 
             if(this.getPhotoExtension().equals("gif")) {
                 image = new Image(firstImagePath.toURI().toString());
@@ -204,7 +235,7 @@ public class DirectoryReader {
     }
 
     public String getDirectoryAsString() {
-        return getCurrentImage().getParent().toString();
+        return getCurrentImagePath().getParent().toString();
     }
 
     public List<String> getWritableFileExtensionList() {

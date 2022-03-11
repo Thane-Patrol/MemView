@@ -2,6 +2,7 @@ package main.controllers;
 
 import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
+import directory.handling.ImageAndPathHolder;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -118,7 +119,7 @@ public class PhotoViewerController {
     private void initialize() {
 
         //Creating a bufferedImage first as the Twelve Monkeys library creates buffered images unless a GIF then use native Image object
-        File firstImagePath = directoryReader.getCurrentImage().toFile();
+        File firstImagePath = directoryReader.getCurrentImagePath().toFile();
         Image firstImage = directoryReader.loadImage();
 
         mainImageView.setImage(firstImage);
@@ -153,25 +154,28 @@ public class PhotoViewerController {
 
     @FXML
     public void nextButtonAction() {
-        Path nextImageFilePath = directoryReader.getNextImage();
-        commonNextAndBackButtonAction(nextImageFilePath);
+        ImageAndPathHolder imageAndPathHolder = directoryReader.getNextImage();
+        Path nextImageFilePath = imageAndPathHolder.getPath();
+        Image nextImage = imageAndPathHolder.getImage();
+        commonNextAndBackButtonAction(nextImageFilePath, nextImage);
     }
 
-    private void commonNextAndBackButtonAction(Path path) {
+    private void commonNextAndBackButtonAction(Path path, Image image) {
         if(path.equals(outOfBoundsPath)) {
             mainImageView.setImage(new Image(outOfBoundsPath.toUri().toString()));
             return;
         }
         getImageMetadata(path);
         resetZoom();
-        Image image = directoryReader.loadImage();
         mainImageView.setImage(image);
     }
 
     @FXML
     public void backButtonAction() {
-        Path previousImagePath = directoryReader.getPreviousImage();
-        commonNextAndBackButtonAction(previousImagePath);
+        ImageAndPathHolder imageAndPathHolder = directoryReader.getPreviousImage();
+        Path nextImageFilePath = imageAndPathHolder.getPath();
+        Image nextImage = imageAndPathHolder.getImage();
+        commonNextAndBackButtonAction(nextImageFilePath, nextImage);
     }
 
     public void resizeImageForScreen(ImageView imageView) {
@@ -330,10 +334,10 @@ public class PhotoViewerController {
     private void toggleGPSExifPreferences() {
         if(GPSCheckMenu.isSelected()) {
             userPreferences.setMetadataGPSLabel(true);
-            getImageMetadata(directoryReader.getCurrentImage());
+            getImageMetadata(directoryReader.getCurrentImagePath());
         } else {
             userPreferences.setMetadataGPSLabel(false);
-            getImageMetadata(directoryReader.getCurrentImage());
+            getImageMetadata(directoryReader.getCurrentImagePath());
         }
     }
 
@@ -341,10 +345,10 @@ public class PhotoViewerController {
     private void toggleFileSizePreferences(){
         if(fileSizeCheckMenu.isSelected()) {
             userPreferences.setMetadataFileSizeLabel(true);
-            getImageMetadata(directoryReader.getCurrentImage());
+            getImageMetadata(directoryReader.getCurrentImagePath());
         } else {
             userPreferences.setMetadataFileSizeLabel(false);
-            getImageMetadata(directoryReader.getCurrentImage());
+            getImageMetadata(directoryReader.getCurrentImagePath());
         }
     }
 
@@ -352,10 +356,10 @@ public class PhotoViewerController {
     private void toggleCreationDatePreferences() {
         if(creationDateCheckMenu.isSelected()) {
             userPreferences.setMetadataCreationLabel(true);
-            getImageMetadata(directoryReader.getCurrentImage());
+            getImageMetadata(directoryReader.getCurrentImagePath());
         } else {
             userPreferences.setMetadataCreationLabel(false);
-            getImageMetadata(directoryReader.getCurrentImage());
+            getImageMetadata(directoryReader.getCurrentImagePath());
         }
     }
 }

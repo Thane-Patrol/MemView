@@ -26,7 +26,7 @@ public class FileHandling {
         }
         this.directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select a directory");
-        directoryChooser.setInitialDirectory(directoryReader.getCurrentImage().getParent().toFile().getAbsoluteFile());
+        directoryChooser.setInitialDirectory(directoryReader.getCurrentImagePath().getParent().toFile().getAbsoluteFile());
 
         fileChooser = new FileChooser();
         fileChooser.setTitle("Select a watermark");

@@ -105,7 +105,7 @@ public class PhotoViewerApplicationLogic {
             vBox.setOnMouseClicked(event -> {
                 directoryReader.setCurrentImageIndex(s);
                 photoViewerController.gotoImageOnClick(directoryReader.loadImage());
-                photoViewerController.updateMetadataLabel(directoryReader.getCurrentImage());
+                photoViewerController.updateMetadataLabel(directoryReader.getCurrentImagePath());
             });
 
             hBox.getChildren().add(vBox);
