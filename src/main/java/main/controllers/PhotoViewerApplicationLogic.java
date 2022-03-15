@@ -29,6 +29,7 @@ import java.util.List;
 
 public class PhotoViewerApplicationLogic {
     private Pane zoomBoxPane;
+    private ImageView zoomedImage;
     private final DirectoryReader directoryReader;
     private final PhotoViewerController photoViewerController;
 
@@ -36,7 +37,6 @@ public class PhotoViewerApplicationLogic {
     public PhotoViewerApplicationLogic(DirectoryReader directoryReader, PhotoViewerController photoViewerController) {
         this.directoryReader = directoryReader;
         this.photoViewerController = photoViewerController;
-
     }
 
     public String getPhotoSizeInUnits(Path imagePath) {
@@ -93,7 +93,6 @@ public class PhotoViewerApplicationLogic {
                 return;
             }
 
-
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(180);
@@ -135,17 +134,19 @@ public class PhotoViewerApplicationLogic {
         return imageView;
     }
 
-    private ImageView centerImageViewOverCursor(ImageView imageView, MouseEvent event) {
-        ImageView zoomImage = imageView;
-        zoomImage.setPreserveRatio(true);
-        Bounds bounds = zoomBoxPane.getParent().getLayoutBounds();
+    private void centerImageViewOverCursor(ImageView imageView, MouseEvent event) {
+        zoomedImage = new ImageView(imageView.getImage());
+        zoomedImage.setPreserveRatio(true);
+        //Bounds bounds = zoomBoxPane.getParent().getLayoutBounds();
         //zoomImage.setFitHeight(imageView.getFitHeight());
         //zoomImage.setFitWidth(imageView.getFitWidth());
-        zoomImage.setLayoutX(bounds.getCenterX());
-        zoomImage.setLayoutY(bounds.getCenterY());
+        zoomBoxPane.setMaxWidth(300);
+        zoomBoxPane.setMaxHeight(300);
+        zoomedImage.setFitHeight(zoomBoxPane.getMaxHeight());
+        zoomedImage.setFitWidth(zoomBoxPane.getMaxWidth());
+        zoomBoxPane.relocate(event.getX(), event.getY());
         //imageView.setLayoutX(event.getSceneX());
         //imageView.setLayoutY(event.getSceneY());
-        return zoomImage;
     }
 
     private ImageView getPixelsUnderneathZoomBox(ImageView imageView) {
@@ -173,24 +174,27 @@ public class PhotoViewerApplicationLogic {
     }
 
     public Pane setZoomedImage(ImageView mainImageView, MouseEvent mouseEvent) {
-        setZoomBoxToRegionUnderMouse(mouseEvent);
+        //setZoomBoxToRegionUnderMouse(mouseEvent);
         //ImageView imageView = scaleImage(mainImageView);
-        //ImageView imageView = centerImageViewOverCursor(mainImageView, mouseEvent);
-        //System.out.println("ImageView x, y coords: " + imageView.getLayoutX() + " y: " + imageView.getLayoutY());
+        centerImageViewOverCursor(mainImageView, mouseEvent);
+        System.out.println("ImageView x, y coords: " + zoomedImage.getLayoutX() + " y: " + zoomedImage.getLayoutY());
         System.out.println("Zoombox x, y coords: " + zoomBoxPane.getLayoutX() + " y: " + zoomBoxPane.getLayoutY());
         //ImageView imageView = getPixelsUnderneathZoomBox(mainImageView);
-        System.out.println("Adding image");
-        //zoomBoxPane.getChildren().add(imageView);
+        zoomBoxPane.getChildren().add(zoomedImage);
         return zoomBoxPane;
     }
 
-    public void hideZoomBox() {zoomBoxPane.setOpacity(0);}
+    public void hideZoomBox() {
+        zoomBoxPane.setOpacity(0);
+        zoomedImage.setImage(null);
+    }
 
 
     public Pane initializeZoomBox(Pane pane) {
         this.zoomBoxPane = pane;
         setMaxZoomBoxSize();
         zoomBoxPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        zoomedImage = new ImageView();
 
         return zoomBoxPane;
     }
