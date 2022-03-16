@@ -144,40 +144,21 @@ public class PhotoViewerApplicationLogic {
         zoomBoxPane.setMaxHeight(300);
         zoomedImage.setFitHeight(zoomBoxPane.getMaxHeight());
         zoomedImage.setFitWidth(zoomBoxPane.getMaxWidth());
-        zoomBoxPane.relocate(event.getX(), event.getY());
-        //imageView.setLayoutX(event.getSceneX());
-        //imageView.setLayoutY(event.getSceneY());
+        zoomBoxPane.setLayoutX(event.getSceneX());
+        zoomBoxPane.setLayoutY(event.getSceneY());
+        event.consume();
     }
 
-    private ImageView getPixelsUnderneathZoomBox(ImageView imageView) {
-        Image image = imageView.getImage();
-        PixelReader pixelReader = image.getPixelReader();
-        int width = (int) zoomBoxPane.getWidth();
-        int height = (int) zoomBoxPane.getHeight();
-
-        WritableImage zoomedImage = new WritableImage(width, height);
-        PixelWriter writer = zoomedImage.getPixelWriter();
-
-        for(int y = 0; y < height; y++) {
-            for(int x = 0; x < width; x++) {
-                Color pixelColor = pixelReader.getColor(x, y);
-                double red = pixelColor.getRed();
-                double blue = pixelColor.getBlue();
-                double green = pixelColor.getGreen();
-                double opacity = pixelColor.getOpacity();
-
-                writer.setColor(x, y, pixelColor);
-            }
-        }
-        ImageView toRtn = new ImageView(zoomedImage);
-        return toRtn;
+    public void moveOnMouseDragged(MouseEvent mouseEvent) {
+        zoomBoxPane.setTranslateX(mouseEvent.getSceneX() - zoomBoxPane.getLayoutX() - 0.5*zoomBoxPane.getWidth());
+        zoomBoxPane.setTranslateY(mouseEvent.getSceneY() - zoomBoxPane.getLayoutY() - 0.5*zoomBoxPane.getHeight());
+        mouseEvent.consume();
     }
 
     public Pane setZoomedImage(ImageView mainImageView, MouseEvent mouseEvent) {
         //setZoomBoxToRegionUnderMouse(mouseEvent);
         //ImageView imageView = scaleImage(mainImageView);
         centerImageViewOverCursor(mainImageView, mouseEvent);
-        System.out.println("ImageView x, y coords: " + zoomedImage.getLayoutX() + " y: " + zoomedImage.getLayoutY());
         System.out.println("Zoombox x, y coords: " + zoomBoxPane.getLayoutX() + " y: " + zoomBoxPane.getLayoutY());
         //ImageView imageView = getPixelsUnderneathZoomBox(mainImageView);
         zoomBoxPane.getChildren().add(zoomedImage);

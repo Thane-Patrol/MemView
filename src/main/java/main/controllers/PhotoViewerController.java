@@ -295,13 +295,12 @@ public class PhotoViewerController {
         zoomBoxContainer = applicationLogic.setZoomedImage(mainImageView, event);
         //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
         //todo implement the above functionality
-
     }
 
     @FXML
     private void moveZoomBoxWithMouse(MouseEvent event) {
         if(zoomBoxContainer.getOpacity() == 100) {
-            //applicationLogic.setZoomedImage(mainImageView, event);
+            applicationLogic.moveOnMouseDragged(event);
             System.out.println("Move zoombox with mouse method called");
         }
     }
