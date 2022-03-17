@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../Libraries/MaterialFX-11.12.0/MaterialFX-11.12.0.iml" filepath="$PROJECT_DIR$/../Libraries/MaterialFX-11.12.0/MaterialFX-11.12.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MemView.iml" filepath="$PROJECT_DIR$/MemView.iml" />
     </modules>
   </component>
 </project>

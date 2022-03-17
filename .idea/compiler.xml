@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="ImageProcessing" target="16" />
+      <module name="MemView" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

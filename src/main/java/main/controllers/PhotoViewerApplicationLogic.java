@@ -126,12 +126,11 @@ public class PhotoViewerApplicationLogic {
         zoomBoxPane.setMaxWidth(bounds.getHeight() / 10);
     }
 
-    private ImageView scaleImage(ImageView mainImageView) {
-        ImageView imageView = new ImageView(mainImageView.getImage());
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(mainImageView.getFitHeight());
-        imageView.setFitWidth(mainImageView.getFitWidth());
-        return imageView;
+    private void scaleImage(MouseEvent event) {
+        zoomedImage.setScaleX(4);
+        zoomedImage.setScaleY(4);
+        Rectangle2D viewport = new Rectangle2D(event.getSceneX(), event.getSceneY(), 85, 85);
+        zoomedImage.setViewport(viewport);
     }
 
     private void centerImageViewOverCursor(ImageView imageView, MouseEvent event) {
@@ -142,8 +141,6 @@ public class PhotoViewerApplicationLogic {
         //zoomImage.setFitWidth(imageView.getFitWidth());
         zoomBoxPane.setMaxWidth(300);
         zoomBoxPane.setMaxHeight(300);
-        zoomedImage.setFitHeight(zoomBoxPane.getMaxHeight());
-        zoomedImage.setFitWidth(zoomBoxPane.getMaxWidth());
         zoomBoxPane.setLayoutX(event.getSceneX());
         zoomBoxPane.setLayoutY(event.getSceneY());
         event.consume();
@@ -152,6 +149,7 @@ public class PhotoViewerApplicationLogic {
     public void moveOnMouseDragged(MouseEvent mouseEvent) {
         zoomBoxPane.setTranslateX(mouseEvent.getSceneX() - zoomBoxPane.getLayoutX() - 0.5*zoomBoxPane.getWidth());
         zoomBoxPane.setTranslateY(mouseEvent.getSceneY() - zoomBoxPane.getLayoutY() - 0.5*zoomBoxPane.getHeight());
+        scaleImage(mouseEvent);
         mouseEvent.consume();
     }
 
