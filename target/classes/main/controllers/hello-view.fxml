@@ -15,13 +15,32 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" styleClass="root" stylesheets="@../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.PhotoViewerController">
+<!--
+  ~ MemView - a simple photo viewer and converter written in Java
+  ~     Copyright (C) 2021 Hugh Mandalidis
+  ~     Contact: mandalidis.hugh@gmail.com
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU Affero General Public License as
+  ~     published by the Free Software Foundation, either version 3 of the
+  ~     License, or (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU Affero General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.en.html>
+  -->
+
+<StackPane fx:id="root" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" onMouseDragged="#moveZoomBoxWithMouse" onMousePressed="#createZoomBoxOnClick" onMouseReleased="#hideZoomBoxOnRelease" onScroll="#scrollHandler" styleClass="root" stylesheets="@../../image.Resources/nordic.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.PhotoViewerController">
    <ToolBar fx:id="galleryThumbnailParentToolbar" onMouseEntered="#setVisibleToolbar" onMouseExited="#setTransparentToolbar" prefHeight="140.0" prefWidth="282.0" styleClass="scroll-ribbon" translateY="40.0" StackPane.alignment="TOP_CENTER">
          <ScrollPane fx:id="scrollPaneRootFileRibbon" fitToHeight="true" fitToWidth="true" styleClass="scroll">
                <HBox fx:id="thumbnailContainerRibbon" prefHeight="100.0" prefWidth="200.0" styleClass="scroll" />
          </ScrollPane>
       <StackPane.margin>
-         <Insets left="-10.0" right="-10.0" top="-6.0" />
+         <Insets left="-10.0" right="-10.0" top="-10.0" />
       </StackPane.margin>
    </ToolBar>
    <Label fx:id="metadataLabel" alignment="TOP_LEFT" onMouseClicked="#openGoogleMapsGPS" styleClass="root" StackPane.alignment="BOTTOM_LEFT">
@@ -33,6 +52,9 @@
       <effect>
          <Blend />
       </effect>
+      <StackPane.margin>
+         <Insets top="20.0" />
+      </StackPane.margin>
    </ImageView>
    <HBox alignment="CENTER" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" prefHeight="100.0" prefWidth="200.0" StackPane.alignment="CENTER">
       <Button mnemonicParsing="false" onAction="#backButtonAction" onKeyPressed="#keyPressHandler" onKeyReleased="#keyReleasedHandler" opacity="0.5" text="&lt;">

@@ -34,7 +34,7 @@
   ~     along with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.en.html>
   -->
 
-<AnchorPane styleClass="root" stylesheets="@../../image.Resources/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.PhotoConversionController">
+<AnchorPane styleClass="root" stylesheets="@../../image.Resources/nordic.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controllers.PhotoConversionController">
       <VBox layoutX="14.0" layoutY="23.0" prefHeight="596.0" prefWidth="241.0">
             <Label alignment="CENTER" prefHeight="25.0" prefWidth="241.0" text="List of files">
                <font>

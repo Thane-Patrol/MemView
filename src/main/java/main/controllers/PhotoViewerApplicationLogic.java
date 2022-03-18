@@ -130,15 +130,6 @@ public class PhotoViewerApplicationLogic {
         });
     }
 
-    private void setZoomBoxToRegionUnderMouse(MouseEvent event) {
-        System.out.println(event.getTarget().toString());
-
-        zoomBoxPane.setLayoutX(event.getSceneX());
-        zoomBoxPane.setLayoutY(event.getSceneY());
-
-        zoomBoxPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-    }
-
     private void setMaxZoomBoxSize() {
         Rectangle2D bounds = Screen.getPrimary().getBounds();
         zoomBoxPane.setMaxHeight(bounds.getHeight() / 10);
@@ -155,9 +146,6 @@ public class PhotoViewerApplicationLogic {
     private void centerImageViewOverCursor(ImageView imageView, MouseEvent event) {
         zoomedImage = new ImageView(imageView.getImage());
         zoomedImage.setPreserveRatio(true);
-        //Bounds bounds = zoomBoxPane.getParent().getLayoutBounds();
-        //zoomImage.setFitHeight(imageView.getFitHeight());
-        //zoomImage.setFitWidth(imageView.getFitWidth());
         zoomBoxPane.setMaxWidth(300);
         zoomBoxPane.setMaxHeight(300);
         zoomBoxPane.setLayoutX(event.getSceneX());
@@ -165,11 +153,12 @@ public class PhotoViewerApplicationLogic {
         event.consume();
     }
 
-    public void moveOnMouseDragged(MouseEvent mouseEvent) {
+    public void moveOnMouseDragged(MouseEvent mouseEvent, ImageView imageView) {
         zoomBoxPane.setTranslateX(mouseEvent.getSceneX() - zoomBoxPane.getLayoutX() - 0.5*zoomBoxPane.getWidth());
         zoomBoxPane.setTranslateY(mouseEvent.getSceneY() - zoomBoxPane.getLayoutY() - 0.5*zoomBoxPane.getHeight());
         scaleImage(mouseEvent);
         mouseEvent.consume();
+        System.out.println("Move on mousedragged method called");
     }
 
     public Pane setZoomedImage(ImageView mainImageView, MouseEvent mouseEvent) {
@@ -191,7 +180,7 @@ public class PhotoViewerApplicationLogic {
     public Pane initializeZoomBox(Pane pane) {
         this.zoomBoxPane = pane;
         setMaxZoomBoxSize();
-        zoomBoxPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        //zoomBoxPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         zoomedImage = new ImageView();
 
         return zoomBoxPane;

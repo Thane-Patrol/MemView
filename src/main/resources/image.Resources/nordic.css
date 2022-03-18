@@ -1,0 +1,32 @@
+.root {
+    -fx-font-size: 24px;
+    -fx-font-family: "Verdana" "Serif" sans-serif;
+    -fx-padding: 10px;
+    -fx-background-color: #2e3440;
+    -fx-text-fill: #eceff4;
+    -fx-font-weight: 300;
+    -fx-base: #2e3440;
+}
+
+.button {
+    -fx-background-color: #696969;
+    -fx-text-fill: #eceff4;
+    -fx-opacity: 0.6;
+    -fx-font-size: 20px;
+}
+
+.scroll {
+    -fx-background-color: #2e3440;
+    -fx-text-fill: #eceff4;
+    -fx-font-size: 24px;
+    -fx-font-family: "Verdana" "Serif" sans-serif;
+    -fx-padding: 10px;
+    -fx-font-weight: 300;
+}
+
+.menu {
+    -fx-font-size: 16px;
+    -fx-opacity: 0.6;
+    -fx-spacing: 5px;
+    -fx-padding: 5px;
+}
