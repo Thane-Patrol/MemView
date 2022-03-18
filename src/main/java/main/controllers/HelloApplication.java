@@ -43,7 +43,7 @@ public class HelloApplication extends Application {
         //This needs to be called before the main controller
         Stage popupStage = new Stage();
         FXMLLoader fxmlLoaderPopupConversion = new FXMLLoader(HelloApplication.class.getResource("photo-conversion.fxml"));
-        Scene popupScene = new Scene(fxmlLoaderPopupConversion.load(), 640, 800);
+        Scene popupScene = new Scene(fxmlLoaderPopupConversion.load(), 640, 850);
         PhotoConversionController photoConversionController = fxmlLoaderPopupConversion.getController();
 
         //These two methods need to be called in this order
