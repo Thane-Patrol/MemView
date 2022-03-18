@@ -18,8 +18,8 @@ This was a comprimise as RAM is usually abundant but disk IO, particularly with 
 
 ## Writable formats
 
-| **Output File Format** | **Input File Format** |
 | --- | BMP | JPG | PNG | TGA | TIFF | WEBP |
+| --- | --- | --- | --- | --- | ---- | ---- |
 | BMP |  X  |  X  |     |  X  |  X   |  X   |
 | JPG |  X  |  X  |     |  X  |      |  X   |
 | PNG |  X  |  X  |  X  |  X  |  X   |  X   |
