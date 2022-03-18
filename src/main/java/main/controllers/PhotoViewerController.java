@@ -110,11 +110,6 @@ public class PhotoViewerController {
         metadataLabel = new Label();
 
         screenBounds = Screen.getPrimary().getVisualBounds();
-        galleryThumbnailParentToolbar = new ToolBar();
-        scrollPaneRootFileRibbon = new ScrollPane();
-        thumbnailContainerRibbon = new HBox();
-
-
     }
 
     public void setHostServices(HostServices hostServices) {
@@ -148,27 +143,49 @@ public class PhotoViewerController {
 
         resizeImageForScreen(mainImageView);
 
-        galleryThumbnailParentToolbar.setOpacity(0.0);
-        galleryThumbnailParentToolbar.toFront();
-        galleryThumbnailParentToolbar.setPrefHeight(screenBounds.getHeight() / 5);
-        galleryThumbnailParentToolbar.setPrefWidth(root.getPrefWidth());
 
-
-        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
 
         //zoomBox initialization
         zoomBoxContainer = applicationLogic.initializeZoomBox(zoomBoxContainer);
         zoomBoxContainer.setOpacity(0.0);
 
-        // Top file view ribbon initialization
-        thumbnailContainerRibbon.setSpacing(75);
-        thumbnailContainerRibbon.setPrefWidth(root.getPrefWidth());
 
-        scrollPaneRootFileRibbon.setFitToHeight(true);
-        scrollPaneRootFileRibbon.setMinViewportHeight(180);
-        scrollPaneRootFileRibbon.setPrefWidth(root.getPrefWidth());
 
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
+    }
+
+    private void initializeGalleryRibbon() {
+        double widthOfBar = root.getWidth();
+
+        galleryThumbnailParentToolbar.setOpacity(0.0);
+        galleryThumbnailParentToolbar.toFront();
+        galleryThumbnailParentToolbar.setPrefHeight(200);
+        galleryThumbnailParentToolbar.setPrefWidth(widthOfBar);
+
+        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
+        // Top file view ribbon initialization
+
+
+        scrollPaneRootFileRibbon.setFitToHeight(true);
+        scrollPaneRootFileRibbon.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneRootFileRibbon.setMinViewportHeight(160);
+        scrollPaneRootFileRibbon.setPrefWidth(widthOfBar);
+
+        thumbnailContainerRibbon.setSpacing(75);
+        thumbnailContainerRibbon.setPrefWidth(widthOfBar);
+    }
+
+    public void initializeSceneDependentComponents() {
+        initializeGalleryRibbon();
+        initializeRoot();
+    }
+
+    private void initializeRoot() {
+        double width = root.getScene().getWidth();
+        double height = root.getScene().getHeight();
+        root.setPrefWidth(width);
+        root.setPrefHeight(height);
+
     }
 
     @FXML

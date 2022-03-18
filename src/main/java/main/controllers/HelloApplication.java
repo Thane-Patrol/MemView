@@ -38,6 +38,7 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoaderMain.load(), 640, 480);
         PhotoViewerController controller = fxmlLoaderMain.getController();
         controller.setHostServices(this.getHostServices());
+        controller.initializeSceneDependentComponents();
 
         //popup FXML file for conversion of photos
         //This needs to be called before the main controller
