@@ -16,6 +16,21 @@ MemView was built with the following in mind:
 *This requires loading images into RAM to prevent waiting for disk IO. 
 This was a comprimise as RAM is usually abundant but disk IO, particularly with mechanical HDDs is limited
 
+## Writable formats
+
+| **Output File Format** | **Input File Format** |
+| --- | BMP | JPG | PNG | TGA | TIFF | WEBP |
+| BMP |  X  |  X  |     |  X  |  X   |  X   |
+| JPG |  X  |  X  |     |  X  |      |  X   |
+| PNG |  X  |  X  |  X  |  X  |  X   |  X   |
+| TGA |  X  |  X  |  X  |  X  |  X   |  X   |
+| TIFF|  X  |  X  |  X  |  X  |  X   |  X   |
+
+## Limitations
+### Conversion:
+- Refer to the table above to see which output file format is avaliable for a given input file format
+- If your favourite format isn't visible, open an issue, detailing any specifics and why it is valuable to have
+
 # Acknowledgements
 TwelveMonkeys - A library that extends the functionality of the Java Image.IO API.
 Many of the available features in MemView would not be possible without it
