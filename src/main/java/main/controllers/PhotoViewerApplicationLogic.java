@@ -26,11 +26,13 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -49,13 +51,11 @@ public class PhotoViewerApplicationLogic {
     private ImageView zoomedImage;
     private final DirectoryReader directoryReader;
     private final PhotoViewerController photoViewerController;
-    private ZoomBoxLogic zoomBoxLogic;
 
 
     public PhotoViewerApplicationLogic(DirectoryReader directoryReader, PhotoViewerController photoViewerController) {
         this.directoryReader = directoryReader;
         this.photoViewerController = photoViewerController;
-        this.zoomBoxLogic = new ZoomBoxLogic();
     }
 
     public String getPhotoSizeInUnits(Path imagePath) {
@@ -132,26 +132,22 @@ public class PhotoViewerApplicationLogic {
 
     private void setMaxZoomBoxSize() {
         Rectangle2D bounds = Screen.getPrimary().getBounds();
-        zoomBoxPane.setMaxHeight(bounds.getHeight() / 6);
-        zoomBoxPane.setMaxWidth(bounds.getHeight() / 6);
+        zoomBoxPane.setMaxHeight(bounds.getHeight() / 10);
+        zoomBoxPane.setMaxWidth(bounds.getHeight() / 10);
     }
 
     private void scaleImage(MouseEvent event) {
         zoomedImage.setScaleX(4);
         zoomedImage.setScaleY(4);
-        Rectangle2D viewport = new Rectangle2D(event.getSceneX() + 85, event.getSceneY() + 85, 85, 85);
+        Rectangle2D viewport = new Rectangle2D(event.getSceneX(), event.getSceneY(), 85, 85);
         zoomedImage.setViewport(viewport);
     }
 
     private void centerImageViewOverCursor(ImageView imageView, MouseEvent event) {
-        Rectangle2D bounds = Screen.getPrimary().getBounds();
         zoomedImage = new ImageView(imageView.getImage());
         zoomedImage.setPreserveRatio(true);
-        zoomedImage.setScaleX(4);
-        zoomedImage.setScaleY(4);
-        zoomedImage.setViewport(new Rectangle2D( + 85, event.getSceneY() + 85, 85, 85));
-        zoomBoxPane.setMaxWidth(bounds.getWidth() / 6);
-        zoomBoxPane.setMaxHeight(bounds.getHeight() / 6);
+        zoomBoxPane.setMaxWidth(300);
+        zoomBoxPane.setMaxHeight(300);
         zoomBoxPane.setLayoutX(event.getSceneX());
         zoomBoxPane.setLayoutY(event.getSceneY());
         event.consume();
@@ -163,30 +159,31 @@ public class PhotoViewerApplicationLogic {
         scaleImage(mouseEvent);
         mouseEvent.consume();
         System.out.println("Move on mousedragged method called");
-        //zoomBoxLogic.moveOnMouseDragged(mouseEvent);
     }
 
     public Pane setZoomedImage(ImageView mainImageView, MouseEvent mouseEvent) {
-       centerImageViewOverCursor(mainImageView, mouseEvent);
-       System.out.println("Zoombox x, y coords: " + zoomBoxPane.getLayoutX() + " y: " + zoomBoxPane.getLayoutY());
-       zoomBoxPane.getChildren().add(zoomedImage);
-       return zoomBoxPane;
-       //return zoomBoxLogic.initializeZoomBoxOnUserClick(mouseEvent);
+        //setZoomBoxToRegionUnderMouse(mouseEvent);
+        //ImageView imageView = scaleImage(mainImageView);
+        centerImageViewOverCursor(mainImageView, mouseEvent);
+        System.out.println("Zoombox x, y coords: " + zoomBoxPane.getLayoutX() + " y: " + zoomBoxPane.getLayoutY());
+        //ImageView imageView = getPixelsUnderneathZoomBox(mainImageView);
+        zoomBoxPane.getChildren().add(zoomedImage);
+        return zoomBoxPane;
     }
 
     public void hideZoomBox() {
         zoomBoxPane.setOpacity(0);
         zoomedImage.setImage(null);
-        //zoomBoxLogic.hideZoomBox();
     }
 
 
     public Pane initializeZoomBox(Pane pane) {
         this.zoomBoxPane = pane;
         setMaxZoomBoxSize();
+        //zoomBoxPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         zoomedImage = new ImageView();
+
         return zoomBoxPane;
-       // return zoomBoxLogic.initializeZoomBox(pane);
     }
 
     public GeoLocation getGPSCoordinates(Path imagePath) {

@@ -93,7 +93,7 @@ public class PhotoViewerController {
 
         root = new StackPane();
 
-        String directory =  "/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
+        String directory =  "/home/hugh/Documents/Development/javaMemView/1.png"; //"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         //Instantiation of all the helper classes needed, Order is important
@@ -155,7 +155,8 @@ public class PhotoViewerController {
     }
 
     private void initializeGalleryRibbon() {
-        double widthOfBar = root.getWidth();
+        //the 0.99 is a fudge factor to prevent strange issues where width gets set to larger than screen size
+        double widthOfBar = Screen.getPrimary().getBounds().getWidth() * 0.99;
 
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
@@ -335,6 +336,7 @@ public class PhotoViewerController {
     private void moveZoomBoxWithMouse(MouseEvent event) {
         if(zoomBoxContainer.getOpacity() == 100) {
             applicationLogic.moveOnMouseDragged(event, mainImageView);
+            zoomBoxContainer.toFront();
             System.out.println("move on mouse dragged method called");
         }
     }
