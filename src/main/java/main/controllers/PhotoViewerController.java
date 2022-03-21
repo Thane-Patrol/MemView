@@ -93,7 +93,7 @@ public class PhotoViewerController {
 
         root = new StackPane();
 
-        String directory =  "/home/hugh/Documents/Development/javaMemView/1.png"; //"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
+        String directory =  "/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         //Instantiation of all the helper classes needed, Order is important
@@ -325,18 +325,17 @@ public class PhotoViewerController {
     //Trigger should be on mouseclick on the ImageView object itself
     @FXML
     private void createZoomBoxOnClick(MouseEvent event){
-        System.out.println("createZoomBoxOnClick method called+");
         zoomBoxContainer.toFront();
         zoomBoxContainer.setOpacity(100);
         zoomBoxContainer = applicationLogic.setZoomedImage(mainImageView, event);
-        //Manipulation of zoomBoxContainer with the objective to sit on top of the mainImageView and show the zoomed section underneath
-        //todo implement the above functionality
+        System.out.println("createZoomboxOnClick meethod called");
     }
 
     @FXML
     private void moveZoomBoxWithMouse(MouseEvent event) {
         if(zoomBoxContainer.getOpacity() == 100) {
             applicationLogic.moveOnMouseDragged(event, mainImageView);
+            System.out.println("move on mouse dragged method called");
         }
     }
 
