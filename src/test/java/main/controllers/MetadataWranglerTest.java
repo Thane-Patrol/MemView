@@ -75,9 +75,10 @@ public class MetadataWranglerTest {
         FileTime fileTime = fileAttributes.creationTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String toRtn = "Creation: " + simpleDateFormat.format(fileTime.toMillis());
+        System.out.println(toRtn);
 
-        boolean checkCreationDate = toRtn.contains("2020");
-        Assertions.assertTrue(true);
+        boolean checkCreationDate = toRtn.contains("2022");
+        Assertions.assertTrue(checkCreationDate);
     }
 
     public String testGetFileSize() {

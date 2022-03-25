@@ -23,6 +23,8 @@ import directory.handling.DirectoryReader;
 import directory.handling.FileHandling;
 import directory.handling.ImageAndPathHolder;
 import javafx.application.HostServices;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -152,28 +154,30 @@ public class PhotoViewerController {
 
 
         mainImageView.fitWidthProperty().bind((root.widthProperty()));
+        mainImageView.fitHeightProperty().bind(root.heightProperty());
     }
 
     private void initializeGalleryRibbon() {
         //the 0.99 is a fudge factor to prevent strange issues where width gets set to larger than screen size
-        double widthOfBar = Screen.getPrimary().getBounds().getWidth() * 0.99;
+        DoubleBinding widthOfBar = root.widthProperty().multiply(0.97);
+        DoubleBinding heightOfBar = root.heightProperty().multiply(0.2);
 
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
-        galleryThumbnailParentToolbar.setPrefHeight(200);
-        galleryThumbnailParentToolbar.setPrefWidth(widthOfBar);
+        galleryThumbnailParentToolbar.prefHeightProperty().bind(heightOfBar);
+        galleryThumbnailParentToolbar.prefWidthProperty().bind(widthOfBar);
 
-        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon);
+        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon, heightOfBar);
         // Top file view ribbon initialization
-
 
         scrollPaneRootFileRibbon.setFitToHeight(true);
         scrollPaneRootFileRibbon.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneRootFileRibbon.setMinViewportHeight(160);
-        scrollPaneRootFileRibbon.setPrefWidth(widthOfBar);
+        scrollPaneRootFileRibbon.prefHeightProperty().bind(heightOfBar);
+        scrollPaneRootFileRibbon.prefWidthProperty().bind(widthOfBar);
+        //scrollPaneRootFileRibbon.setPrefWidth(widthOfBar);
 
         thumbnailContainerRibbon.setSpacing(75);
-        thumbnailContainerRibbon.setPrefWidth(widthOfBar);
+        thumbnailContainerRibbon.prefWidthProperty().bind(widthOfBar);
     }
 
     public void initializeSceneDependentComponents() {

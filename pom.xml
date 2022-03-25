@@ -9,6 +9,15 @@
     <version>1.0-SNAPSHOT</version>
     <name>MemView</name>
 
+    <distributionManagement>
+        <repository>
+            <id>internal</id>
+            <name>MemView</name>
+            <url>file:///home/hugh/Documents/Development/Java/target/output</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <releases>

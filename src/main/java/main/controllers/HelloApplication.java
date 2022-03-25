@@ -21,6 +21,7 @@ package main.controllers;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -58,6 +59,7 @@ public class HelloApplication extends Application {
 
         mainStage.setTitle("MemView");
         mainStage.setScene(scene);
+        setStageMinDims(mainStage);
 
         //Set to start as Maximised Window to prevent weird multiMonitor issues
         mainStage.setMaximized(true);
@@ -68,5 +70,11 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
 
         launch();
+    }
+
+    private void setStageMinDims(Stage stage) {
+        Rectangle2D bounds = Screen.getPrimary().getBounds();
+        stage.setMinWidth(bounds.getHeight() * 0.3);
+        stage.setMinHeight(bounds.getHeight() * 0.3);
     }
 }

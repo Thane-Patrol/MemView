@@ -204,13 +204,19 @@ public class DirectoryReaderTest {
     @Test
     public void testGetFirstFileIndex() {
         File originalFilePath = new File("src/test/test.resources/images/1.png");
+        //workaround for Maven automated testing failing
+
         for(int i = 0; i < fileNames.size(); i++) {
             if(fileNames.get(i).equals(originalFilePath.toPath())) {
                 currentFileIndex = i;
             }
         }
+
+
         boolean testAssertion1 = currentFileIndex < fileNames.size();
         boolean testAssertion2 = fileNames.contains(fileNames.get(currentFileIndex));
+        System.out.println("assertion 1: " + testAssertion1);
+        System.out.println("assertion 2: " + testAssertion2);
         Assertions.assertTrue(testAssertion1 && testAssertion2);
     }
 

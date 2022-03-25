@@ -25,6 +25,7 @@ import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.GpsDirectory;
 import directory.handling.DirectoryReader;
+import javafx.beans.binding.DoubleBinding;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
@@ -90,7 +91,7 @@ public class PhotoViewerApplicationLogic {
         return fileSizeWithBytes;
     }
 
-    public void addPhotoThumbnailsToHBox(HBox hBox) {
+    public void addPhotoThumbnailsToHBox(HBox hBox, DoubleBinding heightOfBar) {
         List<Path> filePaths = directoryReader.getListOfFilePaths();
 
         //Stream through this path, Create the labels, thumbnails and Vboxs to contain them and add all of them to the hbox then return it
@@ -114,10 +115,10 @@ public class PhotoViewerApplicationLogic {
 
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
-            imageView.setFitWidth(180);
-            imageView.setFitHeight(150);
+            imageView.fitHeightProperty().bind(heightOfBar.multiply(0.9));
             VBox vBox = new VBox(imageView, fileName);
-            vBox.setMaxHeight(Screen.getPrimary().getBounds().getHeight()/8);
+            vBox.maxHeightProperty().bind(heightOfBar);
+            //vBox.setMaxHeight(Screen.getPrimary().getBounds().getHeight()/8);
 
             //Set the mainImage view to the thumbnail when clicked on
             vBox.setOnMouseClicked(event -> {
