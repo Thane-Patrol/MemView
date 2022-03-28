@@ -278,7 +278,7 @@
                             <bundleJre>false</bundleJre>
                             <generateInstaller>true</generateInstaller>
                             <administratorRequired>false</administratorRequired>
-                            <platform>linux</platform>
+                            <platform>auto</platform>
 
 
                         </configuration>

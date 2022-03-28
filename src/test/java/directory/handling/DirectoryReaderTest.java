@@ -47,21 +47,9 @@ public class DirectoryReaderTest {
     private List<String> writableExtensionList = new ArrayList<>();
     private final Path outOfBoundsImagePath = Paths.get("image.Resources/outOfBoundsImage");
     private int currentFileIndex;
-
-    public DirectoryReaderTest() {
-        String unsanitisedFileName = "src/test/test.resources/images/1.png";
-        String sanitisedFileName = unsanitisedFileName.replaceAll("//s", "");
-        File ogFile = new File(sanitisedFileName);
-
-        //testAddReadableExtensionList();
-        //testAddWriteableFileExtensionsToList();
-
-        //testAddPhotosToList();
-        //testGetFirstFileIndex();
-    }
-
-    @Test
-    public void testAddPhotosToList() {
+    
+    
+    private void initializeFileList() {
         File originalFilePath = new File("src/test/test.resources/images/1.png");
 
         try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(originalFilePath.toPath().getParent())) {
@@ -78,11 +66,18 @@ public class DirectoryReaderTest {
                     fileNames.add(amendedPhotoPath);
                     int finFileNameSize = fileNames.size();
                     Assertions.assertTrue(OGFileNameSize < finFileNameSize);
+                    System.out.println("File added: " + amendedPhotoPath.toString());
                 }
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Test
+    public void testAddPhotosToList() {
+        initializeFileList();
+        
         System.out.println("filename size = " + fileNames.size() );
         fileNames.stream().forEach(s -> System.out.println(s.getFileName()));
         Assertions.assertTrue(fileNames.size() == 10);
@@ -90,11 +85,13 @@ public class DirectoryReaderTest {
 
     @Test
     public Path testGetCurrentImage() {
+        initializeFileList();
         return fileNames.get(currentFileIndex);
     }
 
     @Test
     public Path testGetPreviousImage() {
+        initializeFileList();
         int originalFileIndex = currentFileIndex;
 
         if(fileNames.size() == 1) {
@@ -121,6 +118,7 @@ public class DirectoryReaderTest {
 
     @Test
     public Path testGetNextImage() {
+        initializeFileList();
         int originalFileIndex = currentFileIndex;
         if(fileNames.size() == 1) {
             return outOfBoundsImagePath;
@@ -184,6 +182,8 @@ public class DirectoryReaderTest {
 
     @Test
     public Image testLoadImage() {
+        initializeFileList();
+        
         Image image;
         try {
             File firstImagePath = fileNames.get(currentFileIndex).toFile();
@@ -203,7 +203,8 @@ public class DirectoryReaderTest {
 
     @Test
     public void testGetFirstFileIndex() {
-        File originalFilePath = new File("src/test/test.resources/images/1.png");
+        initializeFileList();
+        File originalFilePath = new File("src/test/test.resources/images/2.png");
         //workaround for Maven automated testing failing
 
         for(int i = 0; i < fileNames.size(); i++) {
@@ -211,13 +212,10 @@ public class DirectoryReaderTest {
                 currentFileIndex = i;
             }
         }
-
-
-        boolean testAssertion1 = currentFileIndex < fileNames.size();
-        boolean testAssertion2 = fileNames.contains(fileNames.get(currentFileIndex));
-        System.out.println("assertion 1: " + testAssertion1);
-        System.out.println("assertion 2: " + testAssertion2);
-        Assertions.assertTrue(testAssertion1 && testAssertion2);
+        
+        boolean testAssertion1 = fileNames.contains(fileNames.get(currentFileIndex));
+        System.out.println("assertion 2: " + testAssertion1);
+        Assertions.assertTrue(testAssertion1);
     }
 
     @Test
