@@ -50,10 +50,11 @@ public class DirectoryReaderTest {
     
     
     private void initializeFileList() {
+        System.out.println("iniitalizeFileList method called");
         File originalFilePath = new File("src/test/test.resources/images/1.png");
 
         try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(originalFilePath.toPath().getParent())) {
-
+            System.out.println("Try block called");
             for(Path photos : directoryStream) {
                 String unknownCapsExtension = FilenameUtils.getExtension(photos.toString());
                 String lowerCaseExtension = unknownCapsExtension.toLowerCase();
