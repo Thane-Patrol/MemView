@@ -73,7 +73,7 @@ public class HelloApplication extends Application {
 
     private void setStageMinDims(Stage stage) {
         Rectangle2D bounds = Screen.getPrimary().getBounds();
-        stage.setMinWidth(bounds.getHeight() * 0.3);
-        stage.setMinHeight(bounds.getHeight() * 0.3);
+        stage.setMinWidth(bounds.getHeight() * 0.4);
+        stage.setMinHeight(bounds.getHeight() * 0.4);
     }
 }

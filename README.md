@@ -1,6 +1,9 @@
 # MemView
 A fast, modern, cross platform photo viewer and converter written in Java
 
+# Important!
+Currently redistributable files are not available for download. This repository is set up as a learning project and will be made available in due course
+
 ## Why MemView?
 Many photo viewing applications available across platforms suffer from feature bloat or lack of features. 
 

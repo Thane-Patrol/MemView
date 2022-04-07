@@ -1,0 +1,8 @@
+Package: MemView
+Version: 1.0-SNAPSHOT
+Section: misc
+Priority: optional
+Architecture: amd64
+Maintainer: ACME <>
+Description: MemView
+Distribution: development

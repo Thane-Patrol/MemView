@@ -95,7 +95,7 @@ public class PhotoViewerController {
 
         root = new StackPane();
 
-        String directory =  "/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
+        String directory =  "/home/hugh/Documents/Development/javaMemView/1.png"; //"/Users/hugh/Desktop/memview/Back Garden From stairs.png"; //"/home/hugh/Documents/Development/javaMemView/1.png";  // //"D:\\javaMemView\\1.jpg"; // /Users/hugh/Desktop/memview/Back Garden From stairs.png
         System.out.println("Directory: " + directory);
 
         //Instantiation of all the helper classes needed, Order is important
@@ -159,25 +159,29 @@ public class PhotoViewerController {
 
     private void initializeGalleryRibbon() {
         //the 0.99 is a fudge factor to prevent strange issues where width gets set to larger than screen size
-        DoubleBinding widthOfBar = root.widthProperty().multiply(0.97);
-        DoubleBinding heightOfBar = root.heightProperty().multiply(0.2);
+        DoubleBinding widthOfBar = root.widthProperty().multiply(0.96);
+        DoubleBinding heightOfBar = root.heightProperty().multiply(0.21);
+
+        DoubleBinding toolbarHeight = heightOfBar.multiply(0.95);
+        DoubleBinding contentHeight = toolbarHeight.multiply(0.6);
 
         galleryThumbnailParentToolbar.setOpacity(0.0);
         galleryThumbnailParentToolbar.toFront();
-        galleryThumbnailParentToolbar.prefHeightProperty().bind(heightOfBar);
+        galleryThumbnailParentToolbar.prefHeightProperty().bind(toolbarHeight);
         galleryThumbnailParentToolbar.prefWidthProperty().bind(widthOfBar);
 
-        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon, heightOfBar);
+        applicationLogic.addPhotoThumbnailsToHBox(thumbnailContainerRibbon, contentHeight);
         // Top file view ribbon initialization
 
         scrollPaneRootFileRibbon.setFitToHeight(true);
         scrollPaneRootFileRibbon.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneRootFileRibbon.prefHeightProperty().bind(heightOfBar);
+        scrollPaneRootFileRibbon.prefHeightProperty().bind(toolbarHeight);
         scrollPaneRootFileRibbon.prefWidthProperty().bind(widthOfBar);
         //scrollPaneRootFileRibbon.setPrefWidth(widthOfBar);
 
         thumbnailContainerRibbon.setSpacing(75);
         thumbnailContainerRibbon.prefWidthProperty().bind(widthOfBar);
+        thumbnailContainerRibbon.prefHeightProperty().bind(contentHeight);
     }
 
     public void initializeSceneDependentComponents() {

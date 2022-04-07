@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=MemView
+GenericName=MemView
+Comment=MemView
+Exec=/opt/MemView/MemView %U
+Icon=/opt/MemView/MemView.png
+Terminal=false
+Type=Application
+StartupNotify=true

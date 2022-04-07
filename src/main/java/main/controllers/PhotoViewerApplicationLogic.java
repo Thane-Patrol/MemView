@@ -34,6 +34,7 @@ import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -96,11 +97,9 @@ public class PhotoViewerApplicationLogic {
 
         //Stream through this path, Create the labels, thumbnails and Vboxs to contain them and add all of them to the hbox then return it
         filePaths.stream().forEach(s -> {
+            VBox vBox = new VBox();
+            Label fileName = setGalleryImageLabelSize(s, heightOfBar, vBox);
 
-            Label fileName = new Label();
-            fileName.setText(s.getFileName().toString());
-            fileName.setMaxWidth(180);
-            System.out.println("loading: " + s.getFileName().toString());
 
             BufferedImage finalImage;
             Image image;
@@ -115,8 +114,8 @@ public class PhotoViewerApplicationLogic {
 
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
-            imageView.fitHeightProperty().bind(heightOfBar.multiply(0.9));
-            VBox vBox = new VBox(imageView, fileName);
+            imageView.fitHeightProperty().bind(heightOfBar);
+            vBox.getChildren().addAll(imageView, fileName);
             vBox.maxHeightProperty().bind(heightOfBar);
             //vBox.setMaxHeight(Screen.getPrimary().getBounds().getHeight()/8);
 
@@ -130,6 +129,19 @@ public class PhotoViewerApplicationLogic {
             hBox.getChildren().add(vBox);
         });
     }
+
+    private Label setGalleryImageLabelSize(Path path, DoubleBinding heightOfBar, VBox vBox) {
+        Label fileName = new Label();
+        fileName.setText(path.getFileName().toString());
+        fileName.setMaxWidth(180);
+
+        Font tempFont = fileName.getFont();
+
+        fileName.prefHeightProperty().bind(heightOfBar.multiply(0.1));
+        System.out.println("loading: " + path.getFileName().toString());
+        return fileName;
+    }
+
 
     private void setMaxZoomBoxSize() {
         Rectangle2D bounds = Screen.getPrimary().getBounds();

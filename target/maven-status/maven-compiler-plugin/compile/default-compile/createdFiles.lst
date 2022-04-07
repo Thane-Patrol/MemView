@@ -1,0 +1,17 @@
+photo/conversion/ConversionLogicHelper.class
+directory/handling/DirectoryReader.class
+photo/conversion/ListHolder.class
+photo/conversion/ThumbnailBuilder.class
+photo/conversion/ConversionLogic.class
+main/controllers/PhotoViewerController.class
+module-info.class
+directory/handling/ImageAndPathHolder.class
+main/controllers/PhotoViewerApplicationLogic.class
+main/controllers/HelloApplication.class
+main/controllers/PhotoConversionController.class
+photo/conversion/ParameterHolderHelper.class
+main/controllers/MetadataWrangler.class
+main/controllers/ZoomBoxLogic.class
+photo/conversion/ThumbnailLogicSwitcher.class
+preferences/UserPreferences.class
+directory/handling/FileHandling.class

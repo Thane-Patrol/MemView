@@ -1,0 +1,4 @@
+--patch-module
+com.example.memview=_
+--add-reads
+com.example.memview=ALL-UNNAMED

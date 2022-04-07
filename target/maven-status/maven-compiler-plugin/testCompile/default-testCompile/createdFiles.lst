@@ -1,0 +1,10 @@
+photo/conversion/ThumbnailParameterBuilderObjectTest.class
+main/controllers/MetadataWranglerTest.class
+photo/conversion/ConversionLogicTest.class
+main/controllers/PhotoViewerControllerTest.class
+main/controllers/PhotoConversionPopupControllerTest.class
+directory/handling/FileHandlingTest.class
+directory/handling/DirectoryReaderTest.class
+preferences/UserPreferencesTest.class
+main/controllers/PhotoViewerApplicationLogicTest.class
+main/controllers/HelloApplicationTest.class
